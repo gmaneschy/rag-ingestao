@@ -33,7 +33,8 @@ def engine(monkeypatch):
     monkeypatch.setenv("DATABASE_URL", URL)
     get_settings.cache_clear()
     get_engine.cache_clear()
-    eng = create_engine(URL)
+    # connect_timeout: se a conexão travar (comum com "localhost" no Windows), falha logo.
+    eng = create_engine(URL, connect_args={"connect_timeout": 5})
     with eng.begin() as c:
         c.execute(text("DROP SCHEMA public CASCADE"))
         c.execute(text("CREATE SCHEMA public"))
@@ -42,6 +43,7 @@ def engine(monkeypatch):
     command.upgrade(cfg, "head")
     yield eng, cfg
     eng.dispose()
+    get_engine().dispose()  # fecha as conexões que a migração abriu pela engine da aplicação
     get_settings.cache_clear()
     get_engine.cache_clear()
 
