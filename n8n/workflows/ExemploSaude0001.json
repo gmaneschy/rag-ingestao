@@ -1,0 +1,63 @@
+{
+  "id": "ExemploSaude0001",
+  "name": "Exemplo: consultar a saúde da API",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "saude",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "5f0a1c2e-7b1d-4c58-9a3e-1d6f2b8a0c01",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "9d3c7e41-2b6a-4f0e-8c15-6a1b0e2f4d02"
+    },
+    {
+      "parameters": {
+        "url": "http://api:8000/saude",
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "c4b8d2a6-0e3f-4a71-b5d9-8f2e6c1a7b03",
+      "name": "Consultar API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Consultar API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "nodeGroups": [],
+  "pinData": {},
+  "tags": []
+}

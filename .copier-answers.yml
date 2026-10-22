@@ -1,0 +1,10 @@
+_commit: 6e1677a
+_src_path: .
+description: API FastAPI
+project_name: RAG com ingestão de documentos
+project_slug: rag-ingestao
+python_version: '3.12'
+use_local_llm: false
+use_n8n: true
+use_pgvector: true
+use_redis: false

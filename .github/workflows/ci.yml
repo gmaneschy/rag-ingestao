@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  testes:
+    name: Lint e testes
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        # Mesma imagem do Compose, para pegar diferenças de versão do Postgres e do pgvector.
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: app
+          POSTGRES_DB: teste
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U app -d teste"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql+psycopg://app:app@localhost:5432/teste
+      TEST_DATABASE_URL: postgresql+psycopg://app:app@localhost:5432/teste
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Instalar dependências (exatamente as do uv.lock)
+        run: uv sync --frozen
+      - name: Lint
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+      - name: Testes (inclui o de integração com o Postgres)
+        run: uv run pytest -q
+      - name: Migrações num Postgres de verdade
+        run: uv run alembic upgrade head
+
+  compose:
+    name: Compose e imagem (amd64)
+    runs-on: ubuntu-latest
+    env:
+      # Só o banco e a API: o n8n e o Caddy não são o que este job verifica.
+      COMPOSE_PROFILES: app
+    steps:
+      - uses: actions/checkout@v5
+      - name: Gerar um .env de teste
+        run: python3 scripts/gen_env.py
+      - name: Validar o compose.yaml com todos os profiles
+        run: docker compose --profile "*" config --quiet
+      - name: Subir banco e API e esperar ficarem saudáveis
+        run: docker compose up -d --build --wait --wait-timeout 180
+      - name: Mostrar o estado e os logs
+        if: always()
+        run: |
+          docker compose ps
+          docker compose logs --tail=80
+      - name: Derrubar
+        if: always()
+        run: docker compose down -v
+
+  arm64:
+    name: Imagem (arm64)
+    # A instância gratuita da Oracle é arm64; este job garante que a imagem constrói nela.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/arm64
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

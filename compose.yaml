@@ -1,0 +1,101 @@
+# Serviços do projeto. O banco sobe sempre; o resto é ligado por profile.
+#
+#   local:     COMPOSE_PROFILES=...      só o banco (e o que mais quiser); a API roda com `make dev`
+#   servidor:  COMPOSE_PROFILES=app,proxy,n8n   API, HTTPS (Caddy) e n8n
+#
+# O COMPOSE_PROFILES é lido do .env. Nada é publicado para a internet além do Caddy (80/443);
+# o que expõe porta no host fica preso em 127.0.0.1.
+
+name: rag-ingestao
+
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?rode `make env` para gerar o .env}
+      POSTGRES_DB: ${POSTGRES_DB:-rag_ingestao}
+      N8N_DB_PASSWORD: ${N8N_DB_PASSWORD:?rode `make env` para gerar o .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # Scripts daqui só rodam na primeira vez, com o volume vazio.
+      - ./infra/postgres/init:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "127.0.0.1:${DB_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    profiles: [app]
+    build: .
+    image: rag-ingestao:latest
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_ENV: ${APP_ENV:-production}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      API_KEY: ${API_KEY:?rode `make env` para gerar o .env}
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-rag_ingestao}
+    # Aplica as migrações antes de atender. Com uma única instância, isso basta.
+    command:
+      - sh
+      - -c
+      - alembic upgrade head && exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers --forwarded-allow-ips=*
+
+  caddy:
+    profiles: [proxy]
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./infra/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+  n8n:
+    profiles: [n8n]
+    # Fixe uma versão depois do primeiro teste (N8N_VERSION no .env) para o deploy ser reproduzível.
+    image: n8nio/n8n:${N8N_VERSION:-latest}
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # Banco próprio do n8n, no mesmo servidor Postgres (criado por infra/postgres/init).
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: db
+      DB_POSTGRESDB_PORT: "5432"
+      DB_POSTGRESDB_DATABASE: n8n
+      DB_POSTGRESDB_USER: n8n
+      DB_POSTGRESDB_PASSWORD: ${N8N_DB_PASSWORD:?rode `make env` para gerar o .env}
+      # Cifra as credenciais guardadas. Se for perdida, as credenciais salvas ficam inúteis.
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:?rode `make env` para gerar o .env}
+      N8N_EDITOR_BASE_URL: ${N8N_URL:-http://localhost:5678}
+      N8N_WEBHOOK_URL: ${N8N_URL:-http://localhost:5678}/
+      N8N_PROXY_HOPS: "1"
+      N8N_SECURE_COOKIE: ${N8N_SECURE_COOKIE:-false}
+      N8N_DIAGNOSTICS_ENABLED: "false"
+      N8N_PERSONALIZATION_ENABLED: "false"
+      GENERIC_TIMEZONE: ${TZ:-America/Sao_Paulo}
+      TZ: ${TZ:-America/Sao_Paulo}
+    ports:
+      - "127.0.0.1:5678:5678"
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+volumes:
+  pgdata:
+  caddy_data:
+  caddy_config:
+  n8n_data:

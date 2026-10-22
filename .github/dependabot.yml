@@ -1,0 +1,7 @@
+# Abre pull requests quando saem versões novas das actions do CI, para não ficarem velhas.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

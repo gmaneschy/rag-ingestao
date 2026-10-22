@@ -1,0 +1,17 @@
+# HTTPS automático. DOMAIN vem do .env (localhost em desenvolvimento).
+# No servidor sem domínio próprio, use um nome que aponta para o IP, como api.SEU-IP.sslip.io.
+
+{$DOMAIN:localhost} {
+	encode zstd gzip
+	header {
+		-Server
+		X-Content-Type-Options nosniff
+		Referrer-Policy no-referrer
+	}
+	reverse_proxy api:8000
+}
+
+n8n.{$DOMAIN:localhost} {
+	encode zstd gzip
+	reverse_proxy n8n:5678
+}

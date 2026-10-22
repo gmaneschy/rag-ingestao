@@ -1,0 +1,4 @@
+# Fins de linha LF em todas as plataformas. No Windows, o git converteria para CRLF, e um
+# script .sh com CRLF quebra dentro do contêiner Linux (o banco não inicializa o n8n).
+* text=auto eol=lf
+*.sh text eol=lf
