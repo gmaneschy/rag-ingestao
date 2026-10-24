@@ -15,8 +15,12 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 FROM python:3.12-slim
 ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1
+    PYTHONDONTWRITEBYTECODE=1 \
+    DADOS_DIR=/app/dados \
+    MODELOS_DIR=/app/modelos
 RUN useradd --system --create-home --uid 1000 app
+# Pastas dos arquivos originais e do cache de modelos: volumes nomeados herdam este dono.
+RUN mkdir -p /app/dados /app/modelos && chown app:app /app/dados /app/modelos
 WORKDIR /app
 COPY --from=build /app/.venv /app/.venv
 COPY alembic.ini ./

@@ -6,3 +6,9 @@ __pycache__/
 .env
 storage/
 *.log
+# Arquivos enviados e cache de modelos (só a pasta de entrada existe no repositório)
+dados/*
+!dados/entrada/
+dados/entrada/*
+!dados/entrada/.gitkeep
+modelos/

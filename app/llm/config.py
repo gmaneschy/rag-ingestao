@@ -21,9 +21,10 @@ class LLMSettings(BaseSettings):
     embeddings_provider: Provedor = "simulado"
     llm_provider: Provedor = "simulado"
 
-    # Candidato inicial para o modelo local de embeddings (multilíngue, 384 dimensões).
-    # A escolha definitiva sai da avaliação da etapa 5; o nome vai gravado em cada vetor.
-    embeddings_model: str = "intfloat/multilingual-e5-small"
+    # Modelo local de embeddings: multilíngue (~50 idiomas, inclui português), 384 dimensões,
+    # ~220 MB, disponível no fastembed. Enxerga ~128 tokens por trecho. A escolha definitiva sai
+    # da avaliação da etapa 5; o nome vai gravado em cada vetor.
+    embeddings_model: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
     embeddings_dim: int = DIMENSAO_VETOR
 
     llm_model: str = ""

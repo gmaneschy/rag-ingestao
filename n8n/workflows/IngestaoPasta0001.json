@@ -1,0 +1,121 @@
+{
+  "id": "IngestaoPasta0001",
+  "name": "Ingestão: pasta de entrada",
+  "description": "Arquivo novo em dados/entrada é enviado à API (POST /documentos). Reenviar o mesmo arquivo é seguro: a API é idempotente por hash.",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "triggerOn": "folder",
+        "path": "/files/entrada",
+        "events": [
+          "add"
+        ],
+        "options": {
+          "awaitWriteFinish": true,
+          "usePolling": true,
+          "ignored": "**/.*"
+        }
+      },
+      "id": "a1d4e6f2-3b7c-4e19-8f05-2c6b9d1e7a11",
+      "name": "Arquivo novo na pasta",
+      "type": "n8n-nodes-base.localFileTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "fileSelector": "={{ $json.path }}",
+        "options": {}
+      },
+      "id": "b2e5f7a3-4c8d-4f2a-9a16-3d7c0e2f8b22",
+      "name": "Ler arquivo",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        260,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.RAG_API_URL }}/documentos",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-Key",
+              "value": "={{ $env.RAG_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "arquivo",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "colecao",
+              "value": "geral"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "c3f6a8b4-5d9e-4a3b-8b27-4e8d1f3a9c33",
+      "name": "Enviar para a API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        520,
+        0
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    }
+  ],
+  "connections": {
+    "Arquivo novo na pasta": {
+      "main": [
+        [
+          {
+            "node": "Ler arquivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ler arquivo": {
+      "main": [
+        [
+          {
+            "node": "Enviar para a API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "nodeGroups": [],
+  "pinData": {},
+  "tags": []
+}

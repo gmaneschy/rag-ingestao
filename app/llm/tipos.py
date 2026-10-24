@@ -8,6 +8,10 @@ DIMENSAO_VETOR = 384
 MENSAGEM_SEM_EVIDENCIA = "Não encontrei evidência nos documentos fornecidos para responder."
 
 
+class ModeloIndisponivel(RuntimeError):
+    """O modelo não pôde ser carregado (download falhou, sem rede, limite de requisições)."""
+
+
 @dataclass(frozen=True)
 class TrechoRecuperado:
     """Um trecho que a busca devolveu e que pode ser citado na resposta."""

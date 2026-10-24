@@ -20,7 +20,7 @@ def test_ids_ativos_so_devolve_fluxos_ativos(tmp_path) -> None:
 
 def test_fluxo_de_exemplo_e_json_valido_e_ativo() -> None:
     pasta = n8n.RAIZ / n8n.PASTA
-    assert n8n.ids_ativos(pasta) == ["ExemploSaude0001"]
+    assert set(n8n.ids_ativos(pasta)) == {"ExemploSaude0001", "IngestaoPasta0001"}
 
 
 @pytest.fixture

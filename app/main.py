@@ -11,7 +11,7 @@ from starlette.middleware.base import RequestResponseEndpoint
 
 from app.config import get_settings
 from app.logging_config import configure_logging
-from app.routers import saude
+from app.routers import documentos, saude
 
 logger = logging.getLogger("app")
 
@@ -57,6 +57,7 @@ def create_app() -> FastAPI:
         return resposta
 
     app.include_router(saude.router)
+    app.include_router(documentos.router)
     return app
 
 

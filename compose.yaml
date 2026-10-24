@@ -42,6 +42,12 @@ services:
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
       API_KEY: ${API_KEY:?rode `make env` para gerar o .env}
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-rag_ingestao}
+      EMBEDDINGS_PROVIDER: ${EMBEDDINGS_PROVIDER:-local}
+      LLM_PROVIDER: ${LLM_PROVIDER:-simulado}
+      HF_TOKEN: ${HF_TOKEN:-}   # opcional: eleva o limite de download do modelo
+    volumes:
+      - dados:/app/dados          # arquivos originais enviados
+      - modelos:/app/modelos      # cache do modelo de embeddings (baixado na primeira vez)
     # Aplica as migrações antes de atender. Com uma única instância, isso basta.
     command:
       - sh
@@ -89,13 +95,28 @@ services:
       N8N_PERSONALIZATION_ENABLED: "false"
       GENERIC_TIMEZONE: ${TZ:-America/Sao_Paulo}
       TZ: ${TZ:-America/Sao_Paulo}
+      # Fluxo da pasta de entrada (n8n/workflows/IngestaoPasta0001.json):
+      #  - o nó de pasta vem desligado no n8n 2.x; NODES_EXCLUDE=[] o liga;
+      #  - arquivos só podem ser lidos sob /files (padrão: ~/.n8n-files);
+      #  - o fluxo lê a URL e a chave da API de $env, para o JSON não carregar segredos.
+      NODES_EXCLUDE: "[]"
+      N8N_RESTRICT_FILE_ACCESS_TO: /files
+      N8N_BLOCK_ENV_ACCESS_IN_NODE: "false"
+      RAG_API_URL: ${RAG_API_URL:-http://api:8000}
+      RAG_API_KEY: ${API_KEY:?rode `make env` para gerar o .env}
+    # Permite alcançar a API que roda no computador (uvicorn local) como host.docker.internal.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "127.0.0.1:5678:5678"
     volumes:
       - n8n_data:/home/node/.n8n
+      - ./dados/entrada:/files/entrada   # solte aqui os documentos a ingerir
 
 volumes:
   pgdata:
+  dados:
+  modelos:
   caddy_data:
   caddy_config:
   n8n_data:

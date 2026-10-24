@@ -62,8 +62,20 @@ def test_chave_nao_vaza_na_representacao() -> None:
     assert "segredo-xyz" not in repr(_novo(llm_provider="api", llm_api_key="segredo-xyz"))
 
 
-def test_provedor_ainda_nao_implementado_falha_com_mensagem_clara() -> None:
-    with pytest.raises(ProvedorNaoImplementado, match="local"):
-        criar_embeddings(_novo(embeddings_provider="local"))
+def test_provedor_local_de_embeddings_e_criado_sem_baixar_o_modelo() -> None:
+    from app.llm.local import EmbeddingsLocal
+
+    embeddings = criar_embeddings(_novo(embeddings_provider="local"))
+    assert isinstance(embeddings, EmbeddingsLocal)
+    assert embeddings.dimensao == 384
+    assert "multilingual" in embeddings.nome_modelo
+
+
+def test_provedor_api_de_embeddings_ainda_nao_existe() -> None:
+    with pytest.raises(ProvedorNaoImplementado, match="api"):
+        criar_embeddings(_novo(embeddings_provider="api", llm_api_key="x"))
+
+
+def test_gerador_de_resposta_por_api_ainda_nao_existe() -> None:
     with pytest.raises(ProvedorNaoImplementado, match="api"):
         criar_gerador_de_resposta(_novo(llm_provider="api", llm_api_key="x"))
