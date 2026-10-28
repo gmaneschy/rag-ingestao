@@ -11,7 +11,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from app.llm.tipos import DIMENSAO_VETOR
 
-Provedor = Literal["simulado", "local", "api"]
+Provedor = Literal["simulado", "local", "api", "ollama"]
 
 
 class LLMSettings(BaseSettings):
@@ -27,9 +27,14 @@ class LLMSettings(BaseSettings):
     embeddings_model: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
     embeddings_dim: int = DIMENSAO_VETOR
 
+    # Geração da resposta. Com LLM_PROVIDER=ollama: LLM_MODEL é o nome do modelo no Ollama
+    # (o que `ollama list` mostra) e LLM_BASE_URL, o servidor (padrão: o do próprio computador).
     llm_model: str = ""
     llm_base_url: str = ""
     llm_api_key: SecretStr | None = None
+    llm_timeout_s: int = 300  # modelo local em CPU pode levar minutos
+    llm_max_tokens_saida: int = 500
+    llm_num_ctx_max: int = 8192  # teto da janela de contexto pedida ao Ollama
 
     # Tetos de custo: por pergunta (tokens) e por dia (dólares), aplicados nas etapas 3 e 5.
     max_tokens_por_pergunta: int = 2000
@@ -46,6 +51,15 @@ class LLMSettings(BaseSettings):
         usa_api = "api" in (self.embeddings_provider, self.llm_provider)
         if usa_api and not (self.llm_api_key and self.llm_api_key.get_secret_value()):
             raise ValueError("LLM_API_KEY é obrigatória quando algum provedor é 'api'")
+        if self.llm_provider == "ollama":
+            if not self.llm_model.strip():
+                raise ValueError(
+                    "LLM_MODEL é obrigatório com LLM_PROVIDER=ollama (veja `ollama list`)"
+                )
+            if not self.llm_base_url:
+                self.llm_base_url = "http://127.0.0.1:11434"
+        if self.llm_timeout_s < 1 or self.llm_max_tokens_saida < 1 or self.llm_num_ctx_max < 2048:
+            raise ValueError("LLM_TIMEOUT_S, LLM_MAX_TOKENS_SAIDA e LLM_NUM_CTX_MAX inválidos")
         if self.max_tokens_por_pergunta < 1 or self.limite_diario_gasto < 0:
             raise ValueError("Os limites de tokens e de gasto precisam ser positivos")
         return self

@@ -13,6 +13,8 @@ def _ambiente_limpo(monkeypatch) -> None:
         "LLM_PROVIDER",
         "EMBEDDINGS_DIM",
         "LLM_API_KEY",
+        "LLM_MODEL",
+        "LLM_BASE_URL",
         "MAX_TOKENS_POR_PERGUNTA",
         "LIMITE_DIARIO_GASTO",
     ):
@@ -79,3 +81,25 @@ def test_provedor_api_de_embeddings_ainda_nao_existe() -> None:
 def test_gerador_de_resposta_por_api_ainda_nao_existe() -> None:
     with pytest.raises(ProvedorNaoImplementado, match="api"):
         criar_gerador_de_resposta(_novo(llm_provider="api", llm_api_key="x"))
+
+
+def test_ollama_exige_o_nome_do_modelo() -> None:
+    with pytest.raises(ValidationError, match="LLM_MODEL"):
+        _novo(llm_provider="ollama")
+
+
+def test_ollama_usa_o_servidor_local_por_padrao_e_nao_pede_chave() -> None:
+    s = _novo(llm_provider="ollama", llm_model="qwen")
+    assert s.llm_base_url == "http://127.0.0.1:11434"
+    assert _novo(
+        llm_provider="ollama", llm_model="qwen", llm_base_url="http://h:1"
+    ).llm_base_url == ("http://h:1")
+
+
+def test_fabrica_cria_o_gerador_ollama() -> None:
+    from app.llm.ollama import GeradorDeRespostaOllama
+
+    gerador = criar_gerador_de_resposta(_novo(llm_provider="ollama", llm_model="qwen"))
+    assert isinstance(gerador, GeradorDeRespostaOllama)
+    assert gerador.nome_modelo == "ollama/qwen"
+    assert gerador.max_tokens == 500

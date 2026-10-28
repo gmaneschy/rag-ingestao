@@ -44,7 +44,13 @@ services:
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-rag_ingestao}
       EMBEDDINGS_PROVIDER: ${EMBEDDINGS_PROVIDER:-local}
       LLM_PROVIDER: ${LLM_PROVIDER:-simulado}
+      LLM_MODEL: ${LLM_MODEL:-}
+      # O Ollama roda no computador, fora do Compose. LLM_BASE_URL do .env vale para a API local
+      # (127.0.0.1) e não serve aqui dentro; por isso o nome próprio.
+      LLM_BASE_URL: ${LLM_BASE_URL_DOCKER:-http://host.docker.internal:11434}
       HF_TOKEN: ${HF_TOKEN:-}   # opcional: eleva o limite de download do modelo
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - dados:/app/dados          # arquivos originais enviados
       - modelos:/app/modelos      # cache do modelo de embeddings (baixado na primeira vez)

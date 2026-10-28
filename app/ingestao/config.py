@@ -14,6 +14,9 @@ class IngestaoSettings(BaseSettings):
     dados_dir: Path = Path("dados")
     modelos_dir: Path = Path("modelos")
 
+    # Ao subir, retoma os documentos que ficaram 'pendente' (servidor reiniciado no meio).
+    retomar_pendentes: bool = True
+
     tamanho_max_mb: int = 20
     max_paginas: int = 500
 

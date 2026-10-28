@@ -10,6 +10,7 @@ from alembic.config import Config
 from sqlalchemy import create_engine, text
 
 from app.config import get_settings
+from app.consulta.config import get_consulta_settings
 from app.db import get_engine, get_sessionmaker
 from app.ingestao.config import get_ingestao_settings
 from app.llm.config import get_llm_settings
@@ -65,7 +66,17 @@ def ambiente(tmp_path_factory) -> Iterator[Path]:
     mp.setenv("DADOS_DIR", str(dados))
     mp.setenv("MODELOS_DIR", str(dados / "modelos"))
     mp.setenv("EMBEDDINGS_PROVIDER", "simulado")
-    for fn in (get_settings, get_engine, get_sessionmaker, get_ingestao_settings, get_llm_settings):
+    mp.setenv("LLM_PROVIDER", "simulado")
+    mp.setenv("LLM_MODEL", "")
+    mp.setenv("RETOMAR_PENDENTES", "false")  # os testes decidem quando retomar
+    for fn in (
+        get_settings,
+        get_engine,
+        get_sessionmaker,
+        get_ingestao_settings,
+        get_llm_settings,
+        get_consulta_settings,
+    ):
         fn.cache_clear()
 
     eng = create_engine(URL, connect_args={"connect_timeout": 5})
@@ -80,7 +91,14 @@ def ambiente(tmp_path_factory) -> Iterator[Path]:
 
     get_engine().dispose()
     mp.undo()
-    for fn in (get_settings, get_engine, get_sessionmaker, get_ingestao_settings, get_llm_settings):
+    for fn in (
+        get_settings,
+        get_engine,
+        get_sessionmaker,
+        get_ingestao_settings,
+        get_llm_settings,
+        get_consulta_settings,
+    ):
         fn.cache_clear()
 
 

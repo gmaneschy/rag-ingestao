@@ -3,6 +3,7 @@
 from app.ingestao.config import get_ingestao_settings
 from app.llm.config import LLMSettings, get_llm_settings
 from app.llm.local import EmbeddingsLocal
+from app.llm.ollama import GeradorDeRespostaOllama
 from app.llm.protocolos import GeradorDeEmbeddings, GeradorDeResposta
 from app.llm.simulado import EmbeddingsSimulado, GeradorDeRespostaSimulado
 
@@ -30,6 +31,14 @@ def criar_gerador_de_resposta(settings: LLMSettings | None = None) -> GeradorDeR
     settings = settings or get_llm_settings()
     if settings.llm_provider == "simulado":
         return GeradorDeRespostaSimulado()
+    if settings.llm_provider == "ollama":
+        return GeradorDeRespostaOllama(
+            base_url=settings.llm_base_url,
+            modelo=settings.llm_model,
+            max_tokens=min(settings.llm_max_tokens_saida, settings.max_tokens_por_pergunta),
+            timeout_s=settings.llm_timeout_s,
+            num_ctx_max=settings.llm_num_ctx_max,
+        )
     raise ProvedorNaoImplementado(
-        f"LLM_PROVIDER={settings.llm_provider!r} ainda não existe (etapas 3 e 5)"
+        f"LLM_PROVIDER={settings.llm_provider!r} ainda não existe (api: mais tarde)"
     )
