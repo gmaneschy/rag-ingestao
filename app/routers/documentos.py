@@ -110,7 +110,7 @@ def listar_documentos(
         session.execute(
             text(
                 "SELECT d.id, d.nome, d.colecao, d.versao, d.estado, d.mensagem_erro, "
-                "d.criado_em, d.atualizado_em, "
+                "d.aviso, d.criado_em, d.atualizado_em, "
                 "(SELECT count(*) FROM trecho t WHERE t.documento_id = d.id) AS trechos "
                 f"FROM documento d {onde} "
                 "ORDER BY d.atualizado_em DESC, d.id DESC LIMIT :limite OFFSET :deslocamento"
@@ -133,8 +133,9 @@ def ver_documento(
     linha = (
         session.execute(
             text(
-                "SELECT d.id, d.nome, d.colecao, d.versao, d.estado, d.mensagem_erro, "
+                "SELECT d.id, d.nome, d.colecao, d.versao, d.estado, d.mensagem_erro, d.aviso, "
                 "d.criado_em, d.atualizado_em, count(t.id) AS trechos, "
+                "count(DISTINCT t.secao) AS secoes, "
                 "min(t.modelo_embedding) AS modelo_embedding "
                 "FROM documento d LEFT JOIN trecho t ON t.documento_id = d.id "
                 "WHERE d.id = :id GROUP BY d.id"
@@ -155,8 +156,8 @@ def ver_documento(
             dict(t)
             for t in session.execute(
                 text(
-                    "SELECT posicao, pagina, texto FROM ("
-                    "SELECT posicao, pagina, texto, "
+                    "SELECT posicao, pagina, secao, texto FROM ("
+                    "SELECT posicao, pagina, secao, texto, "
                     "row_number() OVER (ORDER BY posicao) - 1 AS ordem "
                     "FROM trecho WHERE documento_id = :id) x "
                     "WHERE ordem = ANY(:indices) ORDER BY posicao"
@@ -165,6 +166,35 @@ def ver_documento(
             ).mappings()
         ]
     return detalhe
+
+
+@router.get("/{documento_id}/secoes")
+def ver_secoes(
+    documento_id: int, session: Annotated[Session, Depends(get_session)]
+) -> dict[str, object]:
+    """As seções detectadas, na ordem do documento, com quantos trechos e quais páginas."""
+    if not session.execute(
+        text("SELECT 1 FROM documento WHERE id = :id"), {"id": documento_id}
+    ).first():
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Documento não encontrado")
+    linhas = session.execute(
+        text(
+            "SELECT secao, count(*) AS trechos, min(pagina) AS pagina_inicial, "
+            "max(pagina) AS pagina_final, min(posicao) AS primeira "
+            "FROM trecho WHERE documento_id = :id AND secao IS NOT NULL "
+            "GROUP BY secao ORDER BY primeira"
+        ),
+        {"id": documento_id},
+    ).mappings()
+    sem_secao = session.execute(
+        text("SELECT count(*) FROM trecho WHERE documento_id = :id AND secao IS NULL"),
+        {"id": documento_id},
+    ).scalar_one()
+    return {
+        "id": documento_id,
+        "secoes": [{k: v for k, v in linha.items() if k != "primeira"} for linha in linhas],
+        "trechos_sem_secao": sem_secao,
+    }
 
 
 @router.delete("/{documento_id}")

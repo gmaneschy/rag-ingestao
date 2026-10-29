@@ -19,7 +19,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.ingestao.config import IngestaoSettings
 from app.ingestao.divisao import dividir
-from app.ingestao.extracao import EXTENSOES_ACEITAS, ErroDeExtracao, extrair_paginas
+from app.ingestao.extracao import EXTENSOES_ACEITAS, ErroDeExtracao, extrair
 from app.llm.protocolos import GeradorDeEmbeddings
 from app.llm.tipos import DIMENSAO_VETOR, ModeloIndisponivel
 
@@ -209,8 +209,8 @@ def processar(
             raise ErroDeExtracao(
                 f"O modelo gera {embeddings.dimensao} dimensões; a coluna aceita {DIMENSAO_VETOR}"
             )
-        paginas = extrair_paginas(Path(caminho), max_paginas=config.max_paginas)
-        trechos = dividir(paginas, config.tamanho_trecho, config.sobreposicao_trecho)
+        extracao = extrair(Path(caminho), max_paginas=config.max_paginas)
+        trechos = dividir(extracao.paginas, config.tamanho_trecho, config.sobreposicao_trecho)
         vetores = embeddings.gerar_trechos([t.texto for t in trechos])
         if len(vetores) != len(trechos):
             raise ErroDeExtracao("O gerador de embeddings devolveu uma quantidade inesperada")
@@ -228,8 +228,8 @@ def processar(
             )
             session.execute(
                 text(
-                    "INSERT INTO trecho (documento_id, posicao, pagina, texto, vetor, "
-                    "modelo_embedding, dimensao) VALUES (:d, :pos, :pag, :t, "
+                    "INSERT INTO trecho (documento_id, posicao, pagina, secao, texto, vetor, "
+                    "modelo_embedding, dimensao) VALUES (:d, :pos, :pag, :sec, :t, "
                     "CAST(:v AS vector), :m, :dim)"
                 ),
                 [
@@ -237,6 +237,7 @@ def processar(
                         "d": documento_id,
                         "pos": t.posicao,
                         "pag": t.pagina,
+                        "sec": t.secao,
                         "t": t.texto,
                         "v": _vetor_como_texto(v),
                         "m": embeddings.nome_modelo,
@@ -248,9 +249,9 @@ def processar(
             session.execute(
                 text(
                     "UPDATE documento SET estado = 'processado', mensagem_erro = NULL, "
-                    "atualizado_em = now() WHERE id = :id"
+                    "aviso = :aviso, atualizado_em = now() WHERE id = :id"
                 ),
-                {"id": documento_id},
+                {"id": documento_id, "aviso": extracao.aviso},
             )
             ja_ingerido = session.execute(
                 text(

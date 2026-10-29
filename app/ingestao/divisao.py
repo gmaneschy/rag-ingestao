@@ -1,6 +1,7 @@
 """Divisão do texto em trechos: por parágrafo, com sobreposição, sem atravessar páginas.
 
-Um trecho nunca mistura páginas, para a citação "documento, página N" ser sempre verdadeira.
+Um trecho nunca mistura páginas, para a citação "documento, página N" ser sempre verdadeira,
+nem seções, para ter uma seção só.
 """
 
 import re
@@ -8,6 +9,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 
 from app.ingestao.extracao import Pagina
+from app.ingestao.secoes import Titulo
 
 _FRASE = re.compile(r"(?<=[.!?])\s+")
 
@@ -17,6 +19,7 @@ class TrechoNovo:
     posicao: int
     pagina: int | None
     texto: str
+    secao: str | None = None  # ex.: "Parte I > Capítulo 2"
 
 
 def _quebrar_longo(paragrafo: str, tamanho: int) -> list[str]:
@@ -92,12 +95,40 @@ def _agrupar(paragrafos: Iterable[str], tamanho: int, sobreposicao: int) -> list
     return trechos
 
 
+def _caminho(pilha: list[tuple[int, str]]) -> str | None:
+    return " > ".join(texto for _, texto in pilha)[:300] or None
+
+
+def _aplicar(pilha: list[tuple[int, str]], titulo: Titulo) -> None:
+    """Um título de nível n encerra os que estavam abertos com nível n ou maior."""
+    while pilha and pilha[-1][0] >= titulo.nivel:
+        pilha.pop()
+    pilha.append((titulo.nivel, titulo.texto))
+
+
 def dividir(paginas: list[Pagina], tamanho: int = 500, sobreposicao: int = 80) -> list[TrechoNovo]:
     if tamanho < 1 or not 0 <= sobreposicao < tamanho:
         raise ValueError("tamanho deve ser positivo e a sobreposição menor que o tamanho")
     resultado: list[TrechoNovo] = []
+    pilha: list[tuple[int, str]] = []  # a seção em vigor, que atravessa as páginas
     for pagina in paginas:
         paragrafos = [p.strip() for p in pagina.texto.split("\n\n") if p.strip()]
-        for texto in _agrupar(paragrafos, tamanho, sobreposicao):
-            resultado.append(TrechoNovo(posicao=len(resultado), pagina=pagina.numero, texto=texto))
+        if not paragrafos:
+            continue
+        # Os títulos da página, por parágrafo onde começam (sem localização = começo da página).
+        marcas: dict[int, list[Titulo]] = {}
+        for titulo in pagina.titulos:
+            indice = min(titulo.paragrafo or 0, len(paragrafos) - 1)
+            marcas.setdefault(indice, []).append(titulo)
+        limites = sorted({0, *marcas}) + [len(paragrafos)]
+        for inicio, fim in zip(limites, limites[1:], strict=False):
+            for titulo in marcas.get(inicio, []):
+                _aplicar(pilha, titulo)
+            secao = _caminho(pilha)
+            for texto in _agrupar(paragrafos[inicio:fim], tamanho, sobreposicao):
+                resultado.append(
+                    TrechoNovo(
+                        posicao=len(resultado), pagina=pagina.numero, texto=texto, secao=secao
+                    )
+                )
     return resultado

@@ -14,7 +14,14 @@ from app.llm.simulado import EmbeddingsSimulado
 
 def _linha(i: int, sim: float | None = None) -> SimpleNamespace:
     return SimpleNamespace(
-        id=i, posicao=i, pagina=1, texto=f"t{i}", documento_id=1, nome="a.txt", similaridade=sim
+        id=i,
+        posicao=i,
+        pagina=1,
+        secao=None,
+        texto=f"t{i}",
+        documento_id=1,
+        nome="a.txt",
+        similaridade=sim,
     )
 
 

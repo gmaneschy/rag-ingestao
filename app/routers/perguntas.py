@@ -4,7 +4,7 @@ from functools import lru_cache
 from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from pydantic import BaseModel, Field, StringConstraints
+from pydantic import BaseModel, Field, StringConstraints, model_validator
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
@@ -34,6 +34,16 @@ class PerguntaIn(BaseModel):
     colecoes: list[Colecao] | None = Field(default=None, max_length=20)
     k: int | None = Field(default=None, ge=1, le=10)
     modo: Literal["hibrida", "vetorial", "textual"] = "hibrida"
+    # Restringem a busca: seção cujo nome contém o texto, e faixa de páginas (inclusiva).
+    secao: str | None = Field(default=None, min_length=1, max_length=120)
+    pagina_de: int | None = Field(default=None, ge=1)
+    pagina_ate: int | None = Field(default=None, ge=1)
+
+    @model_validator(mode="after")
+    def validar_faixa(self) -> "PerguntaIn":
+        if self.pagina_de and self.pagina_ate and self.pagina_de > self.pagina_ate:
+            raise ValueError("pagina_de não pode ser maior que pagina_ate")
+        return self
 
 
 class AvaliacaoIn(BaseModel):
@@ -60,6 +70,9 @@ def perguntar(
             k=corpo.k,
             colecoes=corpo.colecoes,
             modo=corpo.modo,
+            secao=corpo.secao,
+            pagina_de=corpo.pagina_de,
+            pagina_ate=corpo.pagina_ate,
         )
     except ReindexacaoNecessaria as erro:
         raise HTTPException(

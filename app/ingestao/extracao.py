@@ -1,4 +1,6 @@
-"""Extração de texto: PDF com texto, TXT e Markdown. OCR para PDF escaneado fica para depois."""
+"""Extração de texto: PDF com texto, TXT e Markdown, com as seções detectadas.
+
+OCR para PDF escaneado e EPUB ficam para a etapa 5."""
 
 import logging
 import re
@@ -7,6 +9,9 @@ from pathlib import Path
 
 from pypdf import PdfReader
 from pypdf.errors import PyPdfError
+
+from app.ingestao import secoes
+from app.ingestao.secoes import Titulo
 
 logger = logging.getLogger("app.ingestao")
 
@@ -21,6 +26,14 @@ class ErroDeExtracao(Exception):
 class Pagina:
     numero: int | None  # None nos formatos sem página (TXT, Markdown)
     texto: str
+    titulos: tuple[Titulo, ...] = ()  # seções que começam nesta página, em ordem
+
+
+@dataclass(frozen=True)
+class Extracao:
+    paginas: list[Pagina]
+    total_paginas: int | None
+    aviso: str | None  # algo que deu certo, mas que o usuário deve saber
 
 
 _ESPACOS = re.compile(r"[^\S\n]+")
@@ -85,7 +98,7 @@ def juntar_linhas(texto: str) -> str:
     return "\n\n".join(blocos)
 
 
-def _ler_pdf(caminho: Path, max_paginas: int) -> list[Pagina]:
+def _ler_pdf(caminho: Path, max_paginas: int) -> tuple[list[Pagina], int]:
     try:
         leitor = PdfReader(caminho)
         if leitor.is_encrypted:
@@ -93,18 +106,41 @@ def _ler_pdf(caminho: Path, max_paginas: int) -> list[Pagina]:
         total = len(leitor.pages)
         if total > max_paginas:
             raise ErroDeExtracao(f"PDF com {total} páginas; o limite é {max_paginas}")
-        paginas = []
+        textos: list[tuple[int, str]] = []
         for numero, pagina in enumerate(leitor.pages, start=1):
             texto = limpar(pagina.extract_text() or "")
-            texto = juntar_linhas(remover_numero_de_pagina(texto, numero))
+            texto = remover_numero_de_pagina(texto, numero)
             if texto:
-                paginas.append(Pagina(numero=numero, texto=texto))
+                textos.append((numero, texto))
+        indice = secoes.titulos_do_indice(leitor)
     except ErroDeExtracao:
         raise
     except (PyPdfError, ValueError, OSError, RecursionError, KeyError, TypeError) as erro:
         # PDFs malformados levantam de tudo; o motivo detalhado vai só para o log.
         logger.warning("falha ao ler PDF", extra={"erro": type(erro).__name__})
         raise ErroDeExtracao("PDF corrompido ou em formato não suportado") from erro
+    return _montar_paginas(textos, indice), total
+
+
+def _montar_paginas(textos: list[tuple[int, str]], indice: dict[int, list[Titulo]]) -> list[Pagina]:
+    """Junta as linhas de cada página e anota as seções que começam nela.
+
+    Usa o índice do PDF se ele tiver pelo menos duas entradas; senão procura títulos no texto.
+    """
+    usar_indice = sum(len(v) for v in indice.values()) >= 2
+    marcas_por_pagina = (
+        [[] for _ in textos] if usar_indice else secoes.detectar_no_texto([t for _, t in textos])
+    )
+    paginas = []
+    for (numero, texto), marcas in zip(textos, marcas_por_pagina, strict=True):
+        if marcas:
+            texto = limpar(secoes.isolar(texto, marcas))
+        texto = juntar_linhas(texto)
+        if not texto:
+            continue
+        paragrafos = secoes.paragrafos_da_pagina(texto)
+        titulos = indice.get(numero, []) if usar_indice else [t for _, t in marcas]
+        paginas.append(Pagina(numero, texto, secoes.indexar(titulos, paragrafos)))
     return paginas
 
 
@@ -115,14 +151,22 @@ def _ler_texto(caminho: Path) -> list[Pagina]:
     except UnicodeDecodeError:
         texto = bruto.decode("latin-1")
     texto = limpar(texto)
-    return [Pagina(numero=None, texto=texto)] if texto else []
+    if not texto:
+        return []
+    marcas = secoes.detectar_no_texto([texto])[0]
+    if marcas:
+        texto = limpar(secoes.isolar(texto, marcas))
+    titulos = secoes.indexar([t for _, t in marcas], secoes.paragrafos_da_pagina(texto))
+    return [Pagina(numero=None, texto=texto, titulos=titulos)]
 
 
-def extrair_paginas(caminho: Path, *, max_paginas: int = 500) -> list[Pagina]:
-    """Devolve as páginas com texto. Levanta ErroDeExtracao se não houver nada aproveitável."""
+def extrair(caminho: Path, *, max_paginas: int = 500) -> Extracao:
+    """Páginas com texto, mais um aviso se algo ficou de fora. Levanta ErroDeExtracao se não
+    houver nada aproveitável."""
     extensao = caminho.suffix.lower()
+    total: int | None = None
     if extensao == ".pdf":
-        paginas = _ler_pdf(caminho, max_paginas)
+        paginas, total = _ler_pdf(caminho, max_paginas)
     elif extensao in {".txt", ".md"}:
         paginas = _ler_texto(caminho)
     else:
@@ -131,4 +175,15 @@ def extrair_paginas(caminho: Path, *, max_paginas: int = 500) -> list[Pagina]:
         raise ErroDeExtracao(
             "Nenhum texto extraível (PDF escaneado? o OCR ainda não foi implementado)"
         )
-    return paginas
+    aviso = None
+    if total is not None and len(paginas) < total:
+        sem_texto = total - len(paginas)
+        aviso = (
+            f"{sem_texto} de {total} páginas sem texto extraível (escaneadas?); "
+            "o conteúdo delas não foi indexado"
+        )
+    return Extracao(paginas, total, aviso)
+
+
+def extrair_paginas(caminho: Path, *, max_paginas: int = 500) -> list[Pagina]:
+    return extrair(caminho, max_paginas=max_paginas).paginas

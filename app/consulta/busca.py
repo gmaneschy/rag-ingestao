@@ -5,7 +5,8 @@ exato (siglas, códigos, nomes próprios), onde a vetorial falha. A fusão usa s
 trecho em cada lista (Reciprocal Rank Fusion), então não precisa comparar notas de escalas
 diferentes.
 
-O filtro de coleção entra na própria consulta SQL, antes de qualquer trecho sair do banco.
+Os filtros (coleção, seção, faixa de páginas) entram na própria consulta SQL, antes de qualquer
+trecho sair do banco.
 """
 
 from dataclasses import dataclass
@@ -36,23 +37,49 @@ class Achado:
     rank_vetorial: int | None  # 1 = melhor
     rank_textual: int | None
     pontuacao: float
+    secao: str | None = None
 
 
 def vetor_como_texto(vetor: list[float]) -> str:
     return "[" + ",".join(f"{v:.8g}" for v in vetor) + "]"
 
 
-def _filtro(colecoes: list[str] | None) -> tuple[str, dict[str, object]]:
-    if not colecoes:
-        return "", {}
-    return " AND d.colecao = ANY(:colecoes)", {"colecoes": colecoes}
+@dataclass(frozen=True)
+class Filtros:
+    colecoes: list[str] | None = None
+    secao: str | None = None  # contém (sem diferenciar maiúsculas) no nome da seção
+    pagina_de: int | None = None
+    pagina_ate: int | None = None
 
 
-_CAMPOS = "t.id, t.posicao, t.pagina, t.texto, d.id AS documento_id, d.nome"
+def _escapar_like(texto: str) -> str:
+    return texto.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
 
 
-def _buscar_vetorial(session: Session, vetor: list[float], n: int, colecoes: list[str] | None):
-    filtro, parametros = _filtro(colecoes)
+def _filtro(filtros: Filtros | list[str] | None) -> tuple[str, dict[str, object]]:
+    if not isinstance(filtros, Filtros):
+        filtros = Filtros(colecoes=filtros)
+    sql, parametros = "", {}
+    if filtros.colecoes:
+        sql += " AND d.colecao = ANY(:colecoes)"
+        parametros["colecoes"] = filtros.colecoes
+    if filtros.secao:
+        sql += " AND t.secao ILIKE :secao"
+        parametros["secao"] = f"%{_escapar_like(filtros.secao)}%"
+    if filtros.pagina_de is not None:
+        sql += " AND t.pagina >= :pagina_de"
+        parametros["pagina_de"] = filtros.pagina_de
+    if filtros.pagina_ate is not None:
+        sql += " AND t.pagina <= :pagina_ate"
+        parametros["pagina_ate"] = filtros.pagina_ate
+    return sql, parametros
+
+
+_CAMPOS = "t.id, t.posicao, t.pagina, t.secao, t.texto, d.id AS documento_id, d.nome"
+
+
+def _buscar_vetorial(session: Session, vetor: list[float], n: int, filtros: Filtros):
+    filtro, parametros = _filtro(filtros)
     return session.execute(
         text(
             f"SELECT {_CAMPOS}, 1 - (t.vetor <=> CAST(:v AS vector)) AS similaridade "
@@ -63,13 +90,13 @@ def _buscar_vetorial(session: Session, vetor: list[float], n: int, colecoes: lis
     ).all()
 
 
-def _buscar_textual(session: Session, pergunta: str, n: int, colecoes: list[str] | None):
+def _buscar_textual(session: Session, pergunta: str, n: int, filtros: Filtros):
     """Qualquer palavra da pergunta serve (OU), e quem casa mais palavras sobe no ranking.
 
     O padrão do Postgres exige TODAS as palavras (E), o que zera o resultado em perguntas
     naturais. As palavras vazias ("o", "de", "qual") já saem na configuração 'portuguese'.
     """
-    filtro, parametros = _filtro(colecoes)
+    filtro, parametros = _filtro(filtros)
     return session.execute(
         text(
             "WITH q AS (SELECT to_tsquery('portuguese', "
@@ -107,6 +134,7 @@ def fundir(vetoriais: list, textuais: list, *, rrf_k: int, k: int) -> list[Achad
                 rank_vetorial=rv,
                 rank_textual=rt,
                 pontuacao=pontuacao,
+                secao=linha.secao,
             )
         )
     achados.sort(key=lambda a: (-a.pontuacao, -(a.similaridade or 0.0), a.trecho.id))
@@ -123,11 +151,13 @@ def buscar(
     candidatos: int = 20,
     rrf_k: int = 60,
     colecoes: list[str] | None = None,
+    secao: str | None = None,
+    pagina_de: int | None = None,
+    pagina_ate: int | None = None,
 ) -> list[Achado]:
-    vetoriais = _buscar_vetorial(session, vetor, candidatos, colecoes) if modo != "textual" else []
-    textuais = (
-        _buscar_textual(session, pergunta, candidatos, colecoes) if modo != "vetorial" else []
-    )
+    filtros = Filtros(colecoes, secao, pagina_de, pagina_ate)
+    vetoriais = _buscar_vetorial(session, vetor, candidatos, filtros) if modo != "textual" else []
+    textuais = _buscar_textual(session, pergunta, candidatos, filtros) if modo != "vetorial" else []
     return fundir(vetoriais, textuais, rrf_k=rrf_k, k=k)
 
 
@@ -156,3 +186,29 @@ def verificar_modelo(
     nomes = list(nomes)
     if nomes:
         raise ReindexacaoNecessaria(nomes)
+
+
+def explicar_filtros(session: Session, colecoes: list[str] | None, secao: str | None) -> str | None:
+    """Por que a busca não achou nada: coleção que não existe ou seção que não casa com nada."""
+    if colecoes:
+        existentes = set(
+            session.execute(
+                text("SELECT DISTINCT colecao FROM documento WHERE colecao = ANY(:c)"),
+                {"c": colecoes},
+            ).scalars()
+        )
+        faltam = [c for c in colecoes if c not in existentes]
+        if faltam:
+            return f"Coleção sem documentos: {', '.join(faltam)}."
+    if secao:
+        filtro, parametros = _filtro(Filtros(colecoes, secao))
+        casam = session.execute(
+            text(
+                "SELECT count(*) FROM trecho t JOIN documento d ON d.id = t.documento_id "
+                f"WHERE true{filtro}"
+            ),
+            parametros,
+        ).scalar_one()
+        if not casam:
+            return f"Nenhum trecho em seção que contenha '{secao}'."
+    return None

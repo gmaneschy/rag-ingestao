@@ -40,6 +40,7 @@ def _como_dict(numero: int, achado: Achado) -> dict[str, object]:
         "documento_id": achado.documento_id,
         "documento": achado.trecho.documento,
         "pagina": achado.trecho.pagina,
+        "secao": achado.secao,
         "texto": achado.trecho.texto,
     }
 
@@ -66,6 +67,9 @@ def perguntar(
     k: int | None = None,
     colecoes: list[str] | None = None,
     modo: Modo = "hibrida",
+    secao: str | None = None,
+    pagina_de: int | None = None,
+    pagina_ate: int | None = None,
 ) -> Resultado:
     inicio = time.perf_counter()
     if llm.limite_diario_gasto and gasto_de_hoje(session) >= llm.limite_diario_gasto:
@@ -82,6 +86,9 @@ def perguntar(
         candidatos=consulta.consulta_candidatos,
         rrf_k=consulta.consulta_rrf_k,
         colecoes=colecoes,
+        secao=secao,
+        pagina_de=pagina_de,
+        pagina_ate=pagina_ate,
     )
 
     if busca.tem_evidencia(achados, consulta.limiar_similaridade):
@@ -93,6 +100,8 @@ def perguntar(
     aviso = None
     if not resposta.recusou and not fontes:
         aviso = "A resposta não citou nenhum trecho; trate-a com cautela."
+    elif not achados:
+        aviso = busca.explicar_filtros(session, colecoes, secao)
     latencia = round((time.perf_counter() - inicio) * 1000)
 
     consulta_id = session.execute(

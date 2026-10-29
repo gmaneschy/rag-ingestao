@@ -110,7 +110,7 @@ def test_detalhe_com_amostra_espalhada(cliente) -> None:
     com = cliente.get(f"/documentos/{doc}?amostra=3", headers=CHAVE).json()
     posicoes = [t["posicao"] for t in com["amostra"]]
     assert posicoes == [0, 3, 6]  # espalhados do início ao fim, não só os primeiros
-    assert set(com["amostra"][0]) == {"posicao", "pagina", "texto"}
+    assert set(com["amostra"][0]) == {"posicao", "pagina", "secao", "texto"}
 
     muita = cliente.get(f"/documentos/{doc}?amostra=20", headers=CHAVE).json()
     assert [t["posicao"] for t in muita["amostra"]] == list(range(10))
