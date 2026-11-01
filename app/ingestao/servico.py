@@ -17,6 +17,7 @@ from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 
+from app.ingestao.classificacao import classificar
 from app.ingestao.config import IngestaoSettings
 from app.ingestao.divisao import dividir
 from app.ingestao.extracao import EXTENSOES_ACEITAS, ErroDeExtracao, extrair
@@ -210,7 +211,9 @@ def processar(
                 f"O modelo gera {embeddings.dimensao} dimensões; a coluna aceita {DIMENSAO_VETOR}"
             )
         extracao = extrair(Path(caminho), max_paginas=config.max_paginas)
-        trechos = dividir(extracao.paginas, config.tamanho_trecho, config.sobreposicao_trecho)
+        trechos = classificar(
+            dividir(extracao.paginas, config.tamanho_trecho, config.sobreposicao_trecho)
+        )
         vetores = embeddings.gerar_trechos([t.texto for t in trechos])
         if len(vetores) != len(trechos):
             raise ErroDeExtracao("O gerador de embeddings devolveu uma quantidade inesperada")
@@ -228,8 +231,8 @@ def processar(
             )
             session.execute(
                 text(
-                    "INSERT INTO trecho (documento_id, posicao, pagina, secao, texto, vetor, "
-                    "modelo_embedding, dimensao) VALUES (:d, :pos, :pag, :sec, :t, "
+                    "INSERT INTO trecho (documento_id, posicao, pagina, secao, tipo, texto, vetor, "
+                    "modelo_embedding, dimensao) VALUES (:d, :pos, :pag, :sec, :tipo, :t, "
                     "CAST(:v AS vector), :m, :dim)"
                 ),
                 [
@@ -238,6 +241,7 @@ def processar(
                         "pos": t.posicao,
                         "pag": t.pagina,
                         "sec": t.secao,
+                        "tipo": t.tipo,
                         "t": t.texto,
                         "v": _vetor_como_texto(v),
                         "m": embeddings.nome_modelo,

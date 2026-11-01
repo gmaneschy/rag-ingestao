@@ -1,9 +1,14 @@
 """Tipos trocados entre o RAG e os provedores de embeddings e de resposta."""
 
 from dataclasses import dataclass
+from typing import Literal
 
 # Dimensão da coluna trecho.vetor (migração 0002). Mudar exige nova migração e reindexação.
 DIMENSAO_VETOR = 384
+
+# "factual" responde só com o que os trechos dizem; "analise" também interpreta e opina, mas separa
+# o que está nos trechos (Evidências) do que é do modelo (Avaliação).
+TipoResposta = Literal["factual", "analise"]
 
 MENSAGEM_SEM_EVIDENCIA = "Não encontrei evidência nos documentos fornecidos para responder."
 
@@ -20,6 +25,7 @@ class TrechoRecuperado:
     documento: str
     pagina: int | None
     texto: str
+    secao: str | None = None
 
 
 @dataclass(frozen=True)
@@ -33,3 +39,7 @@ class Resposta:
     tokens_entrada: int = 0
     tokens_saida: int = 0
     custo: float = 0.0
+    # Só no tipo "analise": o texto dividido nas duas partes (avaliacao é None se o modelo
+    # não as separou).
+    evidencias: str | None = None
+    avaliacao: str | None = None

@@ -7,6 +7,9 @@ from auxiliares import ambiente, banco, pdf_com_texto, precisa_de_banco  # noqa:
 from fastapi.testclient import TestClient
 from sqlalchemy import text
 
+from app.consulta import servico
+from app.consulta.config import get_consulta_settings
+from app.llm.config import get_llm_settings
 from app.main import create_app
 from app.routers.documentos import obter_embeddings
 from app.routers.perguntas import obter_gerador
@@ -45,6 +48,20 @@ def _perguntar(cliente, pergunta="Qual é a garantia?", **extra):
     return r.json()
 
 
+def _interno(banco, pergunta="Qual é a garantia?", **filtros):
+    """Chama o serviço direto: `secao` e as páginas não são mais aceitas na API (a tela as usa)."""
+    with banco() as session:
+        return servico.perguntar(
+            session,
+            pergunta,
+            embeddings=obter_embeddings(),
+            gerador=obter_gerador(),
+            llm=get_llm_settings(),
+            consulta=get_consulta_settings(),
+            **filtros,
+        )
+
+
 def test_secoes_do_documento(cliente) -> None:
     doc = _enviar(cliente, "guia.md", GUIA)
     corpo = cliente.get(f"/documentos/{doc}/secoes", headers=CHAVE).json()
@@ -81,31 +98,32 @@ def test_aviso_de_pagina_sem_texto_aparece_no_detalhe_e_na_lista(cliente) -> Non
     assert cliente.get("/documentos", headers=CHAVE).json()["itens"][0]["aviso"] == detalhe["aviso"]
 
 
-def test_filtro_por_secao(cliente) -> None:
+def test_filtro_por_secao(cliente, banco) -> None:
     _enviar(cliente, "guia.md", GUIA)
-    todas = _perguntar(cliente, "O que o produto faz? Baixe, instale, garantia", k=10)
+    pergunta = "O que o produto faz? Baixe, instale, garantia"
+    todas = _perguntar(cliente, pergunta, k=10)
     assert {f["secao"] for f in todas["trechos_usados"]} >= {"Guia > Instalação", "Guia > Garantia"}
 
-    so_garantia = _perguntar(
-        cliente, "O que o produto faz? Baixe, instale, garantia", k=10, secao="garantia"
-    )
-    assert so_garantia["trechos_usados"]
-    assert {f["secao"] for f in so_garantia["trechos_usados"]} == {"Guia > Garantia"}
+    so_garantia = _interno(banco, pergunta, k=10, secao="garantia")
+    assert so_garantia.trechos_usados
+    assert {f["secao"] for f in so_garantia.trechos_usados} == {"Guia > Garantia"}
 
 
-def test_filtro_por_faixa_de_paginas(cliente) -> None:
+def test_filtro_por_faixa_de_paginas(cliente, banco) -> None:
     paginas = [f"Pagina {i} fala do prazo de entrega numero {i}." for i in range(1, 6)]
     _enviar(cliente, "livro.pdf", pdf_com_texto(paginas))
-    r = _perguntar(cliente, "prazo de entrega", k=10, pagina_de=2, pagina_ate=3)
-    assert sorted(f["pagina"] for f in r["trechos_usados"]) == [2, 3]
-    r = _perguntar(cliente, "prazo de entrega", k=10, pagina_de=4)
-    assert sorted(f["pagina"] for f in r["trechos_usados"]) == [4, 5]
+    r = _interno(banco, "prazo de entrega", k=10, pagina_de=2, pagina_ate=3)
+    assert sorted(f["pagina"] for f in r.trechos_usados) == [2, 3]
+    r = _interno(banco, "prazo de entrega", k=10, pagina_de=4)
+    assert sorted(f["pagina"] for f in r.trechos_usados) == [4, 5]
 
 
-def test_faixa_de_paginas_invertida_e_recusada(cliente) -> None:
+@pytest.mark.parametrize("campo", ["secao", "pagina_de", "pagina_ate"])
+def test_a_api_nao_aceita_mais_secao_nem_paginas(cliente, campo) -> None:
+    # Erro explícito, não filtro ignorado em silêncio: quem ainda manda o campo fica sabendo.
     r = cliente.post(
         "/perguntas",
-        json={"pergunta": "qualquer coisa", "pagina_de": 5, "pagina_ate": 2},
+        json={"pergunta": "qualquer coisa", campo: "x" if campo == "secao" else 3},
         headers=CHAVE,
     )
     assert r.status_code == 422
@@ -120,18 +138,17 @@ def test_aviso_quando_a_colecao_nao_existe(cliente) -> None:
     assert r["aviso"] == "Coleção sem documentos: nao-existe."
 
 
-def test_aviso_quando_a_secao_nao_existe(cliente) -> None:
+def test_aviso_quando_a_secao_nao_existe(cliente, banco) -> None:
     _enviar(cliente, "guia.md", GUIA)
-    r = _perguntar(cliente, secao="capítulo 99")
-    assert r["recusou"] is True
-    assert r["aviso"] == "Nenhum trecho em seção que contenha 'capítulo 99'."
+    r = _interno(banco, secao="capítulo 99")
+    assert r.resposta.recusou is True
+    assert r.aviso == "Nenhum trecho em seção que contenha 'capítulo 99'."
 
 
-def test_secao_com_curinga_do_like_e_tratada_como_texto(cliente) -> None:
+def test_secao_com_curinga_do_like_e_tratada_como_texto(cliente, banco) -> None:
     _enviar(cliente, "guia.md", GUIA)
     # "%" não pode casar com tudo: a seção digitada é literal.
-    r = _perguntar(cliente, secao="%")
-    assert r["trechos_usados"] == []
+    assert _interno(banco, secao="%").trechos_usados == []
 
 
 def test_reprocessar_atualiza_as_secoes(cliente, banco) -> None:

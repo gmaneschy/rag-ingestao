@@ -14,11 +14,19 @@ import unicodedata
 from dataclasses import dataclass
 from typing import Literal
 
-Origem = Literal["indice", "markdown", "palavra", "decimal", "caixa_alta"]
+Origem = Literal["indice", "markdown", "palavra", "decimal", "caixa_alta", "romano", "cabecalho"]
 
 TAMANHO_MAX_TITULO = 120
-# Um título idêntico em tantas páginas é cabeçalho ou rodapé corrido.
+# Um título idêntico em tantas páginas é cabeçalho ou rodapé corrido. Em CAIXA ALTA bastam duas:
+# carimbo de biblioteca, nome da editora; título de capítulo em caixa alta aparece uma vez só.
 PAGINAS_PARA_SER_CABECALHO = 3
+PAGINAS_PARA_SER_CARIMBO = 2
+# Uma página com mais "títulos" que isso é sumário, índice, lista de notas ou de ilustrações: as
+# linhas são entradas de lista, não começos de seção. (Só vale para documentos com páginas.)
+MAX_TITULOS_POR_PAGINA = 2
+# Números romanos soltos só são capítulos se o documento tiver vários (um "I" sozinho é só uma
+# letra que a quebra de linha deixou sozinha).
+MIN_ROMANOS = 3
 
 
 @dataclass(frozen=True)
@@ -55,6 +63,40 @@ _SOZINHAS = re.compile(
 )
 _MARKDOWN = re.compile(r"^(#{1,6})\s+(.+?)\s*#*\s*$")
 _DECIMAL = re.compile(r"^(\d{1,2}(?:\.\d{1,2}){0,3})[.)]?\s+[A-ZÀ-ÝÇ].{2,70}$")
+_ROMANO = re.compile(
+    r"^(?=[IVXLCDM])M{0,3}(?:CM|CD|D?C{0,3})(?:XC|XL|L?X{0,3})(?:IX|IV|V?I{0,3})\.?$"
+)
+# Linha de nota ou de referência bibliográfica, que não é título mesmo começando com "12.".
+_REFERENCIA = re.compile(
+    r"-$|[()\[\]\"“”]|\b(?:1[0-9]|20)\d\d\b|\bibid\b|\bop\.\s*cit|\bpp?\.\s*\d", re.IGNORECASE
+)
+# Início de nota de rodapé ("36. Charles Bernheimer, Figures of Ill Repute: ... in"): vírgula
+# numa linha longa, ou linha cortada em preposição/artigo, é citação quebrada, não título.
+_LINHA_CORTADA = re.compile(
+    r"\b(?:in|of|the|and|to|for|on|with|at|by|a|an|de|da|do|das|dos|em|e|para|com)$"
+)
+
+
+def _frase_numerada(linha: str) -> bool:
+    """ "26. Andrei Bely wrote in ... that heroes": nota em frase corrida, não título em Title Case.
+
+    Título longo usa só preposições e artigos em minúscula (curtos); verbo e substantivo comum em
+    minúscula, com 4 letras ou mais, denunciam uma frase.
+    """
+    palavras = linha.split()
+    if len(palavras) < 8 or not re.match(r"\d+\.\s", linha):
+        return False
+    return any(len(p) >= 4 and p[:1].islower() for p in palavras[1:])
+
+
+# Endereço ("3 Henrietta Street") e instituição ("BURLINGAME PUBLIC LIBRARY") não são título.
+_ENDERECO = re.compile(
+    r"\b(?:street|road|avenue|square|lane|drive|rua|avenida|pra[çc]a|rodovia)\s*\.?$", re.I
+)
+_INSTITUICAO = re.compile(
+    r"\b(?:library|university|press|publish\w*|editora|biblioteca|universidade|copyright|isbn)\b",
+    re.IGNORECASE,
+)
 _CAIXA_ALTA = re.compile(r"^[A-ZÀ-ÝÇ0-9][A-ZÀ-ÝÇ0-9 ,.:;'’\-–—&()/]{3,70}$")
 
 
@@ -80,7 +122,9 @@ def titulo_da_linha(linha: str) -> Titulo | None:
         return Titulo(_limitar(md.group(2)), len(md.group(1)), "markdown", linha)
 
     com_numero = _COM_NUMERO.match(linha)
-    if com_numero:
+    # Frase que a quebra de linha deixou começando em "chapter 7)." não é título: título abre
+    # com maiúscula.
+    if com_numero and linha[0].isupper():
         palavra = normalizar(com_numero.group("palavra"))
         return Titulo(_limitar(linha), _NIVEL_DA_PALAVRA[palavra], "palavra", linha)
     if _SOZINHAS.match(linha):
@@ -88,8 +132,18 @@ def titulo_da_linha(linha: str) -> Titulo | None:
 
     if linha.endswith((".", "!", "?", ",", ";")):
         return None  # título não termina em pontuação de frase
+    if _ROMANO.match(linha) and len(linha.rstrip(".")) <= 8:
+        return Titulo(_limitar(linha.rstrip(".")), 2, "romano", linha)
     decimal = _DECIMAL.match(linha)
-    if decimal and len(linha.split()) <= 10:
+    if (
+        decimal
+        and len(linha.split()) <= 10
+        and not _REFERENCIA.search(linha)
+        and not _ENDERECO.search(linha)
+        and not _LINHA_CORTADA.search(linha)
+        and not ("," in linha and len(linha.split()) >= 6)
+        and not _frase_numerada(linha)
+    ):
         return Titulo(_limitar(linha), decimal.group(1).count(".") + 1, "decimal", linha)
 
     letras = [c for c in linha if c.isalpha()]
@@ -98,6 +152,8 @@ def titulo_da_linha(linha: str) -> Titulo | None:
         and len(letras) >= 4
         and len(letras) / len(linha) >= 0.7
         and len(linha.split()) <= 10
+        and not _INSTITUICAO.search(linha)
+        and not _ENDERECO.search(linha)
     ):
         return Titulo(_limitar(linha), 1, "caixa_alta", linha)
     return None
@@ -114,6 +170,7 @@ def detectar_no_texto(paginas: list[str]) -> list[list[tuple[int, Titulo]]]:
         [(i, t) for i, linha in enumerate(texto.split("\n")) if (t := titulo_da_linha(linha))]
         for texto in paginas
     ]
+    achados = _sem_paginas_de_lista(achados, com_paginas=len(paginas) > 1)
     paginas_de: dict[str, set[int]] = {}
     for numero, da_pagina in enumerate(achados):
         for _, titulo in da_pagina:
@@ -125,7 +182,12 @@ def detectar_no_texto(paginas: list[str]) -> list[list[tuple[int, Titulo]]]:
         mantidos = []
         for i, titulo in da_pagina:
             chave = normalizar(titulo.texto)
-            corrido = len(paginas_de[chave]) >= PAGINAS_PARA_SER_CABECALHO
+            minimo = (
+                PAGINAS_PARA_SER_CARIMBO
+                if titulo.origem == "caixa_alta"
+                else (PAGINAS_PARA_SER_CABECALHO)
+            )
+            corrido = len(paginas_de[chave]) >= minimo
             if corrido and titulo.origem != "palavra":
                 continue
             if corrido and chave in vistos:
@@ -134,6 +196,21 @@ def detectar_no_texto(paginas: list[str]) -> list[list[tuple[int, Titulo]]]:
             mantidos.append((i, titulo))
         limpos.append(mantidos)
     return limpos
+
+
+def _sem_paginas_de_lista(
+    achados: list[list[tuple[int, Titulo]]], *, com_paginas: bool
+) -> list[list[tuple[int, Titulo]]]:
+    """Descarta os "títulos" de páginas que parecem lista (sumário, notas) e romanos isolados."""
+    resultado = []
+    for da_pagina in achados:
+        de_texto = [a for a in da_pagina if a[1].origem != "markdown"]
+        lista = com_paginas and len(de_texto) > MAX_TITULOS_POR_PAGINA
+        resultado.append([] if lista else da_pagina)
+    romanos = {a[1].texto for da_pagina in resultado for a in da_pagina if a[1].origem == "romano"}
+    if len(romanos) < MIN_ROMANOS:
+        resultado = [[a for a in da_pagina if a[1].origem != "romano"] for da_pagina in resultado]
+    return resultado
 
 
 def isolar(texto: str, marcas: list[tuple[int, Titulo]]) -> str:

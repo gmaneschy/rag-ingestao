@@ -5,10 +5,13 @@ exato (siglas, códigos, nomes próprios), onde a vetorial falha. A fusão usa s
 trecho em cada lista (Reciprocal Rank Fusion), então não precisa comparar notas de escalas
 diferentes.
 
-Os filtros (coleção, seção, faixa de páginas) entram na própria consulta SQL, antes de qualquer
-trecho sair do banco.
+Os filtros (coleção, documento, tipo do trecho, seção, faixa de páginas) entram na própria
+consulta SQL, antes de qualquer trecho sair do banco. Por padrão só o `corpo` é consultado:
+notas, bibliografia, copyright e legendas ficam de fora, a não ser que o pedido as inclua.
+Depois da fusão, trechos quase idênticos (a mesma orelha em três páginas) contam uma vez só.
 """
 
+import re
 from dataclasses import dataclass
 from typing import Literal
 
@@ -44,12 +47,19 @@ def vetor_como_texto(vetor: list[float]) -> str:
     return "[" + ",".join(f"{v:.8g}" for v in vetor) + "]"
 
 
+TIPOS_PADRAO: tuple[str, ...] = ("corpo",)
+LIMIAR_DUPLICADO = 0.8  # Jaccard das palavras a partir do qual dois trechos são "o mesmo"
+_PALAVRA = re.compile(r"[^\W_]+")
+
+
 @dataclass(frozen=True)
 class Filtros:
     colecoes: list[str] | None = None
     secao: str | None = None  # contém (sem diferenciar maiúsculas) no nome da seção
     pagina_de: int | None = None
     pagina_ate: int | None = None
+    documento_ids: list[int] | None = None
+    tipos: tuple[str, ...] | None = TIPOS_PADRAO  # None = todos os tipos
 
 
 def _escapar_like(texto: str) -> str:
@@ -58,11 +68,17 @@ def _escapar_like(texto: str) -> str:
 
 def _filtro(filtros: Filtros | list[str] | None) -> tuple[str, dict[str, object]]:
     if not isinstance(filtros, Filtros):
-        filtros = Filtros(colecoes=filtros)
+        filtros = Filtros(colecoes=filtros, tipos=None)
     sql, parametros = "", {}
     if filtros.colecoes:
         sql += " AND d.colecao = ANY(:colecoes)"
         parametros["colecoes"] = filtros.colecoes
+    if filtros.documento_ids:
+        sql += " AND d.id = ANY(:documento_ids)"
+        parametros["documento_ids"] = filtros.documento_ids
+    if filtros.tipos:
+        sql += " AND t.tipo = ANY(:tipos)"
+        parametros["tipos"] = list(filtros.tipos)
     if filtros.secao:
         sql += " AND t.secao ILIKE :secao"
         parametros["secao"] = f"%{_escapar_like(filtros.secao)}%"
@@ -126,7 +142,11 @@ def fundir(vetoriais: list, textuais: list, *, rrf_k: int, k: int) -> list[Achad
         achados.append(
             Achado(
                 trecho=TrechoRecuperado(
-                    id=linha.id, documento=linha.nome, pagina=linha.pagina, texto=linha.texto
+                    id=linha.id,
+                    documento=linha.nome,
+                    pagina=linha.pagina,
+                    texto=linha.texto,
+                    secao=linha.secao,
                 ),
                 documento_id=linha.documento_id,
                 posicao=linha.posicao,
@@ -139,6 +159,29 @@ def fundir(vetoriais: list, textuais: list, *, rrf_k: int, k: int) -> list[Achad
         )
     achados.sort(key=lambda a: (-a.pontuacao, -(a.similaridade or 0.0), a.trecho.id))
     return achados[:k]
+
+
+def _palavras(texto: str) -> frozenset[str]:
+    return frozenset(p.casefold() for p in _PALAVRA.findall(texto))
+
+
+def deduplicar(achados: list[Achado], limiar: float = LIMIAR_DUPLICADO) -> list[Achado]:
+    """Tira os trechos quase idênticos a um que já subiu no ranking (fica o de melhor posição).
+
+    Compara o conjunto de palavras, então variações de OCR ("inmost" por "in most") ainda casam.
+    """
+    mantidos: list[Achado] = []
+    conjuntos: list[frozenset[str]] = []
+    for achado in achados:
+        palavras = _palavras(achado.trecho.texto)
+        repetido = any(
+            palavras and outro and len(palavras & outro) / len(palavras | outro) >= limiar
+            for outro in conjuntos
+        )
+        if not repetido:
+            mantidos.append(achado)
+            conjuntos.append(palavras)
+    return mantidos
 
 
 def buscar(
@@ -154,11 +197,18 @@ def buscar(
     secao: str | None = None,
     pagina_de: int | None = None,
     pagina_ate: int | None = None,
+    documento_ids: list[int] | None = None,
+    tipos: tuple[str, ...] | None = TIPOS_PADRAO,
+    remover_duplicados: bool = True,
 ) -> list[Achado]:
-    filtros = Filtros(colecoes, secao, pagina_de, pagina_ate)
+    filtros = Filtros(colecoes, secao, pagina_de, pagina_ate, documento_ids, tipos)
     vetoriais = _buscar_vetorial(session, vetor, candidatos, filtros) if modo != "textual" else []
     textuais = _buscar_textual(session, pergunta, candidatos, filtros) if modo != "vetorial" else []
-    return fundir(vetoriais, textuais, rrf_k=rrf_k, k=k)
+    if not remover_duplicados:
+        return fundir(vetoriais, textuais, rrf_k=rrf_k, k=k)
+    # Funde todos os candidatos, tira as repetições e só então corta em k.
+    todos = fundir(vetoriais, textuais, rrf_k=rrf_k, k=len(vetoriais) + len(textuais))
+    return deduplicar(todos)[:k]
 
 
 def tem_evidencia(achados: list[Achado], limiar_similaridade: float) -> bool:
@@ -201,7 +251,7 @@ def explicar_filtros(session: Session, colecoes: list[str] | None, secao: str | 
         if faltam:
             return f"Coleção sem documentos: {', '.join(faltam)}."
     if secao:
-        filtro, parametros = _filtro(Filtros(colecoes, secao))
+        filtro, parametros = _filtro(Filtros(colecoes, secao, tipos=None))
         casam = session.execute(
             text(
                 "SELECT count(*) FROM trecho t JOIN documento d ON d.id = t.documento_id "

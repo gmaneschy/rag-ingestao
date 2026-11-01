@@ -13,7 +13,8 @@ from app.consulta.busca import Achado, Modo
 from app.consulta.config import ConsultaSettings
 from app.llm.config import LLMSettings
 from app.llm.protocolos import GeradorDeEmbeddings, GeradorDeResposta
-from app.llm.tipos import MENSAGEM_SEM_EVIDENCIA, Resposta
+from app.llm.tipos import MENSAGEM_SEM_EVIDENCIA, Resposta, TipoResposta
+from app.llm.verificacao import nomes_sem_suporte
 
 logger = logging.getLogger("app.consulta")
 
@@ -31,6 +32,8 @@ class Resultado:
     modelo_geracao: str
     latencia_ms: int
     aviso: str | None
+    tipo: TipoResposta = "factual"
+    analise: dict[str, object] | None = None
 
 
 def _como_dict(numero: int, achado: Achado) -> dict[str, object]:
@@ -43,6 +46,47 @@ def _como_dict(numero: int, achado: Achado) -> dict[str, object]:
         "secao": achado.secao,
         "texto": achado.trecho.texto,
     }
+
+
+AVISO_RESPOSTA_SEM_CITACAO = "A resposta não citou nenhum trecho; trate-a com cautela."
+AVISO_AVALIACAO = (
+    "A Avaliação é interpretação do modelo, não afirmação dos documentos: só as Evidências "
+    "são sustentadas pelos trechos citados."
+)
+AVISO_SEM_SEPARACAO = (
+    "O modelo não separou Evidências de Avaliação; trate todo o texto como interpretação."
+)
+AVISO_NOMES = (
+    "Nomes da resposta que não aparecem no trecho citado: {nomes}. Pode ser só tradução; "
+    "confira a fonte."
+)
+AVISO_SEM_CITACAO = "As Evidências não citaram nenhum trecho; trate a análise com cautela."
+
+
+def _descrever_analise(
+    resposta: Resposta, fontes: list[dict[str, object]], achados: list[Achado]
+) -> tuple[dict[str, object], str]:
+    """As duas partes da análise, a base em que ela se apoia e o aviso de transparência.
+
+    A base diz quanto do documento a análise viu: ela só enxerga os trechos recuperados, não o
+    documento inteiro.
+    """
+    separou = resposta.avaliacao is not None
+    paginas = sorted({a.trecho.pagina for a in achados if a.trecho.pagina is not None})
+    analise: dict[str, object] = {
+        "evidencias": resposta.evidencias,
+        "avaliacao": resposta.avaliacao,
+        "separou": separou,
+        "base_trechos": len(achados),
+        "base_paginas": paginas,
+    }
+    if not separou:
+        aviso = AVISO_SEM_SEPARACAO
+    elif not fontes:
+        aviso = f"{AVISO_SEM_CITACAO} {AVISO_AVALIACAO}"
+    else:
+        aviso = AVISO_AVALIACAO
+    return analise, aviso
 
 
 def gasto_de_hoje(session: Session) -> float:
@@ -70,6 +114,9 @@ def perguntar(
     secao: str | None = None,
     pagina_de: int | None = None,
     pagina_ate: int | None = None,
+    tipo: TipoResposta = "factual",
+    documento_ids: list[int] | None = None,
+    incluir_tipos: list[str] | None = None,
 ) -> Resultado:
     inicio = time.perf_counter()
     if llm.limite_diario_gasto and gasto_de_hoje(session) >= llm.limite_diario_gasto:
@@ -82,33 +129,58 @@ def perguntar(
         pergunta,
         vetor,
         modo=modo,
-        k=k or consulta.consulta_k,
+        k=k or (consulta.consulta_k_analise if tipo == "analise" else consulta.consulta_k),
         candidatos=consulta.consulta_candidatos,
         rrf_k=consulta.consulta_rrf_k,
         colecoes=colecoes,
         secao=secao,
         pagina_de=pagina_de,
         pagina_ate=pagina_ate,
+        documento_ids=documento_ids,
+        tipos=(*busca.TIPOS_PADRAO, *(incluir_tipos or [])),
     )
 
     if busca.tem_evidencia(achados, consulta.limiar_similaridade):
-        resposta = gerador.responder(pergunta, [a.trecho for a in achados])
+        trechos = [a.trecho for a in achados]
+        # O tipo só vai ao gerador quando é a análise: os geradores do tipo factual não mudam.
+        resposta = (
+            gerador.responder(pergunta, trechos, tipo=tipo)
+            if tipo == "analise"
+            else gerador.responder(pergunta, trechos)
+        )
     else:  # sem evidência: nem chama o modelo (mais barato e sem risco de alucinar)
         resposta = Resposta(texto=MENSAGEM_SEM_EVIDENCIA, recusou=True)
 
     fontes = [_como_dict(n, achados[n - 1]) for n in resposta.fontes if n <= len(achados)]
     aviso = None
     if not resposta.recusou and not fontes:
-        aviso = "A resposta não citou nenhum trecho; trate-a com cautela."
+        aviso = AVISO_RESPOSTA_SEM_CITACAO
     elif not achados:
         aviso = busca.explicar_filtros(session, colecoes, secao)
+
+    if not resposta.recusou and fontes:
+        # Na análise só as Evidências são afirmações dos documentos; a Avaliação é opinião.
+        verificavel = resposta.evidencias if tipo == "analise" and resposta.evidencias else None
+        nomes = nomes_sem_suporte(
+            verificavel if verificavel is not None else resposta.texto,
+            [a.trecho.texto for a in achados],
+        )
+        if nomes:
+            aviso = " ".join(a for a in (aviso, AVISO_NOMES.format(nomes=", ".join(nomes))) if a)
+
+    analise = None
+    if tipo == "analise" and not resposta.recusou:
+        analise, aviso_analise = _descrever_analise(resposta, fontes, achados)
+        if aviso == AVISO_RESPOSTA_SEM_CITACAO:
+            aviso = None  # a análise já traz o aviso próprio, mais específico
+        aviso = " ".join(a for a in (aviso_analise, aviso) if a) or None
     latencia = round((time.perf_counter() - inicio) * 1000)
 
     consulta_id = session.execute(
         text(
             "INSERT INTO consulta (pergunta, resposta, fontes, modelo_geracao, tokens_entrada, "
-            "tokens_saida, latencia_ms, custo) VALUES (:p, :r, CAST(:f AS jsonb), :m, :ti, :to, "
-            ":l, :c) RETURNING id"
+            "tokens_saida, latencia_ms, custo, tipo) VALUES (:p, :r, CAST(:f AS jsonb), :m, "
+            ":ti, :to, :l, :c, :tipo) RETURNING id"
         ),
         {
             "p": pergunta,
@@ -119,6 +191,7 @@ def perguntar(
             "to": resposta.tokens_saida,
             "l": latencia,
             "c": resposta.custo,
+            "tipo": tipo,
         },
     ).scalar_one()
     session.commit()
@@ -127,6 +200,7 @@ def perguntar(
         extra={
             "consulta_id": consulta_id,
             "modo": modo,
+            "tipo": tipo,
             "trechos": len(achados),
             "recusou": resposta.recusou,
             "fontes": len(fontes),
@@ -141,4 +215,6 @@ def perguntar(
         modelo_geracao=getattr(gerador, "nome_modelo", ""),
         latencia_ms=latencia,
         aviso=aviso,
+        tipo=tipo,
+        analise=analise,
     )

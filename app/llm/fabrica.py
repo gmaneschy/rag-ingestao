@@ -36,6 +36,9 @@ def criar_gerador_de_resposta(settings: LLMSettings | None = None) -> GeradorDeR
             base_url=settings.llm_base_url,
             modelo=settings.llm_model,
             max_tokens=min(settings.llm_max_tokens_saida, settings.max_tokens_por_pergunta),
+            max_tokens_analise=min(
+                settings.llm_max_tokens_analise, settings.max_tokens_por_pergunta
+            ),
             timeout_s=settings.llm_timeout_s,
             num_ctx_max=settings.llm_num_ctx_max,
         )

@@ -6,7 +6,7 @@ import re
 import unicodedata
 from collections.abc import Sequence
 
-from app.llm.tipos import MENSAGEM_SEM_EVIDENCIA, Resposta, TrechoRecuperado
+from app.llm.tipos import MENSAGEM_SEM_EVIDENCIA, Resposta, TipoResposta, TrechoRecuperado
 
 _PALAVRA = re.compile(r"\w+")
 
@@ -64,7 +64,13 @@ class GeradorDeRespostaSimulado:
 
     nome_modelo = "simulado-extrativo-v1"
 
-    def responder(self, pergunta: str, trechos: Sequence[TrechoRecuperado]) -> Resposta:
+    def responder(
+        self,
+        pergunta: str,
+        trechos: Sequence[TrechoRecuperado],
+        *,
+        tipo: TipoResposta = "factual",
+    ) -> Resposta:
         palavras_da_pergunta = set(_palavras(pergunta)) - _VAZIAS
         melhor_posicao, melhor_pontos = 0, 0
         for posicao, trecho in enumerate(trechos, start=1):
@@ -83,6 +89,21 @@ class GeradorDeRespostaSimulado:
 
         primeira_frase = re.split(r"(?<=[.!?])\s+", trechos[melhor_posicao - 1].texto.strip())[0]
         texto = f"{primeira_frase} [{melhor_posicao}]"
+        if tipo == "analise":
+            evidencias = texto
+            avaliacao = (
+                "Com base só nesse trecho, não dá para concluir além do que ele diz "
+                "(interpretação do gerador simulado)."
+            )
+            texto = f"Evidências:\n{evidencias}\n\nAvaliação:\n{avaliacao}"
+            return Resposta(
+                texto=texto,
+                fontes=(melhor_posicao,),
+                tokens_entrada=tokens_entrada,
+                tokens_saida=len(_palavras(texto)),
+                evidencias=evidencias,
+                avaliacao=avaliacao,
+            )
         return Resposta(
             texto=texto,
             fontes=(melhor_posicao,),

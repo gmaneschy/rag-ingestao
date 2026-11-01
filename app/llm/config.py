@@ -34,6 +34,7 @@ class LLMSettings(BaseSettings):
     llm_api_key: SecretStr | None = None
     llm_timeout_s: int = 300  # modelo local em CPU pode levar minutos
     llm_max_tokens_saida: int = 500
+    llm_max_tokens_analise: int = 900  # a análise é mais longa: Evidências e Avaliação
     llm_num_ctx_max: int = 8192  # teto da janela de contexto pedida ao Ollama
 
     # Tetos de custo: por pergunta (tokens) e por dia (dólares), aplicados nas etapas 3 e 5.

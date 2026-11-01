@@ -4,13 +4,14 @@ OCR para PDF escaneado e EPUB ficam para a etapa 5."""
 
 import logging
 import re
+import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
 
 from pypdf import PdfReader
 from pypdf.errors import PyPdfError
 
-from app.ingestao import secoes
+from app.ingestao import cabecalhos, secoes
 from app.ingestao.secoes import Titulo
 
 logger = logging.getLogger("app.ingestao")
@@ -38,6 +39,29 @@ class Extracao:
 
 _ESPACOS = re.compile(r"[^\S\n]+")
 _QUEBRAS = re.compile(r"\n{3,}")
+# Ligaduras tipográficas (ﬁ, ﬂ...) que o PDF entrega como um caractere só: "ﬁn de siècle" não
+# casa com "fin" na busca e o embedding as enxerga como outra coisa.
+_LIGADURAS = {
+    c: unicodedata.normalize("NFKC", c) for c in "\ufb00\ufb01\ufb02\ufb03\ufb04\ufb05\ufb06"
+}
+_HIFEN_SUAVE_NO_FIM = re.compile("\u00ad\n(?=[^\\W\\d_])")
+_HIFEN_SUAVE = re.compile("\u00ad[^\\S\n]*")
+_ZERO_LARGURA = re.compile("[\u200b\u200c\u200d\ufeff]")
+# Defeitos comuns de PDF com camada de OCR: "Russia’ s", "century , these", "law ."
+_APOSTROFO_SOLTO = re.compile(r"(?<=\w)([’'])[^\S\n]+(?=s\b)")
+_ESPACO_ANTES_DE_VIRGULA = re.compile(r"(?<=[^\W\d_])[^\S\n]+(?=[,;:](?:\s|$))")
+_ESPACO_ANTES_DE_PONTO = re.compile(r"(?<=[^\W\d_])[^\S\n]+\.(?=\s+[^\s.]|\s*$)")
+
+
+def normalizar_texto(texto: str) -> str:
+    """Conserta o que a extração de PDF costuma estragar, sem mudar o sentido do texto."""
+    texto = texto.translate(str.maketrans(_LIGADURAS))
+    texto = _ZERO_LARGURA.sub("", texto)
+    texto = _HIFEN_SUAVE_NO_FIM.sub("", texto)
+    texto = _HIFEN_SUAVE.sub("", texto)
+    texto = _APOSTROFO_SOLTO.sub(r"\1", texto)
+    texto = _ESPACO_ANTES_DE_VIRGULA.sub("", texto)
+    return _ESPACO_ANTES_DE_PONTO.sub(".", texto)
 
 
 def limpar(texto: str) -> str:
@@ -46,7 +70,7 @@ def limpar(texto: str) -> str:
     Remove o caractere NUL (o Postgres recusa em colunas de texto), junta espaços repetidos e
     deixa no máximo uma linha em branco: parágrafos continuam separados, ruído não.
     """
-    texto = texto.replace("\x00", "").replace("\r\n", "\n").replace("\r", "\n")
+    texto = normalizar_texto(texto.replace("\x00", "").replace("\r\n", "\n").replace("\r", "\n"))
     linhas = [_ESPACOS.sub(" ", linha).strip() for linha in texto.split("\n")]
     return _QUEBRAS.sub("\n\n", "\n".join(linhas)).strip()
 
@@ -113,16 +137,24 @@ def _ler_pdf(caminho: Path, max_paginas: int) -> tuple[list[Pagina], int]:
             if texto:
                 textos.append((numero, texto))
         indice = secoes.titulos_do_indice(leitor)
+        corrido = cabecalhos.remover_corridos(textos)
+        textos = corrido.textos
+        if corrido.removidas:
+            logger.info("cabeçalhos e rodapés removidos", extra={"linhas": corrido.removidas})
     except ErroDeExtracao:
         raise
     except (PyPdfError, ValueError, OSError, RecursionError, KeyError, TypeError) as erro:
         # PDFs malformados levantam de tudo; o motivo detalhado vai só para o log.
         logger.warning("falha ao ler PDF", extra={"erro": type(erro).__name__})
         raise ErroDeExtracao("PDF corrompido ou em formato não suportado") from erro
-    return _montar_paginas(textos, indice), total
+    return _montar_paginas(textos, indice, corrido.titulos), total
 
 
-def _montar_paginas(textos: list[tuple[int, str]], indice: dict[int, list[Titulo]]) -> list[Pagina]:
+def _montar_paginas(
+    textos: list[tuple[int, str]],
+    indice: dict[int, list[Titulo]],
+    de_cabecalho: dict[int, Titulo] | None = None,
+) -> list[Pagina]:
     """Junta as linhas de cada página e anota as seções que começam nela.
 
     Usa o índice do PDF se ele tiver pelo menos duas entradas; senão procura títulos no texto.
@@ -139,7 +171,11 @@ def _montar_paginas(textos: list[tuple[int, str]], indice: dict[int, list[Titulo
         if not texto:
             continue
         paragrafos = secoes.paragrafos_da_pagina(texto)
-        titulos = indice.get(numero, []) if usar_indice else [t for _, t in marcas]
+        if usar_indice:
+            titulos = indice.get(numero, [])
+        else:
+            cabecalho = [de_cabecalho[numero]] if de_cabecalho and numero in de_cabecalho else []
+            titulos = cabecalho + [t for _, t in marcas]
         paginas.append(Pagina(numero, texto, secoes.indexar(titulos, paragrafos)))
     return paginas
 

@@ -4,7 +4,7 @@ from functools import lru_cache
 from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from pydantic import BaseModel, Field, StringConstraints, model_validator
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
@@ -22,6 +22,7 @@ from app.security import exigir_chave
 router = APIRouter(prefix="/perguntas", tags=["perguntas"], dependencies=[Depends(exigir_chave)])
 
 Colecao = Annotated[str, StringConstraints(pattern=r"^[\w.-]+$", max_length=64)]
+TipoDeTrecho = Literal["notas", "bibliografia", "indice", "copyright", "fragmento"]
 
 
 @lru_cache
@@ -30,20 +31,20 @@ def obter_gerador() -> GeradorDeResposta:
 
 
 class PerguntaIn(BaseModel):
+    # Campo desconhecido é erro (422), não é ignorado em silêncio: `secao` e `pagina_*` saíram.
+    model_config = ConfigDict(extra="forbid")
+
     pergunta: str = Field(min_length=3, max_length=2000)
     colecoes: list[Colecao] | None = Field(default=None, max_length=20)
+    # Só consulta estes documentos (os ids vêm de GET /documentos). Vazio = todos.
+    documento_ids: list[int] | None = Field(default=None, max_length=50)
     k: int | None = Field(default=None, ge=1, le=10)
     modo: Literal["hibrida", "vetorial", "textual"] = "hibrida"
-    # Restringem a busca: seção cujo nome contém o texto, e faixa de páginas (inclusiva).
-    secao: str | None = Field(default=None, min_length=1, max_length=120)
-    pagina_de: int | None = Field(default=None, ge=1)
-    pagina_ate: int | None = Field(default=None, ge=1)
-
-    @model_validator(mode="after")
-    def validar_faixa(self) -> "PerguntaIn":
-        if self.pagina_de and self.pagina_ate and self.pagina_de > self.pagina_ate:
-            raise ValueError("pagina_de não pode ser maior que pagina_ate")
-        return self
+    # "analise" também interpreta e opina, separando Evidências (citadas) de Avaliação.
+    tipo: Literal["factual", "analise"] = "factual"
+    # A busca usa só o corpo do texto. Para perguntar sobre notas, bibliografia, índice ou a
+    # página de copyright ("qual o ISBN?"), inclua o tipo aqui.
+    incluir_tipos: list[TipoDeTrecho] | None = Field(default=None, max_length=5)
 
 
 class AvaliacaoIn(BaseModel):
@@ -70,9 +71,9 @@ def perguntar(
             k=corpo.k,
             colecoes=corpo.colecoes,
             modo=corpo.modo,
-            secao=corpo.secao,
-            pagina_de=corpo.pagina_de,
-            pagina_ate=corpo.pagina_ate,
+            tipo=corpo.tipo,
+            documento_ids=corpo.documento_ids,
+            incluir_tipos=corpo.incluir_tipos,
         )
     except ReindexacaoNecessaria as erro:
         raise HTTPException(
@@ -91,6 +92,8 @@ def perguntar(
         "resposta": resultado.resposta.texto,
         "recusou": resultado.resposta.recusou,
         "aviso": resultado.aviso,
+        "tipo": resultado.tipo,
+        "analise": resultado.analise,
         "fontes": resultado.fontes,
         "trechos_usados": resultado.trechos_usados,
         "modelo": resultado.modelo_geracao,

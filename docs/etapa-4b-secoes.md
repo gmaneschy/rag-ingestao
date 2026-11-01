@@ -41,7 +41,7 @@ linhas não são reconhecidos.
 | --- | --- |
 | `GET /documentos/{id}/secoes` | `{id, secoes: [{secao, trechos, pagina_inicial, pagina_final}], trechos_sem_secao}`, na ordem do documento |
 | `GET /documentos/{id}` | ganha `secoes` (quantas), `aviso` e, na amostra, `secao` |
-| `POST /perguntas` | ganha `secao` (o nome da seção **contém** o texto, sem diferenciar maiúsculas), `pagina_de` e `pagina_ate` (inclusivos). `fontes` e `trechos_usados` trazem `secao` |
+| `POST /perguntas` | (REMOVIDO na 4d: `secao` e as páginas não são mais aceitos pela API; ver `etapa-4d-limpeza.md`) ganhava `secao` (o nome da seção **contém** o texto, sem diferenciar maiúsculas), `pagina_de` e `pagina_ate` (inclusivos). `fontes` e `trechos_usados` trazem `secao` |
 
 ## Avisos
 

@@ -5,8 +5,14 @@ from collections.abc import Sequence
 
 import httpx
 
-from app.llm.prompt import e_recusa, extrair_citacoes, limpar_saida, montar_mensagens
-from app.llm.tipos import ModeloIndisponivel, Resposta, TrechoRecuperado
+from app.llm.prompt import (
+    e_recusa,
+    extrair_citacoes,
+    limpar_saida,
+    montar_mensagens,
+    separar_analise,
+)
+from app.llm.tipos import ModeloIndisponivel, Resposta, TipoResposta, TrechoRecuperado
 
 # Estimativa pessimista para português: ~3 caracteres por token.
 CARACTERES_POR_TOKEN = 3
@@ -28,6 +34,7 @@ class GeradorDeRespostaOllama:
         modelo: str,
         *,
         max_tokens: int = 500,
+        max_tokens_analise: int = 900,
         timeout_s: int = 300,
         num_ctx_max: int = 8192,
         cliente: httpx.Client | None = None,
@@ -36,27 +43,35 @@ class GeradorDeRespostaOllama:
         self.modelo = modelo
         self.nome_modelo = f"ollama/{modelo}"
         self.max_tokens = max_tokens
+        self.max_tokens_analise = max_tokens_analise
         self.num_ctx_max = num_ctx_max
         self._cliente = cliente or httpx.Client(timeout=httpx.Timeout(timeout_s, connect=5))
         self._timeout_s = timeout_s
 
-    def _num_ctx(self, mensagens: list[dict[str, str]]) -> int:
+    def _num_ctx(self, mensagens: list[dict[str, str]], max_tokens: int) -> int:
         """Janela de contexto pedida. O Ollama usa um padrão pequeno e CORTA o prompt em silêncio
         se ele não couber, então a janela é dimensionada pelo tamanho real do prompt."""
         caracteres = sum(len(m["content"]) for m in mensagens)
-        necessario = math.ceil(caracteres / CARACTERES_POR_TOKEN) + self.max_tokens + 256
+        necessario = math.ceil(caracteres / CARACTERES_POR_TOKEN) + max_tokens + 256
         return min(max(4096, math.ceil(necessario / 1024) * 1024), self.num_ctx_max)
 
-    def responder(self, pergunta: str, trechos: Sequence[TrechoRecuperado]) -> Resposta:
-        mensagens = montar_mensagens(pergunta, trechos)
+    def responder(
+        self,
+        pergunta: str,
+        trechos: Sequence[TrechoRecuperado],
+        *,
+        tipo: TipoResposta = "factual",
+    ) -> Resposta:
+        mensagens = montar_mensagens(pergunta, trechos, tipo)
+        max_tokens = self.max_tokens_analise if tipo == "analise" else self.max_tokens
         corpo = {
             "model": self.modelo,
             "messages": mensagens,
             "stream": False,
             "options": {
                 "temperature": 0,
-                "num_ctx": self._num_ctx(mensagens),
-                "num_predict": self.max_tokens,
+                "num_ctx": self._num_ctx(mensagens, max_tokens),
+                "num_predict": max_tokens,
             },
         }
         try:
@@ -88,10 +103,15 @@ class GeradorDeRespostaOllama:
         if not texto:
             raise ModeloIndisponivel("O Ollama devolveu uma resposta vazia")
         recusou = e_recusa(texto)
+        evidencias, avaliacao = (
+            separar_analise(texto) if tipo == "analise" and not recusou else (None, None)
+        )
         return Resposta(
             texto=texto,
             fontes=() if recusou else extrair_citacoes(texto, len(trechos)),
             recusou=recusou,
+            evidencias=evidencias,
+            avaliacao=avaliacao,
             tokens_entrada=int(dados.get("prompt_eval_count", 0)),
             tokens_saida=int(dados.get("eval_count", 0)),
             custo=0.0,

@@ -3,7 +3,7 @@
 from collections.abc import Sequence
 from typing import Protocol, runtime_checkable
 
-from app.llm.tipos import Resposta, TrechoRecuperado
+from app.llm.tipos import Resposta, TipoResposta, TrechoRecuperado
 
 
 @runtime_checkable
@@ -31,4 +31,10 @@ class GeradorDeResposta(Protocol):
 
     nome_modelo: str
 
-    def responder(self, pergunta: str, trechos: Sequence[TrechoRecuperado]) -> Resposta: ...
+    def responder(
+        self,
+        pergunta: str,
+        trechos: Sequence[TrechoRecuperado],
+        *,
+        tipo: TipoResposta = "factual",
+    ) -> Resposta: ...

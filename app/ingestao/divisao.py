@@ -20,6 +20,7 @@ class TrechoNovo:
     pagina: int | None
     texto: str
     secao: str | None = None  # ex.: "Parte I > Capítulo 2"
+    tipo: str = "corpo"  # corpo, notas, bibliografia, indice, copyright, fragmento
 
 
 def _quebrar_longo(paragrafo: str, tamanho: int) -> list[str]:

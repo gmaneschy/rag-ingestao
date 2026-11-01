@@ -127,7 +127,7 @@ def listar_documentos(
 def ver_documento(
     documento_id: int,
     session: Annotated[Session, Depends(get_session)],
-    amostra: Annotated[int, Query(ge=0, le=20, description="Trechos de amostra")] = 0,
+    amostra: Annotated[int, Query(ge=0, le=100, description="Trechos de amostra")] = 0,
 ) -> dict[str, object]:
     """Estado do documento; com `amostra=N`, N trechos espalhados do início ao fim."""
     linha = (
@@ -148,6 +148,15 @@ def ver_documento(
     if linha is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Documento não encontrado")
     detalhe: dict[str, object] = dict(linha)
+    detalhe["tipos"] = dict(
+        session.execute(
+            text(
+                "SELECT tipo, count(*) FROM trecho WHERE documento_id = :id "
+                "GROUP BY tipo ORDER BY count(*) DESC"
+            ),
+            {"id": documento_id},
+        ).all()
+    )
     if amostra:
         total = int(linha["trechos"])
         n = min(amostra, total)
@@ -156,8 +165,8 @@ def ver_documento(
             dict(t)
             for t in session.execute(
                 text(
-                    "SELECT posicao, pagina, secao, texto FROM ("
-                    "SELECT posicao, pagina, secao, texto, "
+                    "SELECT posicao, pagina, secao, tipo, texto FROM ("
+                    "SELECT posicao, pagina, secao, tipo, texto, "
                     "row_number() OVER (ORDER BY posicao) - 1 AS ordem "
                     "FROM trecho WHERE documento_id = :id) x "
                     "WHERE ordem = ANY(:indices) ORDER BY posicao"
