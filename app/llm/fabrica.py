@@ -41,6 +41,7 @@ def criar_gerador_de_resposta(settings: LLMSettings | None = None) -> GeradorDeR
             ),
             timeout_s=settings.llm_timeout_s,
             num_ctx_max=settings.llm_num_ctx_max,
+            pensar=settings.llm_think,
         )
     raise ProvedorNaoImplementado(
         f"LLM_PROVIDER={settings.llm_provider!r} ainda não existe (api: mais tarde)"

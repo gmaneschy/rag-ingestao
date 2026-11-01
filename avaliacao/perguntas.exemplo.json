@@ -1,0 +1,32 @@
+{
+  "casos": [
+    {
+      "id": "irma-de-ligia",
+      "pergunta": "Qual é o nome da irmã de Lígia?",
+      "colecoes": ["literatura"],
+      "responde": true,
+      "resposta_esperada": "Luiza",
+      "suporte": [{"documento": "NOME-DO-ARQUIVO", "paginas": [1, 1000], "contem": ["Luiza"]}],
+      "observacao": "Troque documento/paginas/contem pelo que 'inspecionar' mostrar."
+    },
+    {
+      "id": "akhmatova-circulo",
+      "pergunta": "Anna Akhmatova fez parte de algum círculo literário?",
+      "colecoes": ["literatura"],
+      "responde": true,
+      "resposta_esperada": "Sim: ... (preencha com o que o livro diz)",
+      "suporte": [{"documento": "NOME-DO-ARQUIVO", "contem": ["Akhmatova"]}]
+    },
+    {
+      "id": "fora-do-corpus-1",
+      "pergunta": "Qual é a capital da Austrália?",
+      "responde": false,
+      "observacao": "Nada no corpus trata disso: o certo é recusar."
+    },
+    {
+      "id": "fora-do-corpus-2",
+      "pergunta": "Quais foram as vendas da Petrobras em 2023?",
+      "responde": false
+    }
+  ]
+}

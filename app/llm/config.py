@@ -36,6 +36,10 @@ class LLMSettings(BaseSettings):
     llm_max_tokens_saida: int = 500
     llm_max_tokens_analise: int = 900  # a análise é mais longa: Evidências e Avaliação
     llm_num_ctx_max: int = 8192  # teto da janela de contexto pedida ao Ollama
+    # Modelos que "pensam" (qwen3, qwen3.5...) gastam o limite de tokens raciocinando e devolvem
+    # resposta vazia. LLM_THINK=false desliga o raciocínio; sem a variável, nada é enviado (modelos
+    # sem essa capacidade, como o qwen2.5, recusam o parâmetro).
+    llm_think: bool | None = None
 
     # Tetos de custo: por pergunta (tokens) e por dia (dólares), aplicados nas etapas 3 e 5.
     max_tokens_por_pergunta: int = 2000

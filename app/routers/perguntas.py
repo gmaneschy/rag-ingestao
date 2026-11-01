@@ -11,7 +11,9 @@ from sqlalchemy.orm import Session
 from app.consulta import servico
 from app.consulta.busca import ReindexacaoNecessaria
 from app.consulta.config import ConsultaSettings, get_consulta_settings
+from app.consulta.reranker import Reordenador, criar_reordenador
 from app.db import get_session
+from app.ingestao.config import get_ingestao_settings
 from app.llm.config import LLMSettings, get_llm_settings
 from app.llm.fabrica import criar_gerador_de_resposta
 from app.llm.protocolos import GeradorDeEmbeddings, GeradorDeResposta
@@ -23,6 +25,13 @@ router = APIRouter(prefix="/perguntas", tags=["perguntas"], dependencies=[Depend
 
 Colecao = Annotated[str, StringConstraints(pattern=r"^[\w.-]+$", max_length=64)]
 TipoDeTrecho = Literal["notas", "bibliografia", "indice", "copyright", "fragmento"]
+
+
+@lru_cache
+def obter_reordenador() -> Reordenador | None:
+    return criar_reordenador(
+        get_consulta_settings().reranker_model, get_ingestao_settings().modelos_dir
+    )
 
 
 @lru_cache
@@ -59,6 +68,7 @@ def perguntar(
     gerador: Annotated[GeradorDeResposta, Depends(obter_gerador)],
     llm: Annotated[LLMSettings, Depends(get_llm_settings)],
     consulta: Annotated[ConsultaSettings, Depends(get_consulta_settings)],
+    reordenador: Annotated[Reordenador | None, Depends(obter_reordenador)],
 ) -> dict[str, object]:
     try:
         resultado = servico.perguntar(
@@ -74,6 +84,7 @@ def perguntar(
             tipo=corpo.tipo,
             documento_ids=corpo.documento_ids,
             incluir_tipos=corpo.incluir_tipos,
+            reordenador=reordenador,
         )
     except ReindexacaoNecessaria as erro:
         raise HTTPException(

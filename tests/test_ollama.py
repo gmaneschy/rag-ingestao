@@ -115,3 +115,22 @@ def test_erro_do_ollama_inclui_o_motivo_devolvido() -> None:
     gerador, _ = _gerador(httpx.Response(400, json={"error": "modelo não suporta isto"}))
     with pytest.raises(ModeloIndisponivel, match="400.*modelo não suporta isto"):
         gerador.responder("p?", TRECHOS)
+
+
+def test_think_so_e_enviado_quando_configurado() -> None:
+    gerador, pedidos = _gerador(_ok("Resposta [1]."))
+    gerador.responder("Pergunta?", TRECHOS)
+    assert "think" not in json.loads(pedidos[0].content)
+
+    gerador, pedidos = _gerador(_ok("Resposta [1]."), pensar=False)
+    gerador.responder("Pergunta?", TRECHOS)
+    assert json.loads(pedidos[0].content)["think"] is False
+
+
+def test_resposta_vazia_depois_de_pensar_orienta_o_llm_think() -> None:
+    vazia = httpx.Response(
+        200, json={"message": {"role": "assistant", "content": "", "thinking": "hmm..."}}
+    )
+    gerador, _ = _gerador(vazia)
+    with pytest.raises(ModeloIndisponivel, match="LLM_THINK=false"):
+        gerador.responder("Pergunta?", TRECHOS)

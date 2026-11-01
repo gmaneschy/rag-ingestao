@@ -41,6 +41,7 @@ class Achado:
     rank_textual: int | None
     pontuacao: float
     secao: str | None = None
+    nota_reranker: float | None = None  # só se um reordenador passou por aqui
 
 
 def vetor_como_texto(vetor: list[float]) -> str:
@@ -106,23 +107,52 @@ def _buscar_vetorial(session: Session, vetor: list[float], n: int, filtros: Filt
     ).all()
 
 
+# Palavra que está em mais que esta fração dos trechos não distingue nada ("was", "what", "on"
+# em perguntas em inglês, que a configuração 'portuguese' não trata como palavras vazias).
+FRACAO_MAX_DO_TERMO = 0.25
+# Em corpus minúsculo toda palavra é "comum" (1 de 3 trechos já passa de 25%): o filtro só vale
+# a partir daqui.
+MIN_TRECHOS_PARA_FILTRAR = 20
+
+
+def _termos_raros(session: Session, pergunta: str) -> list[str]:
+    """Radicais da pergunta que aparecem em até FRACAO_MAX_DO_TERMO dos trechos do corpus."""
+    return list(
+        session.execute(
+            text(
+                "WITH termos AS (SELECT unnest(tsvector_to_array(to_tsvector('portuguese', :p))) "
+                "AS lexema), total AS (SELECT count(*) AS n FROM trecho) "
+                "SELECT lexema FROM termos, total WHERE "
+                "(SELECT count(*) FROM trecho t WHERE to_tsvector('portuguese', t.texto) "
+                "@@ quote_literal(lexema)::tsquery) <= :fracao * total.n OR total.n < :minimo"
+            ),
+            {"p": pergunta, "fracao": FRACAO_MAX_DO_TERMO, "minimo": MIN_TRECHOS_PARA_FILTRAR},
+        ).scalars()
+    )
+
+
 def _buscar_textual(session: Session, pergunta: str, n: int, filtros: Filtros):
-    """Qualquer palavra da pergunta serve (OU), e quem casa mais palavras sobe no ranking.
+    """Qualquer palavra rara da pergunta serve (OU), e quem casa mais palavras sobe no ranking.
 
     O padrão do Postgres exige TODAS as palavras (E), o que zera o resultado em perguntas
-    naturais. As palavras vazias ("o", "de", "qual") já saem na configuração 'portuguese'.
+    naturais. As palavras vazias do português ("o", "de", "qual") já saem na configuração
+    'portuguese'; as comuns demais no corpus (inclusive as de outro idioma) saem em
+    `_termos_raros`, senão uma pergunta em inglês casaria com quase todos os trechos.
     """
+    termos = _termos_raros(session, pergunta)
+    if not termos:
+        return []
     filtro, parametros = _filtro(filtros)
     return session.execute(
         text(
-            "WITH q AS (SELECT to_tsquery('portuguese', "
-            "replace(plainto_tsquery('portuguese', :p)::text, '&', '|')) AS consulta) "
+            "WITH q AS (SELECT (SELECT string_agg(quote_literal(x), ' | ') "
+            "FROM unnest(CAST(:termos AS text[])) AS x)::tsquery AS consulta) "
             f"SELECT {_CAMPOS}, ts_rank_cd(to_tsvector('portuguese', t.texto), q.consulta) AS nota "
             "FROM trecho t JOIN documento d ON d.id = t.documento_id, q "
             f"WHERE to_tsvector('portuguese', t.texto) @@ q.consulta{filtro} "
             "ORDER BY nota DESC, t.id LIMIT :n"
         ),
-        {"p": pergunta, "n": n, **parametros},
+        {"termos": termos, "n": n, **parametros},
     ).all()
 
 

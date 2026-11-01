@@ -16,6 +16,15 @@ class ConsultaSettings(BaseSettings):
     # Similaridade de cosseno mínima do melhor trecho para haver "evidência" quando nenhuma palavra
     # da pergunta aparece nos trechos. AINDA NÃO CALIBRADO com o modelo real: a etapa 5 mede.
     limiar_similaridade: float = 0.25
+    # Reordenação dos candidatos por cross-encoder (vazio = desligada). Modelos do fastembed, ex.:
+    # jinaai/jina-reranker-v2-base-multilingual, BAAI/bge-reranker-v2-m3-int8. Mais lento: só
+    # reordena os `reranker_candidatos` melhores da busca e entrega os k primeiros ao modelo.
+    reranker_model: str = ""
+    reranker_candidatos: int = 20
+    # Com reordenador, nota mínima do 1º trecho para haver evidência (abaixo disso, recusa sem
+    # chamar o LLM). Vazio = continua valendo o critério da similaridade/palavras. A escala
+    # depende do modelo; meça com `python -m app.avaliacao rodar --reranker ... --nota-minima X`.
+    reranker_nota_minima: float | None = None
 
     @model_validator(mode="after")
     def validar(self) -> "ConsultaSettings":
@@ -24,6 +33,8 @@ class ConsultaSettings(BaseSettings):
         maior_k = max(self.consulta_k, self.consulta_k_analise)
         if self.consulta_candidatos < maior_k or self.consulta_rrf_k < 1:
             raise ValueError("CONSULTA_CANDIDATOS deve ser >= ao maior k e CONSULTA_RRF_K >= 1")
+        if not maior_k <= self.reranker_candidatos <= 50:
+            raise ValueError("RERANKER_CANDIDATOS deve ir do maior k até 50")
         if not 0 <= self.limiar_similaridade <= 1:
             raise ValueError("LIMIAR_SIMILARIDADE deve estar entre 0 e 1")
         return self

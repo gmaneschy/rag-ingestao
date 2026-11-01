@@ -1,0 +1,2003 @@
+{
+  "hibrida": {
+    "resumo": {
+      "rotulo": "sem-reranker",
+      "modo": "hibrida",
+      "perguntas_com_resposta": 23,
+      "perguntas_sem_resposta": 9,
+      "latencia_busca_media_ms": 209.909375,
+      "recall@1": 0.43478260869565216,
+      "recall@3": 0.6086956521739131,
+      "recall@5": 0.6521739130434783,
+      "recall@10": 0.7391304347826086,
+      "recall@20": 0.8695652173913043,
+      "mrr@20": 0.5371095043662011,
+      "recusa_correta_portao": 0.0,
+      "recusa_indevida_portao": 0.0
+    },
+    "limiar": [
+      {
+        "limiar": 0.0,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0,
+        "recusa_correta_sim": 0.0,
+        "recusa_indevida_sim": 0.0
+      },
+      {
+        "limiar": 0.05,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0,
+        "recusa_correta_sim": 0.0,
+        "recusa_indevida_sim": 0.0
+      },
+      {
+        "limiar": 0.1,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0,
+        "recusa_correta_sim": 0.0,
+        "recusa_indevida_sim": 0.0
+      },
+      {
+        "limiar": 0.15,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0,
+        "recusa_correta_sim": 0.0,
+        "recusa_indevida_sim": 0.0
+      },
+      {
+        "limiar": 0.2,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0,
+        "recusa_correta_sim": 0.0,
+        "recusa_indevida_sim": 0.0
+      },
+      {
+        "limiar": 0.25,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0,
+        "recusa_correta_sim": 0.0,
+        "recusa_indevida_sim": 0.0
+      },
+      {
+        "limiar": 0.3,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0,
+        "recusa_correta_sim": 0.0,
+        "recusa_indevida_sim": 0.0
+      },
+      {
+        "limiar": 0.35,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0,
+        "recusa_correta_sim": 0.1111111111111111,
+        "recusa_indevida_sim": 0.0
+      },
+      {
+        "limiar": 0.4,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0,
+        "recusa_correta_sim": 0.1111111111111111,
+        "recusa_indevida_sim": 0.0
+      },
+      {
+        "limiar": 0.45,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0,
+        "recusa_correta_sim": 0.1111111111111111,
+        "recusa_indevida_sim": 0.0
+      },
+      {
+        "limiar": 0.5,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0,
+        "recusa_correta_sim": 0.2222222222222222,
+        "recusa_indevida_sim": 0.0
+      },
+      {
+        "limiar": 0.55,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0,
+        "recusa_correta_sim": 0.2222222222222222,
+        "recusa_indevida_sim": 0.08695652173913043
+      },
+      {
+        "limiar": 0.6,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0,
+        "recusa_correta_sim": 0.3333333333333333,
+        "recusa_indevida_sim": 0.21739130434782608
+      }
+    ],
+    "casos": [
+      {
+        "id": "irma-de-ligia",
+        "pergunta": "Qual é o nome da irmã de Lígia?",
+        "responde": true,
+        "resposta_esperada": "Luiza",
+        "posicao": 1,
+        "melhor_similaridade": 0.6899549298765798,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 1823.3,
+        "topo": [
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 40,
+            "secao": "Capítulo 3",
+            "similaridade": 0.5567,
+            "nota_reranker": null,
+            "correto": true,
+            "texto": "Sentia falta do tempo q ue passava com a irmã, e dizia ocasionalmente: “Lígia, vamos ao Guinle?”, e Lígia às vezes recusava, pois sairia com Iago, por exemplo, mas às vezes aceitava, e elas passeavam "
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 40,
+            "secao": "Capítulo 3",
+            "similaridade": 0.69,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "irmã, sua confidente fiel. E o que Lígia, dois anos mais nova, poderia dizer?\n\nDo que ela sabia?"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 100,
+            "secao": "Capítulo 7",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "fossem completamente ridículas, terminou de falar bruscamente, num tom de conclusão inconcl usiva, e o que seguiu foi um silêncio incômodo. Sentiu que foram palavras jogadas ao vento, que expusera seu"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 158,
+            "secao": "Capítulo 11",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Lígia seguia de quadro em quadro. “Sugar mommy... Quem diria!”, pensava.\n\n“Não que ele precise disso, o pai dele já é rico, mas eu não esperava isso da parte dele. É ridículo, nojento. Quantos anos el"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 72,
+            "secao": "Capítulo 6",
+            "similaridade": 0.5446,
+            "nota_reranker": null,
+            "correto": true,
+            "texto": "“Vou para um lugar bem longe. A ti não voltarei mais, nunca mais.”, respondeu Luiza; e parecia tão vívida que Lígia teve certeza de que aquela era verdadeiramente sua irmã. De repente, foi transportad"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "residencia-de-ligia",
+        "pergunta": "Onde Lígia viveu?",
+        "responde": true,
+        "resposta_esperada": "Altiplano, em João Pessoa e Laranjeiras, no Rio de Janeiro",
+        "posicao": 2,
+        "melhor_similaridade": 0.5371854621633044,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 65.0,
+        "topo": [
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 72,
+            "secao": "Capítulo 6",
+            "similaridade": 0.491,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "“Vou para um lugar bem longe. A ti não voltarei mais, nunca mais.”, respondeu Luiza; e parecia tão vívida que Lígia teve certeza de que aquela era verdadeiramente sua irmã. De repente, foi transportad"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 44,
+            "secao": "Capítulo 4",
+            "similaridade": 0.4948,
+            "nota_reranker": null,
+            "correto": true,
+            "texto": "o da natureza - essa entidade fria e estranha que tanto inquietou a sua irmã.\n\nDurante muito tempo, por causa da leitura de certos romances e também, pode -se dizer, sintomas de juventude, Lígia alime"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 51,
+            "secao": "Capítulo 4",
+            "similaridade": 0.4647,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "uma coincidência ele ter se mudado para lá, uma coincidência feliz. Mas Lígia nunca deixava de acreditar que ele mesmo era muito mimado. “Refiro -me às pessoas que não vivem em sociedade por medo, por"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 152,
+            "secao": "Capítulo 11",
+            "similaridade": 0.5372,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "céu completamente limpo. Seguiam pela Avenida Cabo Branco sem nenhum trânsito.\n\nÀ direita, condomínios, hotéis, prédios novos e construções em andamento; à esquerda, as árvores balançando ao vento, a "
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 72,
+            "secao": "Capítulo 6",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Como queria, porém, ter certeza da identidade daquele rosto, Lígia deitou-se novamente na ten tativa vã de continuar aquele pesadelo, mas o que aguardava -lhe um sonho bem diferente. Desta vez, Lígia "
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "estudos-de-ligia-e-luiza",
+        "pergunta": "O que Lígia e Luiza estudavam?",
+        "responde": true,
+        "resposta_esperada": "Lígia e Luiza estudavam música. Luiza estudava piano e canto, Lígia estudava piano e violoncelo.",
+        "posicao": 1,
+        "melhor_similaridade": 0.65250621011659,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 73.3,
+        "topo": [
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 30,
+            "secao": "Capítulo 3",
+            "similaridade": 0.6525,
+            "nota_reranker": null,
+            "correto": true,
+            "texto": "Janeiro. Luiza estudava em uma escola de música fora do bairro de Laranjeiras.\n\nA princípio, os intermináveis exercícios que Luiza fazia todos os dias quando chegava em casa não despertaram em Lígia, "
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 52,
+            "secao": "Capítulo 4",
+            "similaridade": 0.6041,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Então, sempre que Lígia saía com este propósito, era inevitável que pensasse em sua irmã, pois sabia que Luiza ia ao Guinle para meditar sobre uma questão muito importante para si mesma, cuja resposta"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 36,
+            "secao": "Capítulo 3",
+            "similaridade": 0.5571,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "sentada à janela de um ônibus, observando os cisnes, “ Ich leb’ allein...\n\n”; e estas melodias, estas letras, a melancolia das verdades claras e subentendidas destas canções eram somente delas, Lígia "
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 34,
+            "secao": "Capítulo 3",
+            "similaridade": 0.5433,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "brincadeira de criança. Lígia e Luiza eram ambas muito parecidas na fisionomia.\n\nLuiza fosse dois anos mais velha, mas tinham quase a mesma altura, sendo Lígia um pouco mais alta; esguias, agradavelme"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 32,
+            "secao": "Capítulo 3",
+            "similaridade": 0.5507,
+            "nota_reranker": null,
+            "correto": true,
+            "texto": "Luiza lamentou esse súbito desinteresse quando ela lhe disse que desejava parar, e pensou ser culpa dela, se fora rígida demais, se forçara a prática de exercícios excessivamente ou alguma peça de que"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "fora-do-corpus-1",
+        "pergunta": "Lígia era escritora?",
+        "responde": false,
+        "resposta_esperada": null,
+        "posicao": null,
+        "melhor_similaridade": 0.6297420233742931,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 71.0,
+        "topo": [
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 91,
+            "secao": "Capítulo 7",
+            "similaridade": 0.6297,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Pegou, então, o seu livro e tentou lê-lo por um tempo. “Às vezes, mal apagava a vela, meus olhos se fechavam tão depressa...” e os olhos de Lígia definitivamente fechavam, tão poderoso era Pr oust! Ma"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 37,
+            "secao": "Capítulo 3",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Talvez ele não tivesse tido tanta sorte se Lígia fosse mais consciente e orgulhosa da s ua própria beleza, e assim o ignorasse sempre que pudesse - pois Iago, como o botão de um lótus, não fora tocado"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 162,
+            "secao": "Capítulo 11",
+            "similaridade": 0.6234,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Lígia posara para essa pintura, porém, a mulher no quadro tinha feições ambíguas demais e era difícil dizer quem aquela era de fato. Seria Alice? Não. As prop orções do corpo, o vestido e o piano, nad"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 72,
+            "secao": "Capítulo 6",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Como queria, porém, ter certeza da identidade daquele rosto, Lígia deitou-se novamente na ten tativa vã de continuar aquele pesadelo, mas o que aguardava -lhe um sonho bem diferente. Desta vez, Lígia "
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 86,
+            "secao": "Capítulo 7",
+            "similaridade": 0.6181,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "que não escapou aos olhos de Alice, que sentiu uma ponta de ciúme irrelevante.\n\nPara matar o tédio, Lígia trouxera o “ No caminho de Swann”, um sonífero poderoso, sabendo que leria as mesmas primeiras"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "fora-do-corpus-2",
+        "pergunta": "Iago era estrangeiro?",
+        "responde": false,
+        "resposta_esperada": null,
+        "posicao": null,
+        "melhor_similaridade": 0.562696267210923,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 44.6,
+        "topo": [
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 157,
+            "secao": "Capítulo 11",
+            "similaridade": 0.5627,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "fato no mesmo instante, sussurrou a Iago: “Não é a sua musa ali?”. Iago, atônito e hesitante, se dirigiu a eles. “Não vi o nome dele no cartaz?”, perguntou -se Lígia. “Será que meus pais também não vi"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 77,
+            "secao": "Capítulo 6",
+            "similaridade": 0.5491,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Continuaram a caminhar em silêncio. Inquieto, ve ndo que fora um pouco insípido demais, Iago decidiu perguntar sobre a ausência recente de Lígia. — Naquele dia, antes que você voltasse para casa, eu p"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 146,
+            "secao": "Capítulo 10",
+            "similaridade": 0.528,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "o filho. Como ele não falava inglês, Iago agiu como tradutor da conversa.\n\nIngrid, por sentir uma certa sim patia por seu pai e também para embaraçar Iago, começou a prolongar a conversa desnecessaria"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 143,
+            "secao": "Capítulo 10",
+            "similaridade": 0.5038,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Alguns meses antes, numa manhã de carnaval, Iago caminhava vagarosamente pela praia de Tambaú em sentido sul. O sol das 10 ardia alto sobre a cidade infestada de turistas e ele sentia, metaforicamente"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 5,
+            "secao": "Capítulo 1",
+            "similaridade": 0.4558,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "emudecimento, Iago levantou-se e se despediu sem dizer nenhuma palavra.\n\nPor mais que Lígia reconhecesse, sob certa perspectiva, alguma verdade em sua desculpa descabida, jamais poderia aceitá -la - n"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "akhmatova-circulo",
+        "pergunta": "Anna Akhmatova fez parte de algum círculo literário?",
+        "responde": true,
+        "resposta_esperada": "Sim: Anna Akhmatova foi membro do grupo dos acmeístas.",
+        "posicao": 3,
+        "melhor_similaridade": 0.6858547586746683,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 79.9,
+        "topo": [
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 58,
+            "secao": "Lev Tolstoy as Early Modernist",
+            "similaridade": 0.6417,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "were a practitioner of reconstitutive metonymic representation like his author.\n\nTogether with Vronsky, we get a particularly luxurious sense of Anna’s physical presence in the first part of this scen"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 173,
+            "secao": "XVII",
+            "similaridade": 0.5972,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "1938. During this bitter year Chukovskaya and Akhmatova became close friends.\n\nChukovskaya visited the poet regularly and from the first day kept a journal of their meetings, often in ciphered form. D"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 183,
+            "secao": "XVII",
+            "similaridade": 0.6859,
+            "nota_reranker": null,
+            "correto": true,
+            "texto": "Biographical Glossary Akhmatova, Anna Andreyevna (1889-1966): Major twentieth-century Russian poet. A member of the Acmeist group, she attained early fame, but was criticized as apohtical after the re"
+          },
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 204,
+            "secao": "Part IV > Chapter 10 - Herzen, Tolstoy, and the Women’s Issue",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "justly? Or is she innocent, and it is not the business of people to judge her?\n\nIn other words, does Tolstoy have sympathy for Anna, or did the “rubbishy old man” (as protofeminist Anna Akhmatova angr"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 46,
+            "secao": "Lev Tolstoy as Early Modernist",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "of the whole. Rather, it is the whole that is capable of killing the part.\n\nThus you must arrange your reason so that it conforms with the whole, with the source of everything, and not with the part, "
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "akhmatova-gumilyov",
+        "pergunta": "Qual era a relação entre Anna Akhmatova e Nikolai Gumilyov?",
+        "responde": true,
+        "resposta_esperada": "Nikolai Gumilyov foi o primeiro marido de Anna Akhmatova. Divorciaram-se em 1918.",
+        "posicao": 19,
+        "melhor_similaridade": 0.6823103780660275,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 49.0,
+        "topo": [
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 38,
+            "secao": "Introduction",
+            "similaridade": 0.6823,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Personal contact with Anna Akhmatova, Dmitri Shostakovich, George Balanchine, and Joseph Brodsky helped me, I hope, to research and interpret historical materials on Russian culture in a less prejudic"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 173,
+            "secao": "XVII",
+            "similaridade": 0.6514,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "1938. During this bitter year Chukovskaya and Akhmatova became close friends.\n\nChukovskaya visited the poet regularly and from the first day kept a journal of their meetings, often in ciphered form. D"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 69,
+            "secao": "2. The Russian Symbolists and Their Circles",
+            "similaridade": 0.6475,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Last year it was Ekaterina Alekseevna [Bal’mont], now it is Anna Rudolfovna.”28 Despite Mintslova’s “maternal” manipulations, and despite months and even years of agonized indecision, inarticulate fee"
+          },
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 204,
+            "secao": "Part IV > Chapter 10 - Herzen, Tolstoy, and the Women’s Issue",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "justly? Or is she innocent, and it is not the business of people to judge her?\n\nIn other words, does Tolstoy have sympathy for Anna, or did the “rubbishy old man” (as protofeminist Anna Akhmatova angr"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 97,
+            "secao": "3. Voloshin and the Modernist Problem of the Ugly Poetess",
+            "similaridade": 0.6769,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "was the case, and on who the heroes of the tale were, and who the villains.\n\nA principal complication was an overlapping of Cherubina’s story with the story of another romance that found its way into "
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "voloshin-amigos-odessa",
+        "pergunta": "Which of Voloshin’s friends stayed in Odessa?",
+        "responde": true,
+        "resposta_esperada": "Among his closest friends in Odessa were the renowned Russian novelist and short story writer, Ivan Bunin, and his wife, Vera Muromtseva Bunina.",
+        "posicao": 9,
+        "melhor_similaridade": 0.6841808285730195,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 252.1,
+        "topo": [
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 156,
+            "secao": "6. Voloshin Carves Power out of Fear",
+            "similaridade": 0.6818,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "The town, Voloshin tells us, was teeming with White refugees and old friends; amazingly Voloshin found here his old flame, Elizaveta Dmitrieva, the one-time Cherubina de Gabriak. Here, too, he must ag"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 212,
+            "secao": "Conclusion",
+            "similaridade": 0.6421,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "did all they could to preserve Voloshin’s memory in many concrete ways.\n\nAbove all, they asked great numbers of Voloshin’s friends, guests, and associates to write about their memories of him, which K"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 151,
+            "secao": "6. Voloshin Carves Power out of Fear",
+            "similaridade": 0.6173,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "taking charge of the theater himself and leaving the fine arts to Voloshin.\n\nBut Kastorskii strongly objected and apparently shot a telegram off to Odessa (or Simferopol’) demanding to know whether he"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 212,
+            "secao": "Conclusion",
+            "similaridade": 0.6281,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Koktebel’, he let his friends go on without him and settled down in the colony.\n\nSupporting himself by working as a tour guide, among other jobs, he became deeply involved in the organization of Volos"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 60,
+            "secao": "2. The Russian Symbolists and Their Circles",
+            "similaridade": 0.6177,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Sabashnikova. Thus he established a significant kinship tie to the circle.\n\nSecond, and probably more important, he won Ekaterina’s trust and affection to such a point that, for a time, Voloshin spent"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "rozanov-chernyshevsky",
+        "pergunta": "What Rozanov said about Chernyshevsky?",
+        "responde": true,
+        "resposta_esperada": "Rozanov treated Chernyshevsky ironically and with a certain distaste. He discovered in What Is to Be Done? traces of male homosocial desire that resonated more powerfully in the fin de siècle than in the earlier 1860s. Rozanov claimed that, without knowing it, Chernyshevsky deployed triangulated desire as love “between men,” which psychopathologists considered a symptom of degeneration.",
+        "posicao": 1,
+        "melhor_similaridade": 0.7404203776998546,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 218.7,
+        "topo": [
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 38,
+            "secao": "Introduction",
+            "similaridade": 0.7052,
+            "nota_reranker": null,
+            "correto": true,
+            "texto": "extensively about Chernyshevsky than did any of his symbolist contemporaries.\n\nPredictably, he treated Chernyshevsky ironically and with a certain distaste. Yet he regularly commented with great inter"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 180,
+            "secao": "Transcending Gender",
+            "similaridade": 0.7404,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Merezhkovsky’s desire to shake off the earlier layer of his cultural identity.\n\nHe claimed that Merezhkovsky actually wanted to be a Chernyshevsky with a religious twist.5 Without naming Chernyshevsky"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 129,
+            "secao": "XIV",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "field of a lost battle, from hopeless grief, he'd almost always try to flee.\n\nHaving done everything possible, even more than was possible, he wanted only one thing—to restore his good spirits and get"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 231,
+            "secao": "Religious-Philosophical Meetings",
+            "similaridade": 0.7203,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "A close collaborator of the Merezhkovskys at the beginning of the century, Rozanov differed from the other members of their inner circle, in part because he was not a product of the fin-de-siècle hoth"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 144,
+            "secao": "XV",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "AfterMama talked to us, I wondered for the first time about our grandfather. Papa's father. And why we mustn't ask about him. \"That grandfather probably died,\" I said to Kolya after Mama's injunction."
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "rozanov-suslova",
+        "pergunta": "What was the relationship between Rozanov and Apollinaria Suslova?",
+        "responde": true,
+        "resposta_esperada": "Rozanov and Suslova had an affair while he was still in high school and while Dostoevsky was still alive; the couple married in 1880.",
+        "posicao": 1,
+        "melhor_similaridade": 0.6242852741193242,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 182.9,
+        "topo": [
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 235,
+            "secao": "Religious-Philosophical Meetings",
+            "similaridade": 0.62,
+            "nota_reranker": null,
+            "correto": true,
+            "texto": "Russia’s antiquated divorce laws and intolerance of illegitimate children.\n\nUnquestionably, the most interesting aspect of Rozanov’s biography was his relationship with Apollinaria Suslova, Dostoevsky"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 235,
+            "secao": "Religious-Philosophical Meetings",
+            "similaridade": 0.6084,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "him a divorce, even though she had apparently left Rozanov of her own accord.\n\nRozanov met Varvara Dmitrievna, the daughter and widow of parish priests, in 1888, and they soon began to live together a"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 35,
+            "secao": "Introduction",
+            "similaridade": 0.5905,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "The brainchild of Gippius, they represented a confrontation of decadent utopianism, institutional Russian Orthodoxy, and Rozanov’s shocking procreative religion. They served as a platform for Rozanov,"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 252,
+            "secao": "Vasilii Rozanov",
+            "similaridade": 0.6024,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "the word “flesh.” His most striking representation is the portrayal of Rozanov’s thinking and narrative strategies as rhythmic ebbs and flows of bodily excretion, an image that he borrowed from Nikola"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 268,
+            "secao": "Vasilii Rozanov",
+            "similaridade": 0.5807,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "In feminizing Rozanov’s sexuality, I follow his own lead: he made numerous references to his “womanish” (bab’ia) nature: “I am not a ‘man’ [muzhik], but rather a maiden [devushka],” wrote Rozanov in a"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "fora-do-corpus-3",
+        "pergunta": "Quais foram as vendas da Petrobras em 2023?",
+        "responde": false,
+        "resposta_esperada": null,
+        "posicao": null,
+        "melhor_similaridade": 0.4665743374061353,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 26.8,
+        "topo": [
+          {
+            "documento": "Hanna Chuchvaha - Art Periodical Culture in Late Imperial Russia (1898-1917)_compressed.pdf",
+            "pagina": 160,
+            "secao": "3: The Golden Fleece or Russia’s “Très Riches Heures” > The Golden Fleece: the Paratextual Dimension > Extravagance in the ‘Time of Troubles’: From ‘Materialism’ to Materiality’",
+            "similaridade": 0.4666,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "during the first year of publication was released in the last issue of 1906.\n\nIt stated that 83,783.85 roubles were spent during the first year; income from sales was only 101 Bogomolov, “Simvolistska"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 123,
+            "secao": "Capítulo 9",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "— respondeu Lígia e, vendo a surpresa no rosto de Alice, acrescentou, rindo: — Estou brincando! Na verdade, para o programa que eu montei, preciso de acompanhamento para quatro peças que não são nada "
+          },
+          {
+            "documento": "Hanna Chuchvaha - Art Periodical Culture in Late Imperial Russia (1898-1917)_compressed.pdf",
+            "pagina": 160,
+            "secao": "3: The Golden Fleece or Russia’s “Très Riches Heures” > The Golden Fleece: the Paratextual Dimension > Extravagance in the ‘Time of Troubles’: From ‘Materialism’ to Materiality’",
+            "similaridade": 0.454,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "It cost 14 roubles per year; the price, however, included ten yearly supplements and the illustrated periodical Picturesque Russia (Zhivopisnaia Rossiia). The high life extended to the editorial offic"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 129,
+            "secao": "Capítulo 9",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "coisa, mas apenas se jogar nos braços seguros de alguém para se sentir feliz.\n\nSeu antigo namorado, que não lhe dava carinho nem atenção, interpretava isso como um algum tipo de complexo e, no mais, n"
+          },
+          {
+            "documento": "Hanna Chuchvaha - Art Periodical Culture in Late Imperial Russia (1898-1917)_compressed.pdf",
+            "pagina": 52,
+            "secao": "1: When Russia Learned to Reproduce Art > The “Age of Mechanical Reproduction” in Russia: Reproduction Techniques in Historical Perspective",
+            "similaridade": 0.4509,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "published twice a month), and its yearly subscription cost 10 roubles in 1883.\n\nIt did, however, offer 20 high quality reproductions every year, made in etching, copper engraving, lithography or photo"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "fora-do-corpus-4",
+        "pergunta": "What was Rozanov's opinion on Abraham Lincoln?",
+        "responde": false,
+        "resposta_esperada": null,
+        "posicao": null,
+        "melhor_similaridade": 0.6302383800184987,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 338.2,
+        "topo": [
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 253,
+            "secao": "Vasilii Rozanov",
+            "similaridade": 0.6302,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "his discursive power—what Bely described as “the thick physiological jam of V.\n\nV .’ s thinking.” The appropriation of bodily excretion for the purpose of articulating his views on religion and other "
+          },
+          {
+            "documento": "Korney Chukovsky - The Silver Crest - My Russian Boyhood.pdf",
+            "pagina": 88,
+            "secao": "THE SILVER GREST",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "“Where are you going?” Marusya yelled without taking her eyes off her book.\n\n“To see the hedgehog.” But I didn’t even look for the hedgehog. I sat down on a broken box and started groaning. What a mes"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 278,
+            "secao": "Vasilii Rozanov",
+            "similaridade": 0.6124,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "His later version reveals the motor that drove Rozanov’s polemical style, which he took here to its shocking extreme. Unscrupulous, or immoral like Nietzsche, Rozanov ignored the potential impact of h"
+          },
+          {
+            "documento": "Korney Chukovsky - The Silver Crest - My Russian Boyhood.pdf",
+            "pagina": 124,
+            "secao": "MANUEL HERZOG CIRCUS",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "We sat down by the curtain on a pile of bast matting that stank of fish, and Timosha started to describe everything he had been doing since early morning. “First of all—this was on Munya’s advice—I ra"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 251,
+            "secao": "Vasilii Rozanov",
+            "similaridade": 0.5874,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "with him in Zinaida Gippius’s Petersburg apartment during the 1905 revolution.\n\nLike Bely’s verbal portraits of Solov’ev and Gippius, quoted in earlier chapters, this one is grotesque, not to say vici"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "cervantes-lepanto",
+        "pergunta": "Qual mão Cervantes perdeu na batalha de Lepanto?",
+        "responde": true,
+        "resposta_esperada": "A mão esquerda, que ficou inutilizada para sempre. Por isso ficou conhecido como \"o maneta de Lepanto\".",
+        "posicao": 1,
+        "melhor_similaridade": 0.6910382012357483,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 25.8,
+        "topo": [
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 10,
+            "secao": "Parte III: Renascimento tardio e Barroco > Miguel de Cervantes (1547–1616)",
+            "similaridade": 0.691,
+            "nota_reranker": null,
+            "correto": true,
+            "texto": "Em 1571, na batalha naval de Lepanto, contra a frota otomana, estava febril, mas insistiu em lutar no convés. Recebeu dois ferimentos no peito e um na mão esquerda, que ficou inutilizada para sempre. "
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 9,
+            "secao": "Parte II: Idade Média e início do Renascimento > Luís de Camões (c. 1524–1580)",
+            "similaridade": 0.6236,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "damas da corte, entre elas D. Catarina de Ataíde, a \"Natércia\" de seus versos.\n\nPor volta de 1547, foi servir como soldado em Ceuta, no norte da África, e ali perdeu o olho direito em combate, o que e"
+          },
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 148,
+            "secao": "Part III > Chapter 7 - Lermontov and Briullov",
+            "similaridade": 0.635,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "a saint compared to Lermontov.) That mix was a surere recipe for catastrophe.\n\nThe military habit of solving all sorts of conicts with a duel must have been in Lermontov’s blood. He was always living "
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 10,
+            "secao": "Parte III: Renascimento tardio e Barroco > Miguel de Cervantes (1547–1616)",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Desde então, a data de sua morte, 10 de junho, é o Dia de Portugal, de Camões e das Comunidades Portuguesas. Parte III: Renascimento tardio e Barroco Miguel de Cervantes (1547–1616) Cervantes nasceu e"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 11,
+            "secao": "Parte III: Renascimento tardio e Barroco > William Shakespeare (1564–1616)",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Em 1614, apareceu uma suposta Segunda Parte escrita por um certo Alonso Fernández de Avellaneda, pseudônimo ainda não decifrado, que ridicularizava o autor. Cervantes reagiu terminando sua própria con"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "shakespeare-segunda-melhor-cama",
+        "pergunta": "What did Shakespeare leave to his wife Anne in his will?",
+        "responde": true,
+        "resposta_esperada": "He left her only \"the second-best bed\" (\"a segunda melhor cama\"), a detail that fuelled centuries of speculation, although it may have been the marital bed.",
+        "posicao": 1,
+        "melhor_similaridade": 0.6650241105423732,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 211.0,
+        "topo": [
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 11,
+            "secao": "Parte III: Renascimento tardio e Barroco > William Shakespeare (1564–1616)",
+            "similaridade": 0.665,
+            "nota_reranker": null,
+            "correto": true,
+            "texto": "Shakespeare enriqueceu bastante e voltou a Stratford, onde comprou New Place, a segunda maior casa da cidade. Seu testamento, de 1616, tem uma cláusula famosa: deixou à esposa Anne apenas \"a segunda m"
+          },
+          {
+            "documento": "Hanna Chuchvaha - Art Periodical Culture in Late Imperial Russia (1898-1917)_compressed.pdf",
+            "pagina": 226,
+            "secao": "4: Apollo: Between “Archaism” and Modernism > Apollo in Scholarship > Dance: the Apollonian Gesamtkunstwerk",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "new renaissance will approach. And many people know [Benois’s italics] this.\n\nBut when tomorrow will come is unclear… Now the folly and orgies rule, it is a time of utmost brutality ( ozvereniia) and "
+          },
+          {
+            "documento": "Manfred Schruba - Associações Literárias de Moscou e São Petersburgo em 1890-1917_compressed.pdf",
+            "pagina": 342,
+            "secao": "7TTTT I > VI",
+            "similaridade": 0.5913,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "одной и той же Англии жили одновременно реалист Шекспир и декадент Джон Форд1 .\n\nСовершенно таким же образом и в течение 19-го века мы видим одновременное существование двух противоположных литературн"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 52,
+            "secao": "VI",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "But did they see, or did they not — That you'll never learn. Or: Like an apple pink And always most untidy. It isn't that he drinks — He's just happy every Friday. With money—he will play. With none—h"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 7,
+            "secao": "Parte II: Idade Média e início do Renascimento > Francesco Petrarca (1304–1374)",
+            "similaridade": 0.5685,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Fez a vida como clérigo menor, o que lhe garantia renda sem obrigá-lo a casar.\n\nTeve, ainda assim, dois filhos ilegítimos. Sua obra mais famosa, o Cancioneiro, é inspirada em Laura, mulher que ele afi"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "dostoievski-o-jogador",
+        "pergunta": "Em quantos dias Dostoiévski ditou O Jogador e a quem?",
+        "responde": true,
+        "resposta_esperada": "Em apenas vinte e seis dias, à jovem estenógrafa Anna Snitkina, com quem se casou meses depois. A pressa se deveu a um contrato com o editor Stellovski, que o faria perder os direitos de suas obras por nove anos se não entregasse o romance a tempo.",
+        "posicao": 3,
+        "melhor_similaridade": 0.7028011442592704,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 23.9,
+        "topo": [
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 25,
+            "secao": "Parte IV: Iluminismo, Romantismo e séculoXIX > Fëodor Dostoiévski (1821–1881)",
+            "similaridade": 0.6205,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "travessões, maiúsculas e uma sintaxe tão audaciosa que ainda parece moderna.\n\nFëodor Dostoiévski (1821–1881) Dostoiévski nasceu em Moscou, filho de um médico militar, e formou-se engenheiro em São Pet"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 25,
+            "secao": "Parte IV: Iluminismo, Romantismo e séculoXIX > Fëodor Dostoiévski (1821–1881)",
+            "similaridade": 0.7028,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Dostoiévski passou quatro anos em trabalhos forçados na Sibéria, depois mais alguns como soldado, e nunca esqueceu aqueles minutos. A experiência atravessa O Idiota e Memórias da Casa dos Mortos. Sofr"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 26,
+            "secao": "Parte IV: Iluminismo, Romantismo e séculoXIX > Anton Tchekhov (1860–1904)",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": true,
+            "texto": "a jovem estenógrafa Anna Snitkina e ditou-lhe O Jogador em apenas vinte e seis dias. Entregou o manuscrito no último momento. Meses depois, casou-se com Anna, que passou a administrar a vida financeir"
+          },
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 236,
+            "secao": "Part V > Chapter 12 - Dostoevsky and the Romanovs",
+            "similaridade": 0.6852,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "him how he bought sexual favors from a twelve-year-old girl for 500 rubles.\n\nTurgenev interrupted him and ordered him from the house immediately, and Dostoevsky allegedly confessed that he had made it"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 7,
+            "secao": "Parte II: Idade Média e início do Renascimento > Francesco Petrarca (1304–1374)",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "emoção, recolheu-se ao quarto e teve uma visão. Beatriz casou-se com outro e morreu em 1290, aos vinte e quatro anos. Dante a transformou em guia do Paraíso na Divina Comédia. Os historiadores discute"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "keats-epitafio",
+        "pergunta": "What inscription did Keats ask to have on his tombstone?",
+        "responde": true,
+        "resposta_esperada": "He asked that his name not appear, only the words: \"Here lies one whose name was writ in water.\"",
+        "posicao": null,
+        "melhor_similaridade": 0.5873953026541598,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 405.5,
+        "topo": [
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 8,
+            "secao": "Parte II: Idade Média e início do Renascimento > Giovanni Boccaccio (1313–1375)",
+            "similaridade": 0.5874,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Ventoux, na Provença, e, ao abrir as Confissões de Santo Agostinho no topo, leu uma passagem que o repreendeu por admirar montanhas e esquecer a alma. A narrativa dessa escalada é tida como um dos mar"
+          },
+          {
+            "documento": "Korney Chukovsky - The Silver Crest - My Russian Boyhood.pdf",
+            "pagina": 124,
+            "secao": "MANUEL HERZOG CIRCUS",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "We sat down by the curtain on a pile of bast matting that stank of fish, and Timosha started to describe everything he had been doing since early morning. “First of all—this was on Munya’s advice—I ra"
+          },
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 82,
+            "secao": "Part I > Chapter 3 - Catherine the Great and the Culture of Her Era",
+            "similaridade": 0.5537,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "ode was also published anonymously), Catherine decided to reward him.\n\nThe poet was lunching at the home of his director (he was already a clerk in the Senate) when a messenger brought him a paper par"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 68,
+            "secao": "VII",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "\"Think of it, that cretin Nicholas could have calmly sent Pushkin off to Siberia in 1825! To that place where he sent the most talented people in Russia! And we would have been deprived of 'Poltava' a"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 23,
+            "secao": "Parte IV: Iluminismo, Romantismo e séculoXIX > Herman Melville (1819–1891)",
+            "similaridade": 0.5363,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "monóxido de carbono a uma crise cardíaca ou a um espancamento por eleitores.\n\nO obituário difamatório de seu rival Rufus Griswold, que o pintou como louco e degenerado, moldou a imagem pública do poet"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "villa-diodati",
+        "pergunta": "Que obras nasceram do desafio de escrever histórias de fantasmas na Villa Diodati, em 1816?",
+        "responde": true,
+        "resposta_esperada": "Frankenstein, de Mary Shelley, e O Vampiro, de John Polidori, considerado matriz da literatura vampírica. O desafio foi proposto por Lord Byron.",
+        "posicao": 1,
+        "melhor_similaridade": 0.7146238663684363,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 38.0,
+        "topo": [
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 17,
+            "secao": "Parte IV: Iluminismo, Romantismo e séculoXIX > Percy Bysshe Shelley (1792–1822)",
+            "similaridade": 0.7146,
+            "nota_reranker": null,
+            "correto": true,
+            "texto": "perto de Genebra, com o médico John Polidori, Percy Shelley e Mary Godwin.\n\nNum verão chuvoso, propôs que cada um escrevesse uma história de fantasmas: dali saíram Frankenstein, de Mary Shelley, e O V"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 9,
+            "secao": "Parte II: Idade Média e início do Renascimento > Luís de Camões (c. 1524–1580)",
+            "similaridade": 0.6141,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Seu túmulo deu origem ao famoso \"Canto dos Poetas\". Luís de Camões (c. 1524–1580) A vida de Camões é um romance de aventuras, com muito mais lenda do que documentos. Nasceu provavelmente em Lisboa, em"
+          },
+          {
+            "documento": "Manfred Schruba - Associações Literárias de Moscou e São Petersburgo em 1890-1917_compressed.pdf",
+            "pagina": 112,
+            "secao": null,
+            "similaridade": 0.6435,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "лирика» (CI 16., 1909), содержащий преимущественно стихи о Символистов.\n\nВ предисловии ко второму изданию сборника (Стокгольм: Северные огни, 1921. С. [5]) сообщено, что вошедшие в"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 37,
+            "secao": "Epílogo",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Quando o jornal foi fechado pela ditadura, ficou sem emprego em Paris, vivendo de miséria e escrevendo Ninguém Escreve ao Coronel. Em 1950, voltou a Aracataca com a mãe para vender a casa dos avós, e "
+          },
+          {
+            "documento": "Manfred Schruba - Associações Literárias de Moscou e São Petersburgo em 1890-1917_compressed.pdf",
+            "pagina": 211,
+            "secao": "7TTTT I",
+            "similaridade": 0.6374,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "октябре 1911 г.) и драму «Путник». В других издательствах вышли: «Сочинения. Т. 3— 6» Ремизова (СПб., 1911) и роман 3. Гиппиус «Чортова кукла» (М., 1911). В 1912 г. «Мусагет» предпринял еще одну попыт"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "tolstoi-astapovo",
+        "pergunta": "Where did Tolstoy die, and how did he get there?",
+        "responde": true,
+        "resposta_esperada": "He died on 7 November 1910 at the small railway station of Astapovo. At 82 he had secretly left home on 28 October, accompanied by his doctor, and fell ill with pneumonia during the journey.",
+        "posicao": null,
+        "melhor_similaridade": 0.7102113831842175,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 439.8,
+        "topo": [
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 209,
+            "secao": "Part IV > Chapter 10 - Herzen, Tolstoy, and the Women’s Issue",
+            "similaridade": 0.6479,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "You’re a beast.” It went on for years, while the unsuspecting Taneyev calmly continued visiting the Tolstoy house and Sophia attended his concerts in Moscow. What must have infuriated Tolstoy most was"
+          },
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 117,
+            "secao": "Part II > Chapter 5 - Alexander I, Zhukovsky, and Young Pushkin",
+            "similaridade": 0.7102,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "seen in War and Peace, his epic novel about the War of 1812 against Napoleon.\n\nBut Tolstoy became involved in the story of the monarch’s rejection of fame and power and his ight to the people when the"
+          },
+          {
+            "documento": "Korney Chukovsky - The Silver Crest - My Russian Boyhood.pdf",
+            "pagina": 165,
+            "secao": "PANTALEIMON VANYUKHIN",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "When he saw me he got so excited he couldn’t say a word. I sat there, all ruffled up, and also kept silent. Finally he managed to get out a word about the seagulls— how repulsive they were, how greedy"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 255,
+            "secao": "Vasilii Rozanov",
+            "similaridade": 0.7058,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "some instances the way it functions in Tolstoy’s writings. Since this last chapter circles back to the first (devoted to Tolstoy), one of the questions that it addresses is whether Rozanov was any mor"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 52,
+            "secao": "VI",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "But did they see, or did they not — That you'll never learn. Or: Like an apple pink And always most untidy. It isn't that he drinks — He's just happy every Friday. With money—he will play. With none—h"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "orwell-pseudonimo",
+        "pergunta": "Por que Eric Blair escolheu o pseudônimo George Orwell?",
+        "responde": true,
+        "resposta_esperada": "Ao que se conta, em homenagem ao rio Orwell, em Suffolk. O nome foi adotado em Na Pior em Paris e Londres (1933), seu primeiro livro.",
+        "posicao": 1,
+        "melhor_similaridade": 0.5552608017556735,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 29.6,
+        "topo": [
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 35,
+            "secao": "Parte V: O século XX > Vladimir Nabokov (1899–1977)",
+            "similaridade": 0.5553,
+            "nota_reranker": null,
+            "correto": true,
+            "texto": "Voltou à Europa e viveu como mendigo e lavador de pratos em Paris e Londres, e transformou a vivência em Na Pior em Paris e Londres (1933), seu primeiro livro, publicado com um nome novo, George Orwel"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 35,
+            "secao": "Parte V: O século XX > Vladimir Nabokov (1899–1977)",
+            "similaridade": 0.4384,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Ganhou o Nobel em 1969, e, avesso à publicidade, não foi a Estocolmo, mandando o editor receber o prêmio. Morreu em dezembro de 1989 em Paris, meses depois de Suzanne, e foi sepultado ao lado dela, no"
+          },
+          {
+            "documento": "Hanna Chuchvaha - Art Periodical Culture in Late Imperial Russia (1898-1917)_compressed.pdf",
+            "pagina": 243,
+            "secao": "4: Apollo: Between “Archaism” and Modernism > Apollo and its Textual and Paratextual Standards: Materiality, Archeology of the Visual and Apollonianism > Materiality, the Title and the Cover Page",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Eventually St George would come to be acknowledged as Imperial Russia’s great “official” saint: the representation of St George and the Serpent was a central element of the coat of arms of the Russian"
+          },
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 75,
+            "secao": "Part I > Chapter 3 - Catherine the Great and the Culture of Her Era",
+            "similaridade": 0.4818,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "the example and model; how close she measured up to him is subject for debate.\n\nBut the constant unfavorable comparisons seem unfair now and based on antiintellectual or sexist prejudices, since, as w"
+          },
+          {
+            "documento": "Hanna Chuchvaha - Art Periodical Culture in Late Imperial Russia (1898-1917)_compressed.pdf",
+            "pagina": 242,
+            "secao": "4: Apollo: Between “Archaism” and Modernism > Apollo and its Textual and Paratextual Standards: Materiality, Archeology of the Visual and Apollonianism > Materiality, the Title and the Cover Page",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "personage, Jason, who overcame the dragon who guarded the Golden Fleece.\n\n149 For example, Moreau’s St George and the Dragon (1889–90), Burne-Jones’s series St George and the Dragon (1865–66), and the"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "eliot-pound-terra-devastada",
+        "pergunta": "Who heavily edited T. S. Eliot's The Waste Land before publication?",
+        "responde": true,
+        "resposta_esperada": "Ezra Pound, who cut the text drastically, almost by half, and made decisive suggestions. Eliot dedicated the poem to him as \"the better craftsman\".",
+        "posicao": 17,
+        "melhor_similaridade": 0.6080302944888561,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 277.4,
+        "topo": [
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 152,
+            "secao": "XVI",
+            "similaridade": 0.608,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "on them.\" He was a critic, an appraiser of art, by vocation. He was born to it.\n\nOn 28 October 1968, a year before his death, he wrote tomewhenhewas working on his collected works and rereading the cr"
+          },
+          {
+            "documento": "Korney Chukovsky - The Silver Crest - My Russian Boyhood.pdf",
+            "pagina": 62,
+            "secao": "THE SILVER GREST",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Monsieur Lan was like a man who had fallen from the moon. He didn’t recognize a single student by sight and couldn’t keep straight which of his classes he was in. In several years of teaching, he hadn"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 23,
+            "secao": "Parte IV: Iluminismo, Romantismo e séculoXIX > Herman Melville (1819–1891)",
+            "similaridade": 0.5977,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "por um cachalote no Pacífico em 1820, e também na experiência do próprio autor.\n\nEscreveu-a numa fazenda em Massachusetts, vizinho do romancista Nathaniel Hawthorne, de quem se tornou amigo após um pi"
+          },
+          {
+            "documento": "Korney Chukovsky - The Silver Crest - My Russian Boyhood.pdf",
+            "pagina": 126,
+            "secao": "MANUEL HERZOG CIRCUS",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "“Мо, he wasn’t,” Timosha answered. “бо I went to the breakwater and then down to the lighthouse where he fishes for bullheads on holidays. And from there—” “T don’t give a damn where you went. The poi"
+          },
+          {
+            "documento": "Manfred Schruba - Associações Literárias de Moscou e São Petersburgo em 1890-1917_compressed.pdf",
+            "pagina": 145,
+            "secao": null,
+            "similaridade": 0.5971,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "произведений авторов, которые завещали Обществу право собственности на свои сочинения (отчасти в связи с оказанной им материальной помощью); в числе книг, изданных ОПНЛУ, — «Стихотворения» С. Я. Надсо"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "kafka-max-brod",
+        "pergunta": "O que Kafka pediu a Max Brod e o que Brod fez?",
+        "responde": true,
+        "resposta_esperada": "Kafka pediu, em instruções escritas, que Brod queimasse tudo após sua morte. Brod desobedeceu e publicou os textos entre 1925 e 1927.",
+        "posicao": 1,
+        "melhor_similaridade": 0.6580079791103867,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 44.1,
+        "topo": [
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 30,
+            "secao": "Parte V: O século XX > Virginia Woolf (1882–1941)",
+            "similaridade": 0.658,
+            "nota_reranker": null,
+            "correto": true,
+            "texto": "três grandes romances, O Processo, O Castelo e Amerika, ficaram inacabados.\n\nPediu ao amigo Max Brod, em instruções escritas, que queimasse tudo após a sua morte, mas Brod, sabendo que o amigo era um "
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 37,
+            "secao": "Epílogo",
+            "similaridade": 0.4949,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Mais de um morreu jovem, de tuberculose (Keats, as Brontë, Kafka, Tchekhov, Orwell), e mais de um morreu de maneira tão dramática que a biografia parece ter sido ensaiada (Ésquilo, Molière, Byron). Ou"
+          },
+          {
+            "documento": "Manfred Schruba - Associações Literárias de Moscou e São Petersburgo em 1890-1917_compressed.pdf",
+            "pagina": 77,
+            "secao": null,
+            "similaridade": 0.5594,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Видимо, об этом же кружке идет речь в письме М. Л. Лозинского к Вас. В. Гиппиусу от 29 октоября 1912 г.: «Сегодня [К. А.] Вогак, [О. Э.] Мандельштам и я сообщили вкратце [Ф. А.] Брауну о нашем кружке."
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 112,
+            "secao": "XI",
+            "similaridade": 0.5428,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "he choose for me and Kolya; what did he reluctantly permit, what did he slip into our hands? It is important to recall them, for the books he gave us reflect his taste, his ideas about literature for "
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 43,
+            "secao": "1. Voloshin’s Social and Cultural Origins",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Elena was just as lively in her dealings with Max: it was “terribly funny” to listen to her humorous replies to Max’s demands as a child, Viazemskaia recalls, although it may not have been quite so fu"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "balzac-rotina-de-escrita",
+        "pergunta": "What was Balzac's daily writing routine?",
+        "responde": true,
+        "resposta_esperada": "He woke at midnight, put on a white robe resembling a monk's habit, and wrote for sixteen hours, fuelled by large amounts of strong coffee.",
+        "posicao": null,
+        "melhor_similaridade": 0.5463768045045938,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 119.7,
+        "topo": [
+          {
+            "documento": "Manfred Schruba - Associações Literárias de Moscou e São Petersburgo em 1890-1917_compressed.pdf",
+            "pagina": 180,
+            "secao": "7TTTT I",
+            "similaridade": 0.5464,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "был посвящен выработке предварительной номенклатуры; тогда же участники кружка распределили между собой стиховой материал, охвативший произведения русских поэтов от Ломоносова до совремепп и ков-сим в"
+          },
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 60,
+            "secao": "Part I > Chapter 1 - The First Romanovs: From Tsar Mikhail to Peter I",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "cancer or an inammation of the bladder). The tsar’s funeral was held in St.\n\nPetersburg’s Cathedral of Saints Peter and Paul, where Archbishop Feofan Prokopovich, a prolic writer and close comrade-in-"
+          },
+          {
+            "documento": "Manfred Schruba - Associações Literárias de Moscou e São Petersburgo em 1890-1917_compressed.pdf",
+            "pagina": 243,
+            "secao": "7TTTT I",
+            "similaridade": 0.5212,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "ной переписки, воспоминаний). 1 5 предисловии к сборнику Пиксанов изложил основные задачи кружка: собирание и изучение текстов произведений и писем Тургенева, собирание биографических материалов и вос"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 60,
+            "secao": "VII",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "What sort of springs propelled this new, hiterto unknown person? What did he do? What motivated him, what made him happy and unhappy? Neither the travels of his youth nor the slow rambles around Pered"
+          },
+          {
+            "documento": "Manfred Schruba - Associações Literárias de Moscou e São Petersburgo em 1890-1917_compressed.pdf",
+            "pagina": 136,
+            "secao": null,
+            "similaridade": 0.5163,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Начинающие литераторы, желавшие участвовать в сборнике, встречались па квартире Никольского: «...его гостеприимный кабинет на Екатерингофском проспекте по средам видел почти всю студенческую пишущую б"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "escritores-exilados",
+        "pergunta": "Quais escritores o documento cita como exemplos de exílio?",
+        "responde": true,
+        "resposta_esperada": "Ovídio, Dante, Hugo, Joyce e Nabokov, seja por ordem política, seja por escolha.",
+        "posicao": 4,
+        "melhor_similaridade": 0.6439602733118198,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 29.2,
+        "topo": [
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 7,
+            "secao": "Parte II: Idade Média e início do Renascimento > Francesco Petrarca (1304–1374)",
+            "similaridade": 0.5578,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Nunca mais voltou à cidade natal. O exílio fez dele o poeta que conhecemos.\n\nPerambulou por Verona, Lunigiana, Pádua, Ravena, vivendo da hospitalidade de senhores locais, e escreveu a Comédia em itali"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 6,
+            "secao": "Parte II: Idade Média e início do Renascimento > Dante Alighieri (1265–1321)",
+            "similaridade": 0.644,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "No exílio, Ovídio escreveu os Tristes e as Cartas do Ponto, em que lamenta o frio, a barbárie dos habitantes, a saudade de Roma e da mulher, e implora o perdão que nunca veio. Aprendeu o idioma local,"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 149,
+            "secao": "6. Voloshin Carves Power out of Fear",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Crimea upon going to see the member of the Cheka whose name he had been given.\n\nThis man’s first question was whether Voloshin might want to receive a document identifying him as a member of the Cheka"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 37,
+            "secao": "Epílogo",
+            "similaridade": 0.6312,
+            "nota_reranker": null,
+            "correto": true,
+            "texto": "Morreu em abril de 2014, na Cidade do México, e suas cinzas foram levadas em parte para Cartagena das Índias. Epílogo Ao percorrer essas vidas, alguns padrões se repetem com insistência. Muitos escrit"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 149,
+            "secao": "6. Voloshin Carves Power out of Fear",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "illegible] passes, and tickets for use in the line of duty, and living space.\n\nHead of the Section: [signature]35 This paper is handwritten, and the last line “and living space” is added separately, i"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "borges-peron-inspetor",
+        "pergunta": "What position did Perón's government give Borges, and how did he react?",
+        "responde": true,
+        "resposta_esperada": "In 1946 Perón's government \"promoted\" him to inspector of poultry and rabbits in the municipal markets, and Borges resigned.",
+        "posicao": 2,
+        "melhor_similaridade": 0.7197566630523402,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 427.4,
+        "topo": [
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 55,
+            "secao": "1. Voloshin’s Social and Cultural Origins",
+            "similaridade": 0.4774,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "and Turkestan, through proximity over time. Though originally a political exile, he had been integrated into the local system. He had gained some control over local networks and means of power. Not on"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 34,
+            "secao": "Parte V: O século XX > Samuel Beckett (1906–1989)",
+            "similaridade": 0.7198,
+            "nota_reranker": null,
+            "correto": true,
+            "texto": "Em 1946, o governo de Perón, a quem Borges se opunha, o \"promoveu\" a inspetor de aves e coelhos nos mercados municipais; ele pediu demissão. Em 1955, depois da queda de Perón, foi nomeado diretor da B"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 52,
+            "secao": "VI",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "But did they see, or did they not — That you'll never learn. Or: Like an apple pink And always most untidy. It isn't that he drinks — He's just happy every Friday. With money—he will play. With none—h"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 289,
+            "secao": "Conclusion",
+            "similaridade": 0.491,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "by decadent luxury, having acquired political power in court circles.\n\nHis influence came to an end in 1916 when he was assassinated by a group of conspirators consisting of members of the royal famil"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 57,
+            "secao": "VII",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "He commanded us to join him. Not once did he scold Kolya. He rowed, puffing out his chest in show, just as he did when someone tossed the stick back at him. He acted as though he were thoroughly enjoy"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "moliere-doente-imaginario",
+        "pergunta": "Em qual peça Molière estava atuando quando passou mal pela última vez?",
+        "responde": true,
+        "resposta_esperada": "Em O Doente Imaginário, na quarta apresentação, em 17 de fevereiro de 1673. Ele interpretava o hipocondríaco Argan, sofreu uma convulsão em cena, terminou a apresentação e morreu horas depois.",
+        "posicao": 1,
+        "melhor_similaridade": 0.5716334963640388,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 47.7,
+        "topo": [
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 14,
+            "secao": "Parte IV: Iluminismo, Romantismo e séculoXIX > Jonathan Swift (1667–1745)",
+            "similaridade": 0.5716,
+            "nota_reranker": null,
+            "correto": true,
+            "texto": "A morte de Molière é lendária. Em 17 de fevereiro de 1673, durante a quarta apresentação de O Doente Imaginário, em que interpretava o hipocondríaco Argan, sofreu uma convulsão em cena e terminou a ap"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 4,
+            "secao": "Parte I: A Antiguidade ClássicaParte I: A Antiguidade Clássica > Eurípides (c. 480–406 a.C.)",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "dos três grandes trágicos: homem público, de boa reputação, respeitado e rico.\n\nVenceu o concurso dramático de Atenas por volta de vinte vezes (as fontes variam entre dezoito e vinte e quatro) e nunca"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 73,
+            "secao": "The Meaning of The Meaning of Love",
+            "similaridade": 0.5661,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "in the night took me for the devil. I had to spend the night on the bare earth [in the presence of jackals], as a result of which I went back.”3 Describing his sojourn in the desert many years later i"
+          },
+          {
+            "documento": "Hanna Chuchvaha - Art Periodical Culture in Late Imperial Russia (1898-1917)_compressed.pdf",
+            "pagina": 255,
+            "secao": "4: Apollo: Between “Archaism” and Modernism > Apollo and its Textual and Paratextual Standards: Materiality, Archeology of the Visual and Apollonianism > The “Archeological” Meaning of the Title Page",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "The first interpretation of the statue as Aphrodite came from Ivanov.\n\nHe explained it as a clash between the “female” and “male” , alluding to the “female” religions and matriarchal societies with ma"
+          },
+          {
+            "documento": "Manfred Schruba - Associações Literárias de Moscou e São Petersburgo em 1890-1917_compressed.pdf",
+            "pagina": 284,
+            "secao": "7TTTT I > I",
+            "similaridade": 0.5433,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Он, если не ошибаюсь, был одарен разнообразными талантами. Будучи еще лицеистом, он со всей силой своей буйной молодости увлекся Пушкиным и тогда же задумал издать факсимиле всех рукописей, хранившихс"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "virgilio-eneida-queimar",
+        "pergunta": "What did Virgil ask to be done with the Aeneid on his deathbed, and who prevented it?",
+        "responde": true,
+        "resposta_esperada": "He asked that the unfinished Aeneid be burned, but Augustus did not allow it. His friends Varius and Tucca edited the text, leaving the incomplete half-lines intact.",
+        "posicao": 7,
+        "melhor_similaridade": 0.6505979264437991,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 734.5,
+        "topo": [
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 8,
+            "secao": "Parte II: Idade Média e início do Renascimento > Giovanni Boccaccio (1313–1375)",
+            "similaridade": 0.6506,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Ventoux, na Provença, e, ao abrir as Confissões de Santo Agostinho no topo, leu uma passagem que o repreendeu por admirar montanhas e esquecer a alma. A narrativa dessa escalada é tida como um dos mar"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 52,
+            "secao": "VI",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "But did they see, or did they not — That you'll never learn. Or: Like an apple pink And always most untidy. It isn't that he drinks — He's just happy every Friday. With money—he will play. With none—h"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 3,
+            "secao": "Parte I: A Antiguidade ClássicaParte I: A Antiguidade Clássica > Ésquilo (c. 525–c. 456 a.C.)",
+            "similaridade": 0.5812,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Conta Valério Máximo, e outros repetem, que o poeta, calvo, estava ao ar livre, na Sicília, quando uma águia, tomando sua cabeça lustrosa por uma pedra, deixou cair sobre ela uma tartaruga para quebra"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 88,
+            "secao": "X",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "He thought for a secondhow to explain. Then answered very carefully: \"It's blank, that's true, but you see, Nekrasov touched it. Do you understand? He wrote nothing on it, but since the page is there "
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 4,
+            "secao": "Parte I: A Antiguidade ClássicaParte I: A Antiguidade Clássica > Eurípides (c. 480–406 a.C.)",
+            "similaridade": 0.5689,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "que, verdadeiro ou não, tornou-se símbolo do poder da arte contra a calúnia.\n\nSófocles morreu aos noventa anos, pouco antes da derrota final de Atenas na Guerra do Peloponeso. Segundo a tradição, dura"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "processos-por-obscenidade",
+        "pergunta": "Quais autores do documento foram processados por ofensa à moral pública ou obscenidade?",
+        "responde": true,
+        "resposta_esperada": "Flaubert foi processado em 1857 por Madame Bovary e absolvido. Baudelaire e seu editor foram processados por As Flores do Mal (multa de trezentos francos e seis poemas retirados). Joyce teve Ulisses acusado de obscenidade e só em 1933 o juiz John Woolsey o declarou não obsceno.",
+        "posicao": 14,
+        "melhor_similaridade": 0.6172918942368251,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 50.6,
+        "topo": [
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 22,
+            "secao": "Parte IV: Iluminismo, Romantismo e séculoXIX > Edgar Allan Poe (1809–1849)",
+            "similaridade": 0.5747,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Foi dândi extremo, e conta-se que tingiu os cabelos de verde, embora seja uma tradição duvidosa. Sua companheira de longos anos foi Jeanne Duval, mulher de origem negra, inspiradora de muitos poemas, "
+          },
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 218,
+            "secao": "Part IV > Chapter 11 - Tchaikovsky and Homosexuality in Imperial Russia",
+            "similaridade": 0.6173,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "everything base and perverted, has given a man shamed in public opinion the chance to abuse his name?”21 Such diary entries, made by some of the most inuential gures of the period, were quite common.2"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 21,
+            "secao": "Parte IV: Iluminismo, Romantismo e séculoXIX > Gustave Flaubert (1821–1880)",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "dedicou-se à obsessão de escrever com perfeição: o mot juste, a palavra exata.\n\nEm 1849–51, viajou ao Egito e ao Oriente Médio com o amigo Maxime Du Camp, e voltou com impressões que marcaram a obra. "
+          },
+          {
+            "documento": "Manfred Schruba - Associações Literárias de Moscou e São Petersburgo em 1890-1917_compressed.pdf",
+            "pagina": 174,
+            "secao": "7TTTT I",
+            "similaridade": 0.6171,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "В постановлении о Разряде изящной словесности, утвержденном указом от 23 декабря 1899 г., значилось: «Этот разряд составляют, во-первых, избираемые в действительные члены Академии писатели-художники и"
+          },
+          {
+            "documento": "Manfred Schruba - Associações Literárias de Moscou e São Petersburgo em 1890-1917_compressed.pdf",
+            "pagina": 108,
+            "secao": null,
+            "similaridade": 0.6143,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Сквозной темой диспутов были споры о новой литературе, в связи с чем публика ходила на вторники отчасти «ради того, чтобы не пропустить очередного литературного скандала» {Ходасевич, 1991. С. 376). Пр"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "fora-do-corpus-hemingway-filhos",
+        "pergunta": "Quantos filhos teve Ernest Hemingway?",
+        "responde": false,
+        "resposta_esperada": null,
+        "posicao": null,
+        "melhor_similaridade": 0.7163674931150825,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 24.7,
+        "topo": [
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 32,
+            "secao": "Parte V: O século XX > Ernest Hemingway (1899–1961)",
+            "similaridade": 0.7164,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "uma estátua sua, sentado a uma mesa, ocupa a calçada do café A Brasileira.\n\nErnest Hemingway (1899–1961) Hemingway nasceu em Oak Park, Illinois, filho de um médico e de uma mãe musicista dominadora, e"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 33,
+            "secao": "Parte V: O século XX > Jorge Luis Borges (1899–1986)",
+            "similaridade": 0.5448,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Deprimido, e perturbado por tratamentos de choque, Hemingway se matou em Ketchum, Idaho, em julho de 1961, assim como o pai, anos antes. F. Scott Fitzgerald (1896–1940) Francis Scott Key Fitzgerald na"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 12,
+            "secao": "Parte III: Renascimento tardio e Barroco > John Milton (1608–1674)",
+            "similaridade": 0.5755,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Sete anos depois, dois colegas de companhia, John Heminges e Henry Condell, reuniram trinta e seis peças no First Folio (1623), preservando dezoito textos que nunca haviam sido impressos, entre eles M"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 7,
+            "secao": "Parte II: Idade Média e início do Renascimento > Francesco Petrarca (1304–1374)",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "emoção, recolheu-se ao quarto e teve uma visão. Beatriz casou-se com outro e morreu em 1290, aos vinte e quatro anos. Dante a transformou em guia do Paraíso na Divina Comédia. Os historiadores discute"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 20,
+            "secao": "Parte IV: Iluminismo, Romantismo e séculoXIX > Honoré de Balzac (1799–1850)",
+            "similaridade": 0.5584,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "monge, e escrevia durante dezesseis horas, alimentado por litros de café forte.\n\nNum ensaio sobre o assunto, descreveu com humor os prazeres e os tormentos da bebida; cifras de dezenas de xícaras por "
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "fora-do-corpus-garcia-marquez-editora",
+        "pergunta": "Which publishing house released One Hundred Years of Solitude in 1967?",
+        "responde": false,
+        "resposta_esperada": null,
+        "posicao": null,
+        "melhor_similaridade": 0.6655856988542358,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 364.6,
+        "topo": [
+          {
+            "documento": "Manfred Schruba - Associações Literárias de Moscou e São Petersburgo em 1890-1917_compressed.pdf",
+            "pagina": 237,
+            "secao": "7TTTT I",
+            "similaridade": 0.6656,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "кружке, «а то просто в каком-нибудь трактире» (Шаров. С. 186).\n\nНаряду с творческими встречами членов устраивались литературные вечера, на которых «присутствовало до сорока человек» (Лягин. С. 3). Гла"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 167,
+            "secao": "XVII",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Having lost my confidence, I stubbornly suggested publishing just one chapter, the one most important to me: the one which describes how Kornei Ivanovich recited poetry to us out on the sea. No, bette"
+          },
+          {
+            "documento": "Manfred Schruba - Associações Literárias de Moscou e São Petersburgo em 1890-1917_compressed.pdf",
+            "pagina": 162,
+            "secao": "1 U. СтмвтвоуаО' «Гусар»- «*»?*«",
+            "similaridade": 0.6416,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Толстого, Л. Н. Андреева и Блока. Проект издания не был осуществлен. Год спустя Либерсон выпустила компиля тивную брошюру «Страдания одиночества» (СПб.. 1909). Блок относился положительно к начинаниям"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 180,
+            "secao": "7. Voloshin Carves Power, Cont’d, and theBroader Context and Implications of His Activities",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "For example, as Litfond gave out loans, it became entangled in a procedure by which the petitioner for a loan would provide a guarantee from his publishing house that he would receive money to cover t"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 16,
+            "secao": "Parte IV: Iluminismo, Romantismo e séculoXIX > Jane Austen (1775–1817)",
+            "similaridade": 0.6238,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Publicou seus romances sem assinar: Razão e Sensibilidade saiu em 1811, \"por uma Dama\"; Orgulho e Preconceito, em 1813, por apenas cento e dez libras, direitos vendidos ao editor, que lucrou muito mai"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "fora-do-corpus-machado-de-assis",
+        "pergunta": "Machado de Assis foi membro da Academia Brasileira de Letras?",
+        "responde": false,
+        "resposta_esperada": null,
+        "posicao": null,
+        "melhor_similaridade": 0.6064624412896058,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 19.2,
+        "topo": [
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 32,
+            "secao": "Parte V: O século XX > Ernest Hemingway (1899–1961)",
+            "similaridade": 0.6065,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "modesto e liberdade para escrever, em cafés como A Brasileira, no Chiado.\n\nSua obra é um fenômeno único: em vez de assumir uma voz, criou dezenas de \"heteroônimos\", autores fictícios com biografia, es"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 32,
+            "secao": "Parte V: O século XX > Ernest Hemingway (1899–1961)",
+            "similaridade": 0.5667,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "universidade, mas abandonou o curso. A partir de 1907, passou a viver como tradutor de cartas comerciais para empresas estrangeiras, ofício que lhe deu sustento modesto e liberdade para escrever, em c"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 9,
+            "secao": "Parte II: Idade Média e início do Renascimento > Luís de Camões (c. 1524–1580)",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Foi escudeiro, diplomata em missões na França e na Itália, controlador da alfândega do porto de Londres, juiz de paz, membro do Parlamento por Kent e, nos anos 1390, supervisor das obras reais. Foi em"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 32,
+            "secao": "Parte V: O século XX > Ernest Hemingway (1899–1961)",
+            "similaridade": 0.5685,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Segundo Pessoa, em 8 de março de 1914, \"dia triunfal\" de sua vida, escreveu em uma noite, de pé, junto a uma cômoda alta, mais de trinta poemas de O Guardador de Rebanhos, de Caeiro, e depois, de uma "
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 24,
+            "secao": "Parte IV: Iluminismo, Romantismo e séculoXIX > Emily Dickinson (1830–1886)",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Em 1855, publicou por conta própria a primeira edição de Folhas de Relva, cerca de oitocentos exemplares com doze poemas, em versos livres, sem nome do autor na capa. Ajudou a compor algumas páginas d"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "fora-do-corpus-austen-londres",
+        "pergunta": "Did Jane Austen ever live in London?",
+        "responde": false,
+        "resposta_esperada": null,
+        "posicao": null,
+        "melhor_similaridade": 0.6966510828010659,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 120.1,
+        "topo": [
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 16,
+            "secao": "Parte IV: Iluminismo, Romantismo e séculoXIX > Jane Austen (1775–1817)",
+            "similaridade": 0.6967,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Seu túmulo está em Weimar, ao lado do amigo e rival Schiller. Jane Austen (1775–1817) Jane Austen nasceu em Steventon, Hampshire, no seio de uma família numerosa, filha de um pároco que mantinha aluno"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 16,
+            "secao": "Parte IV: Iluminismo, Romantismo e séculoXIX > Jane Austen (1775–1817)",
+            "similaridade": 0.5897,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "O Príncipe Regente, futuro Jorge IV, admirava seus livros e deu a entender que aceitaria uma dedicatória; Austen, sem entusiasmo pela figura, dedicou-lhe Emma (1815). Ficou doente em 1816 e morreu em "
+          },
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 44,
+            "secao": "Part I > Chapter 1 - The First Romanovs: From Tsar Mikhail to Peter I",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "That was the ocial legend, based on Tsar Mikhail’s decree, which in 1619 granted tax and other privileges to the relatives of the late Ivan Susanin, who, “suering intolerable torture from those Polish"
+          },
+          {
+            "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental.pdf",
+            "pagina": 20,
+            "secao": "Parte IV: Iluminismo, Romantismo e séculoXIX > Honoré de Balzac (1799–1850)",
+            "similaridade": 0.5754,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Sua vida pessoal foi mais complicada. Em 1858, separou-se de Catherine, com quem teve dez filhos, e manteve um relacionamento discreto com a jovem atriz Ellen Ternan. Em 1865, sobreviveu ao acidente f"
+          },
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 51,
+            "secao": "Part I > Chapter 1 - The First Romanovs: From Tsar Mikhail to Peter I",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "He gave him his hand to kiss, but the boy was stupid and did not understand; he saw that he was not a priest, so he did not want to kiss it; the Sovereign brought his hand up to the child’s lips himse"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "fora-do-corpus-capital-australia",
+        "pergunta": "Qual é a capital da Austrália?",
+        "responde": false,
+        "resposta_esperada": null,
+        "posicao": null,
+        "melhor_similaridade": 0.33133437458701653,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 59.5,
+        "topo": [
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 55,
+            "secao": "Part I > Chapter 1 - The First Romanovs: From Tsar Mikhail to Peter I",
+            "similaridade": 0.3313,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "political and cultural image was the establishment in 1703 of the city of St.\n\nPetersburg in the mouth of the Neva River; it became the ocial new capital in 1712. The tsar was particularly proud of th"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 100,
+            "secao": "Capítulo 7",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "fossem completamente ridículas, terminou de falar bruscamente, num tom de conclusão inconcl usiva, e o que seguiu foi um silêncio incômodo. Sentiu que foram palavras jogadas ao vento, que expusera seu"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 173,
+            "secao": "Capítulo 12",
+            "similaridade": 0.2839,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Passavam admirando a belíssima Avenida Pasteur, encantando -se com antigos edifícios do lado esquerdo datados dos primeiros anos do século XX: a Universidade Federal, com o muro sempre lamentavelmente"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 132,
+            "secao": "Capítulo 9",
+            "similaridade": null,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "Não sabe que a vida é uma corrida contra o tempo, contra a morte? É a mais pura verdade. Meu coração está sendo devorado por vermes, e ainda que se regenere lentamente, essa é uma luta perdida, inútil"
+          },
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 165,
+            "secao": "Part III > Chapter 8 - Gogol, Ivanov, Tyutchev, and the End of the Nicholas I Era",
+            "similaridade": 0.2601,
+            "nota_reranker": null,
+            "correto": false,
+            "texto": "achieve what the United States has achieved. And what is the United States?\n\nCarrion; a man there is so worn down that he’s not worth a shelled egg. A state without a plenipotentiary monarch is like a"
+          }
+        ],
+        "resposta": null
+      }
+    ],
+    "nota_reranker": []
+  }
+}

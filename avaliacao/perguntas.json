@@ -1,0 +1,652 @@
+{
+  "casos": [
+    {
+      "id": "irma-de-ligia",
+      "pergunta": "Qual é o nome da irmã de Lígia?",
+      "colecoes": [
+        "geral"
+      ],
+      "responde": true,
+      "resposta_esperada": "Luiza",
+      "suporte": [
+        {
+          "documento": "A falésia e o farol",
+          "paginas": [
+            40,
+            72
+          ],
+          "contem": [
+            "Luiza",
+            "irmã"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "residencia-de-ligia",
+      "pergunta": "Onde Lígia viveu?",
+      "colecoes": [
+        "geral"
+      ],
+      "responde": true,
+      "resposta_esperada": "Altiplano, em João Pessoa e Laranjeiras, no Rio de Janeiro",
+      "suporte": [
+        {
+          "documento": "A falésia e o farol",
+          "paginas": [
+            44,
+            45
+          ],
+          "contem_algum": [
+            "Altiplano",
+            "João Pessoa",
+            "Rio de Janeiro",
+            "Laranjeiras"
+          ]
+        },
+        {
+          "documento": "A falésia e o farol",
+          "paginas": [
+            103,
+            103
+          ],
+          "contem_algum": [
+            "Altiplano",
+            "João Pessoa",
+            "Rio de Janeiro",
+            "Laranjeiras"
+          ]
+        },
+        {
+          "documento": "A falésia e o farol",
+          "paginas": [
+            176,
+            176
+          ],
+          "contem_algum": [
+            "Altiplano",
+            "João Pessoa",
+            "Rio de Janeiro",
+            "Laranjeiras"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "estudos-de-ligia-e-luiza",
+      "pergunta": "O que Lígia e Luiza estudavam?",
+      "colecoes": [
+        "geral"
+      ],
+      "responde": true,
+      "resposta_esperada": "Lígia e Luiza estudavam música. Luiza estudava piano e canto, Lígia estudava piano e violoncelo.",
+      "suporte": [
+        {
+          "documento": "A falésia e o farol",
+          "paginas": [
+            30,
+            54
+          ],
+          "contem_algum": [
+            "piano",
+            "violoncelo",
+            "estudar música",
+            "contralto"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fora-do-corpus-1",
+      "pergunta": "Lígia era escritora?",
+      "colecoes": [
+        "geral"
+      ],
+      "responde": false,
+      "observacao": "Nada no corpus trata disso: o certo é recusar."
+    },
+    {
+      "id": "fora-do-corpus-2",
+      "pergunta": "Iago era estrangeiro?",
+      "colecoes": [
+        "geral"
+      ],
+      "responde": false,
+      "observacao": "Nada no corpus trata disso: o certo é recusar."
+    },
+    {
+      "id": "akhmatova-circulo",
+      "pergunta": "Anna Akhmatova fez parte de algum círculo literário?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Sim: Anna Akhmatova foi membro do grupo dos acmeístas.",
+      "suporte": [
+        {
+          "documento": "Lydia Chukovskaya - To the Memory of Childhood",
+          "paginas": [
+            183,
+            183
+          ],
+          "contem": [
+            "Akhmatova",
+            "Acmeist"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "akhmatova-gumilyov",
+      "pergunta": "Qual era a relação entre Anna Akhmatova e Nikolai Gumilyov?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Nikolai Gumilyov foi o primeiro marido de Anna Akhmatova. Divorciaram-se em 1918.",
+      "suporte": [
+        {
+          "documento": "Lydia Chukovskaya - To the Memory of Childhood",
+          "paginas": [
+            184,
+            184
+          ],
+          "contem_algum": [
+            "Gumilyov",
+            "first husband"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "voloshin-amigos-odessa",
+      "pergunta": "Which of Voloshin’s friends stayed in Odessa?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Among his closest friends in Odessa were the renowned Russian novelist and short story writer, Ivan Bunin, and his wife, Vera Muromtseva Bunina.",
+      "suporte": [
+        {
+          "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times",
+          "paginas": [
+            142,
+            146
+          ],
+          "contem": [
+            "Bunin",
+            "Odessa"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rozanov-chernyshevsky",
+      "pergunta": "What Rozanov said about Chernyshevsky?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Rozanov treated Chernyshevsky ironically and with a certain distaste. He discovered in What Is to Be Done? traces of male homosocial desire that resonated more powerfully in the fin de siècle than in the earlier 1860s. Rozanov claimed that, without knowing it, Chernyshevsky deployed triangulated desire as love “between men,” which psychopathologists considered a symptom of degeneration.",
+      "suporte": [
+        {
+          "documento": "Olga Matich - Erotic Utopia",
+          "paginas": [
+            38,
+            38
+          ],
+          "contem": [
+            "Chernyshevsky"
+          ],
+          "contem_algum": [
+            "What Is to Be Done",
+            "Rozanov claimed",
+            "Rozanov discovered",
+            "ironically"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rozanov-suslova",
+      "pergunta": "What was the relationship between Rozanov and Apollinaria Suslova?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Rozanov and Suslova had an affair while he was still in high school and while Dostoevsky was still alive; the couple married in 1880.",
+      "suporte": [
+        {
+          "documento": "Olga Matich - Erotic Utopia",
+          "paginas": [
+            235,
+            235
+          ],
+          "contem": [
+            "Suslova"
+          ],
+          "contem_algum": [
+            "relationship",
+            "couple"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fora-do-corpus-3",
+      "pergunta": "Quais foram as vendas da Petrobras em 2023?",
+      "responde": false
+    },
+    {
+      "id": "fora-do-corpus-4",
+      "pergunta": "What was Rozanov's opinion on Abraham Lincoln?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": false
+    },
+    {
+      "id": "cervantes-lepanto",
+      "pergunta": "Qual mão Cervantes perdeu na batalha de Lepanto?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "A mão esquerda, que ficou inutilizada para sempre. Por isso ficou conhecido como \"o maneta de Lepanto\".",
+      "suporte": [
+        {
+          "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental",
+          "paginas": [
+            10,
+            10
+          ],
+          "contem": [
+            "Lepanto",
+            "mão esquerda"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shakespeare-segunda-melhor-cama",
+      "pergunta": "What did Shakespeare leave to his wife Anne in his will?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "He left her only \"the second-best bed\" (\"a segunda melhor cama\"), a detail that fuelled centuries of speculation, although it may have been the marital bed.",
+      "suporte": [
+        {
+          "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental",
+          "paginas": [
+            11,
+            11
+          ],
+          "contem": [
+            "Anne",
+            "segunda melhor cama"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dostoievski-o-jogador",
+      "pergunta": "Em quantos dias Dostoiévski ditou O Jogador e a quem?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Em apenas vinte e seis dias, à jovem estenógrafa Anna Snitkina, com quem se casou meses depois. A pressa se deveu a um contrato com o editor Stellovski, que o faria perder os direitos de suas obras por nove anos se não entregasse o romance a tempo.",
+      "suporte": [
+        {
+          "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental",
+          "paginas": [
+            25,
+            26
+          ],
+          "contem": [
+            "Snitkina"
+          ],
+          "contem_algum": [
+            "vinte e seis dias",
+            "O Jogador"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "keats-epitafio",
+      "pergunta": "What inscription did Keats ask to have on his tombstone?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "He asked that his name not appear, only the words: \"Here lies one whose name was writ in water.\"",
+      "suporte": [
+        {
+          "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental",
+          "paginas": [
+            18,
+            18
+          ],
+          "contem_algum": [
+            "escrito na água",
+            "túmulo",
+            "Cemitério Protestante"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "villa-diodati",
+      "pergunta": "Que obras nasceram do desafio de escrever histórias de fantasmas na Villa Diodati, em 1816?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Frankenstein, de Mary Shelley, e O Vampiro, de John Polidori, considerado matriz da literatura vampírica. O desafio foi proposto por Lord Byron.",
+      "suporte": [
+        {
+          "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental",
+          "paginas": [
+            17,
+            17
+          ],
+          "contem_algum": [
+            "Villa Diodati",
+            "Frankenstein",
+            "Polidori"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tolstoi-astapovo",
+      "pergunta": "Where did Tolstoy die, and how did he get there?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "He died on 7 November 1910 at the small railway station of Astapovo. At 82 he had secretly left home on 28 October, accompanied by his doctor, and fell ill with pneumonia during the journey.",
+      "suporte": [
+        {
+          "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental",
+          "paginas": [
+            26,
+            26
+          ],
+          "contem": [
+            "Astapovo",
+            "pneumonia"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "orwell-pseudonimo",
+      "pergunta": "Por que Eric Blair escolheu o pseudônimo George Orwell?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Ao que se conta, em homenagem ao rio Orwell, em Suffolk. O nome foi adotado em Na Pior em Paris e Londres (1933), seu primeiro livro.",
+      "suporte": [
+        {
+          "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental",
+          "paginas": [
+            35,
+            35
+          ],
+          "contem": [
+            "rio Orwell",
+            "Suffolk"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "eliot-pound-terra-devastada",
+      "pergunta": "Who heavily edited T. S. Eliot's The Waste Land before publication?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Ezra Pound, who cut the text drastically, almost by half, and made decisive suggestions. Eliot dedicated the poem to him as \"the better craftsman\".",
+      "suporte": [
+        {
+          "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental",
+          "paginas": [
+            31,
+            31
+          ],
+          "contem": [
+            "Ezra Pound",
+            "A Terra Devastada"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kafka-max-brod",
+      "pergunta": "O que Kafka pediu a Max Brod e o que Brod fez?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Kafka pediu, em instruções escritas, que Brod queimasse tudo após sua morte. Brod desobedeceu e publicou os textos entre 1925 e 1927.",
+      "suporte": [
+        {
+          "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental",
+          "paginas": [
+            30,
+            30
+          ],
+          "contem": [
+            "Max Brod",
+            "queimasse"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "balzac-rotina-de-escrita",
+      "pergunta": "What was Balzac's daily writing routine?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "He woke at midnight, put on a white robe resembling a monk's habit, and wrote for sixteen hours, fuelled by large amounts of strong coffee.",
+      "suporte": [
+        {
+          "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental",
+          "paginas": [
+            20,
+            20
+          ],
+          "contem": [
+            "meia-noite",
+            "roupão branco",
+            "café"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "escritores-exilados",
+      "pergunta": "Quais escritores o documento cita como exemplos de exílio?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Ovídio, Dante, Hugo, Joyce e Nabokov, seja por ordem política, seja por escolha.",
+      "suporte": [
+        {
+          "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental",
+          "paginas": [
+            37,
+            37
+          ],
+          "contem": [
+            "exilados",
+            "Ovídio",
+            "Nabokov"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "borges-peron-inspetor",
+      "pergunta": "What position did Perón's government give Borges, and how did he react?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "In 1946 Perón's government \"promoted\" him to inspector of poultry and rabbits in the municipal markets, and Borges resigned.",
+      "suporte": [
+        {
+          "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental",
+          "paginas": [
+            34,
+            34
+          ],
+          "contem": [
+            "Perón",
+            "inspetor de aves e coelhos"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "moliere-doente-imaginario",
+      "pergunta": "Em qual peça Molière estava atuando quando passou mal pela última vez?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Em O Doente Imaginário, na quarta apresentação, em 17 de fevereiro de 1673. Ele interpretava o hipocondríaco Argan, sofreu uma convulsão em cena, terminou a apresentação e morreu horas depois.",
+      "suporte": [
+        {
+          "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental",
+          "paginas": [
+            14,
+            14
+          ],
+          "contem": [
+            "O Doente Imaginário",
+            "Argan"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "virgilio-eneida-queimar",
+      "pergunta": "What did Virgil ask to be done with the Aeneid on his deathbed, and who prevented it?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "He asked that the unfinished Aeneid be burned, but Augustus did not allow it. His friends Varius and Tucca edited the text, leaving the incomplete half-lines intact.",
+      "suporte": [
+        {
+          "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental",
+          "paginas": [
+            5,
+            5
+          ],
+          "contem": [
+            "Eneida",
+            "queimada",
+            "Augusto"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "processos-por-obscenidade",
+      "pergunta": "Quais autores do documento foram processados por ofensa à moral pública ou obscenidade?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Flaubert foi processado em 1857 por Madame Bovary e absolvido. Baudelaire e seu editor foram processados por As Flores do Mal (multa de trezentos francos e seis poemas retirados). Joyce teve Ulisses acusado de obscenidade e só em 1933 o juiz John Woolsey o declarou não obsceno.",
+      "suporte": [
+        {
+          "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental",
+          "paginas": [
+            21,
+            21
+          ],
+          "contem": [
+            "Flaubert"
+          ]
+        },
+        {
+          "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental",
+          "paginas": [
+            22,
+            22
+          ],
+          "contem": [
+            "Baudelaire"
+          ]
+        },
+        {
+          "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental",
+          "paginas": [
+            29,
+            29
+          ],
+          "contem": [
+            "Ulisses"
+          ],
+          "contem_algum": [
+            "obscenidade",
+            "Woolsey"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fora-do-corpus-hemingway-filhos",
+      "pergunta": "Quantos filhos teve Ernest Hemingway?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": false,
+      "observacao": "Hemingway aparece no documento, mas os filhos não são mencionados (só os quatro casamentos). Pergunta próxima do corpus, útil para testar o limiar: o certo é recusar."
+    },
+    {
+      "id": "fora-do-corpus-garcia-marquez-editora",
+      "pergunta": "Which publishing house released One Hundred Years of Solitude in 1967?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": false,
+      "observacao": "O documento fala apenas em um 'editor em Buenos Aires', sem nomear a editora. Pergunta próxima do corpus: o certo é recusar."
+    },
+    {
+      "id": "fora-do-corpus-machado-de-assis",
+      "pergunta": "Machado de Assis foi membro da Academia Brasileira de Letras?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": false,
+      "observacao": "Machado de Assis não aparece no documento. Autor ausente do corpus: o certo é recusar."
+    },
+    {
+      "id": "fora-do-corpus-austen-londres",
+      "pergunta": "Did Jane Austen ever live in London?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": false,
+      "observacao": "Austen aparece no documento (Steventon e Winchester), mas nada trata de Londres. Pergunta próxima do corpus: o certo é recusar."
+    },
+    {
+      "id": "fora-do-corpus-capital-australia",
+      "pergunta": "Qual é a capital da Austrália?",
+      "responde": false,
+      "observacao": "Pergunta de conhecimento geral sem relação com o corpus: o certo é recusar."
+    }
+  ]
+}

@@ -155,3 +155,38 @@ def test_verificar_modelo_aceita_o_mesmo_e_recusa_outro(corpus) -> None:
         with pytest.raises(busca.ReindexacaoNecessaria) as erro:
             busca.verificar_modelo(s, emb.nome_modelo, emb.dimensao, None)
     assert erro.value.documentos == ["bolo.txt"]
+
+
+@pytest.fixture
+def corpus_ingles(banco):  # noqa: F811
+    emb = EmbeddingsSimulado(384)
+    textos = {
+        f"comum{i}.txt": f"What was said on Tuesday was long, and the report was dull {i}."
+        for i in range(24)
+    }
+    textos["rara.txt"] = "Zorblax gave a concise opinion about the budget."
+    for nome, conteudo in textos.items():
+        with banco() as s:
+            reg = servico.registrar(
+                s, nome=nome, conteudo=conteudo.encode(), colecao="en",
+                config=get_ingestao_settings(),
+            )  # fmt: skip
+        servico.processar(banco, reg.documento_id, emb, get_ingestao_settings())
+    return banco, emb
+
+
+@precisa_de_banco
+def test_busca_textual_ignora_palavras_comuns_demais_do_corpus(corpus_ingles) -> None:
+    sessoes, emb = corpus_ingles
+    with sessoes() as s:
+        achados = busca.buscar(s, "What was Zorblax opinion?", None, modo="textual", k=5)
+    # "what" e "was" estão em quase todos os trechos: só a palavra rara conta.
+    assert [a.trecho.documento for a in achados] == ["rara.txt"]
+
+
+@precisa_de_banco
+def test_busca_textual_sem_termo_raro_nao_devolve_nada(corpus_ingles) -> None:
+    sessoes, emb = corpus_ingles
+    with sessoes() as s:
+        achados = busca.buscar(s, "What was on the report?", None, modo="textual", k=5)
+    assert achados == []  # só palavras comuns demais: o que decide é a busca vetorial

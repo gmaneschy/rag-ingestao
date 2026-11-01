@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from app.consulta import busca
+from app.consulta import busca, reranker
 from app.consulta.busca import Achado, Modo
 from app.consulta.config import ConsultaSettings
 from app.llm.config import LLMSettings
@@ -117,6 +117,7 @@ def perguntar(
     tipo: TipoResposta = "factual",
     documento_ids: list[int] | None = None,
     incluir_tipos: list[str] | None = None,
+    reordenador: reranker.Reordenador | None = None,
 ) -> Resultado:
     inicio = time.perf_counter()
     if llm.limite_diario_gasto and gasto_de_hoje(session) >= llm.limite_diario_gasto:
@@ -124,13 +125,16 @@ def perguntar(
 
     busca.verificar_modelo(session, embeddings.nome_modelo, embeddings.dimensao, colecoes)
     vetor = embeddings.gerar_consulta(pergunta) if modo != "textual" else None
+    k_final = k or (consulta.consulta_k_analise if tipo == "analise" else consulta.consulta_k)
     achados = busca.buscar(
         session,
         pergunta,
         vetor,
         modo=modo,
-        k=k or (consulta.consulta_k_analise if tipo == "analise" else consulta.consulta_k),
-        candidatos=consulta.consulta_candidatos,
+        k=max(k_final, consulta.reranker_candidatos) if reordenador else k_final,
+        candidatos=max(consulta.consulta_candidatos, consulta.reranker_candidatos)
+        if reordenador
+        else consulta.consulta_candidatos,
         rrf_k=consulta.consulta_rrf_k,
         colecoes=colecoes,
         secao=secao,
@@ -139,8 +143,14 @@ def perguntar(
         documento_ids=documento_ids,
         tipos=(*busca.TIPOS_PADRAO, *(incluir_tipos or [])),
     )
+    if reordenador and achados:
+        achados = reranker.reordenar(pergunta, achados, reordenador)[:k_final]
 
-    if busca.tem_evidencia(achados, consulta.limiar_similaridade):
+    if reordenador and consulta.reranker_nota_minima is not None:
+        ha_evidencia = reranker.tem_evidencia(achados, consulta.reranker_nota_minima)
+    else:
+        ha_evidencia = busca.tem_evidencia(achados, consulta.limiar_similaridade)
+    if ha_evidencia:
         trechos = [a.trecho for a in achados]
         # O tipo só vai ao gerador quando é a análise: os geradores do tipo factual não mudam.
         resposta = (

@@ -1,0 +1,2193 @@
+{
+  "hibrida": {
+    "resumo": {
+      "rotulo": "hibrida",
+      "modo": "hibrida",
+      "perguntas_com_resposta": 8,
+      "perguntas_sem_resposta": 4,
+      "latencia_busca_media_ms": 413.72499999999997,
+      "recall@1": 0.25,
+      "recall@3": 0.5,
+      "recall@5": 0.625,
+      "recall@10": 0.75,
+      "mrr@10": 0.40327380952380953,
+      "recusa_correta_portao": 0.0,
+      "recusa_indevida_portao": 0.0
+    },
+    "limiar": [
+      {
+        "limiar": 0.0,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.05,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.1,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.15,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.2,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.25,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.3,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.35,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.4,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.45,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.5,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.55,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.6,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      }
+    ],
+    "casos": [
+      {
+        "id": "irma-de-ligia",
+        "pergunta": "Qual é o nome da irmã de Lígia?",
+        "responde": true,
+        "resposta_esperada": "Luiza",
+        "posicao": 1,
+        "melhor_similaridade": 0.6899549298765798,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 2521.0,
+        "topo": [
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 40,
+            "secao": "Capítulo 3",
+            "similaridade": 0.5567,
+            "correto": true,
+            "texto": "Sentia falta do tempo q ue passava com a irmã, e dizia ocasionalmente: “Lígia, vamos ao Guinle?”, e Lígia às vezes recusava, pois sairia com Iago, por exemplo, mas às vezes aceitava, e elas passeavam "
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 40,
+            "secao": "Capítulo 3",
+            "similaridade": 0.69,
+            "correto": false,
+            "texto": "irmã, sua confidente fiel. E o que Lígia, dois anos mais nova, poderia dizer?\n\nDo que ela sabia?"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 100,
+            "secao": "Capítulo 7",
+            "similaridade": null,
+            "correto": false,
+            "texto": "fossem completamente ridículas, terminou de falar bruscamente, num tom de conclusão inconcl usiva, e o que seguiu foi um silêncio incômodo. Sentiu que foram palavras jogadas ao vento, que expusera seu"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 158,
+            "secao": "Capítulo 11",
+            "similaridade": null,
+            "correto": false,
+            "texto": "Lígia seguia de quadro em quadro. “Sugar mommy... Quem diria!”, pensava.\n\n“Não que ele precise disso, o pai dele já é rico, mas eu não esperava isso da parte dele. É ridículo, nojento. Quantos anos el"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 72,
+            "secao": "Capítulo 6",
+            "similaridade": 0.5446,
+            "correto": true,
+            "texto": "“Vou para um lugar bem longe. A ti não voltarei mais, nunca mais.”, respondeu Luiza; e parecia tão vívida que Lígia teve certeza de que aquela era verdadeiramente sua irmã. De repente, foi transportad"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "residencia-de-ligia",
+        "pergunta": "Onde Lígia viveu?",
+        "responde": true,
+        "resposta_esperada": "Altiplano, em João Pessoa e Laranjeiras, no Rio de Janeiro",
+        "posicao": 2,
+        "melhor_similaridade": 0.5371854621633044,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 83.4,
+        "topo": [
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 72,
+            "secao": "Capítulo 6",
+            "similaridade": 0.491,
+            "correto": false,
+            "texto": "“Vou para um lugar bem longe. A ti não voltarei mais, nunca mais.”, respondeu Luiza; e parecia tão vívida que Lígia teve certeza de que aquela era verdadeiramente sua irmã. De repente, foi transportad"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 44,
+            "secao": "Capítulo 4",
+            "similaridade": 0.4948,
+            "correto": true,
+            "texto": "o da natureza - essa entidade fria e estranha que tanto inquietou a sua irmã.\n\nDurante muito tempo, por causa da leitura de certos romances e também, pode -se dizer, sintomas de juventude, Lígia alime"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 51,
+            "secao": "Capítulo 4",
+            "similaridade": 0.4647,
+            "correto": false,
+            "texto": "uma coincidência ele ter se mudado para lá, uma coincidência feliz. Mas Lígia nunca deixava de acreditar que ele mesmo era muito mimado. “Refiro -me às pessoas que não vivem em sociedade por medo, por"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 63,
+            "secao": "Capítulo 5",
+            "similaridade": 0.4433,
+            "correto": false,
+            "texto": "para Lígia -, deixando latente com o falhara naquele aspecto essencial para uma vida de adultério bem -sucedida: a discrição.\n— Onde você estava? — perguntou Miranda. Cansada e sem coragem para olhá -"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 152,
+            "secao": "Capítulo 11",
+            "similaridade": 0.5372,
+            "correto": false,
+            "texto": "céu completamente limpo. Seguiam pela Avenida Cabo Branco sem nenhum trânsito.\n\nÀ direita, condomínios, hotéis, prédios novos e construções em andamento; à esquerda, as árvores balançando ao vento, a "
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "estudos-de-ligia-e-luiza",
+        "pergunta": "O que Lígia e Luiza estudavam?",
+        "responde": true,
+        "resposta_esperada": "Lígia e Luiza estudavam música. Luiza estudava piano e canto, Lígia estudava piano e violoncelo.",
+        "posicao": 1,
+        "melhor_similaridade": 0.65250621011659,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 75.3,
+        "topo": [
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 30,
+            "secao": "Capítulo 3",
+            "similaridade": 0.6525,
+            "correto": true,
+            "texto": "Janeiro. Luiza estudava em uma escola de música fora do bairro de Laranjeiras.\n\nA princípio, os intermináveis exercícios que Luiza fazia todos os dias quando chegava em casa não despertaram em Lígia, "
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 52,
+            "secao": "Capítulo 4",
+            "similaridade": 0.6041,
+            "correto": false,
+            "texto": "Então, sempre que Lígia saía com este propósito, era inevitável que pensasse em sua irmã, pois sabia que Luiza ia ao Guinle para meditar sobre uma questão muito importante para si mesma, cuja resposta"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 36,
+            "secao": "Capítulo 3",
+            "similaridade": 0.5571,
+            "correto": false,
+            "texto": "sentada à janela de um ônibus, observando os cisnes, “ Ich leb’ allein...\n\n”; e estas melodias, estas letras, a melancolia das verdades claras e subentendidas destas canções eram somente delas, Lígia "
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 34,
+            "secao": "Capítulo 3",
+            "similaridade": 0.5433,
+            "correto": false,
+            "texto": "brincadeira de criança. Lígia e Luiza eram ambas muito parecidas na fisionomia.\n\nLuiza fosse dois anos mais velha, mas tinham quase a mesma altura, sendo Lígia um pouco mais alta; esguias, agradavelme"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 32,
+            "secao": "Capítulo 3",
+            "similaridade": 0.5507,
+            "correto": true,
+            "texto": "Luiza lamentou esse súbito desinteresse quando ela lhe disse que desejava parar, e pensou ser culpa dela, se fora rígida demais, se forçara a prática de exercícios excessivamente ou alguma peça de que"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "fora-do-corpus-1",
+        "pergunta": "Lígia era escritora?",
+        "responde": false,
+        "resposta_esperada": null,
+        "posicao": null,
+        "melhor_similaridade": 0.6297420233742931,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 74.7,
+        "topo": [
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 91,
+            "secao": "Capítulo 7",
+            "similaridade": 0.6297,
+            "correto": false,
+            "texto": "Pegou, então, o seu livro e tentou lê-lo por um tempo. “Às vezes, mal apagava a vela, meus olhos se fechavam tão depressa...” e os olhos de Lígia definitivamente fechavam, tão poderoso era Pr oust! Ma"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 37,
+            "secao": "Capítulo 3",
+            "similaridade": null,
+            "correto": false,
+            "texto": "Talvez ele não tivesse tido tanta sorte se Lígia fosse mais consciente e orgulhosa da s ua própria beleza, e assim o ignorasse sempre que pudesse - pois Iago, como o botão de um lótus, não fora tocado"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 162,
+            "secao": "Capítulo 11",
+            "similaridade": 0.6234,
+            "correto": false,
+            "texto": "Lígia posara para essa pintura, porém, a mulher no quadro tinha feições ambíguas demais e era difícil dizer quem aquela era de fato. Seria Alice? Não. As prop orções do corpo, o vestido e o piano, nad"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 72,
+            "secao": "Capítulo 6",
+            "similaridade": null,
+            "correto": false,
+            "texto": "Como queria, porém, ter certeza da identidade daquele rosto, Lígia deitou-se novamente na ten tativa vã de continuar aquele pesadelo, mas o que aguardava -lhe um sonho bem diferente. Desta vez, Lígia "
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 86,
+            "secao": "Capítulo 7",
+            "similaridade": 0.6181,
+            "correto": false,
+            "texto": "que não escapou aos olhos de Alice, que sentiu uma ponta de ciúme irrelevante.\n\nPara matar o tédio, Lígia trouxera o “ No caminho de Swann”, um sonífero poderoso, sabendo que leria as mesmas primeiras"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "fora-do-corpus-2",
+        "pergunta": "Iago era estrangeiro?",
+        "responde": false,
+        "resposta_esperada": null,
+        "posicao": null,
+        "melhor_similaridade": 0.562696267210923,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 44.7,
+        "topo": [
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 157,
+            "secao": "Capítulo 11",
+            "similaridade": 0.5627,
+            "correto": false,
+            "texto": "fato no mesmo instante, sussurrou a Iago: “Não é a sua musa ali?”. Iago, atônito e hesitante, se dirigiu a eles. “Não vi o nome dele no cartaz?”, perguntou -se Lígia. “Será que meus pais também não vi"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 77,
+            "secao": "Capítulo 6",
+            "similaridade": 0.5491,
+            "correto": false,
+            "texto": "Continuaram a caminhar em silêncio. Inquieto, ve ndo que fora um pouco insípido demais, Iago decidiu perguntar sobre a ausência recente de Lígia. — Naquele dia, antes que você voltasse para casa, eu p"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 146,
+            "secao": "Capítulo 10",
+            "similaridade": 0.528,
+            "correto": false,
+            "texto": "o filho. Como ele não falava inglês, Iago agiu como tradutor da conversa.\n\nIngrid, por sentir uma certa sim patia por seu pai e também para embaraçar Iago, começou a prolongar a conversa desnecessaria"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 143,
+            "secao": "Capítulo 10",
+            "similaridade": 0.5038,
+            "correto": false,
+            "texto": "Alguns meses antes, numa manhã de carnaval, Iago caminhava vagarosamente pela praia de Tambaú em sentido sul. O sol das 10 ardia alto sobre a cidade infestada de turistas e ele sentia, metaforicamente"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 5,
+            "secao": "Capítulo 1",
+            "similaridade": 0.4558,
+            "correto": false,
+            "texto": "emudecimento, Iago levantou-se e se despediu sem dizer nenhuma palavra.\n\nPor mais que Lígia reconhecesse, sob certa perspectiva, alguma verdade em sua desculpa descabida, jamais poderia aceitá -la - n"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "akhmatova-circulo",
+        "pergunta": "Anna Akhmatova fez parte de algum círculo literário?",
+        "responde": true,
+        "resposta_esperada": "Sim: Anna Akhmatova foi membro do grupo dos acmeístas.",
+        "posicao": 4,
+        "melhor_similaridade": 0.6858547586746683,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 79.2,
+        "topo": [
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 58,
+            "secao": "Lev Tolstoy as Early Modernist",
+            "similaridade": 0.6417,
+            "correto": false,
+            "texto": "were a practitioner of reconstitutive metonymic representation like his author.\n\nTogether with Vronsky, we get a particularly luxurious sense of Anna’s physical presence in the first part of this scen"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 173,
+            "secao": "XVII",
+            "similaridade": 0.5972,
+            "correto": false,
+            "texto": "1938. During this bitter year Chukovskaya and Akhmatova became close friends.\n\nChukovskaya visited the poet regularly and from the first day kept a journal of their meetings, often in ciphered form. D"
+          },
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 204,
+            "secao": "Part IV > Chapter 10 - Herzen, Tolstoy, and the Women’s Issue",
+            "similaridade": 0.5834,
+            "correto": false,
+            "texto": "justly? Or is she innocent, and it is not the business of people to judge her?\n\nIn other words, does Tolstoy have sympathy for Anna, or did the “rubbishy old man” (as protofeminist Anna Akhmatova angr"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 183,
+            "secao": "XVII",
+            "similaridade": 0.6859,
+            "correto": true,
+            "texto": "Biographical Glossary Akhmatova, Anna Andreyevna (1889-1966): Major twentieth-century Russian poet. A member of the Acmeist group, she attained early fame, but was criticized as apohtical after the re"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 46,
+            "secao": "Lev Tolstoy as Early Modernist",
+            "similaridade": null,
+            "correto": false,
+            "texto": "of the whole. Rather, it is the whole that is capable of killing the part.\n\nThus you must arrange your reason so that it conforms with the whole, with the source of everything, and not with the part, "
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "akhmatova-gumilyov",
+        "pergunta": "Qual era a relação entre Anna Akhmatova e Nikolai Gumilyov?",
+        "responde": true,
+        "resposta_esperada": "Nikolai Gumilyov foi o primeiro marido de Anna Akhmatova. Divorciaram-se em 1918.",
+        "posicao": null,
+        "melhor_similaridade": 0.6823103780660275,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 43.1,
+        "topo": [
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 38,
+            "secao": "Introduction",
+            "similaridade": 0.6823,
+            "correto": false,
+            "texto": "Personal contact with Anna Akhmatova, Dmitri Shostakovich, George Balanchine, and Joseph Brodsky helped me, I hope, to research and interpret historical materials on Russian culture in a less prejudic"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 173,
+            "secao": "XVII",
+            "similaridade": 0.6514,
+            "correto": false,
+            "texto": "1938. During this bitter year Chukovskaya and Akhmatova became close friends.\n\nChukovskaya visited the poet regularly and from the first day kept a journal of their meetings, often in ciphered form. D"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 69,
+            "secao": "2. The Russian Symbolists and Their Circles",
+            "similaridade": 0.6475,
+            "correto": false,
+            "texto": "Last year it was Ekaterina Alekseevna [Bal’mont], now it is Anna Rudolfovna.”28 Despite Mintslova’s “maternal” manipulations, and despite months and even years of agonized indecision, inarticulate fee"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 183,
+            "secao": "XVII",
+            "similaridade": 0.6238,
+            "correto": false,
+            "texto": "Biographical Glossary Akhmatova, Anna Andreyevna (1889-1966): Major twentieth-century Russian poet. A member of the Acmeist group, she attained early fame, but was criticized as apohtical after the re"
+          },
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 204,
+            "secao": "Part IV > Chapter 10 - Herzen, Tolstoy, and the Women’s Issue",
+            "similaridade": null,
+            "correto": false,
+            "texto": "justly? Or is she innocent, and it is not the business of people to judge her?\n\nIn other words, does Tolstoy have sympathy for Anna, or did the “rubbishy old man” (as protofeminist Anna Akhmatova angr"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "voloshin-amigos-odessa",
+        "pergunta": "Which of Voloshin’s friends stayed in Odessa?",
+        "responde": true,
+        "resposta_esperada": "Among his closest friends in Odessa were the renowned Russian novelist and short story writer, Ivan Bunin, and his wife, Vera Muromtseva Bunina.",
+        "posicao": 7,
+        "melhor_similaridade": 0.6841808285730195,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 458.0,
+        "topo": [
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 145,
+            "secao": "6. Voloshin Carves Power out of Fear",
+            "similaridade": 0.6842,
+            "correto": false,
+            "texto": "to another. From now on Voloshin would become a champion in this activity.\n\nSoon after the arrival of the Bolsheviks, and as they gained a foothold in the Crimea, Voloshin decided to leave Odessa and "
+          },
+          {
+            "documento": "Hanna Chuchvaha - Art Periodical Culture in Late Imperial Russia (1898-1917)_compressed.pdf",
+            "pagina": 253,
+            "secao": "4: Apollo: Between “Archaism” and Modernism > Apollo and its Textual and Paratextual Standards: Materiality, Archeology of the Visual and Apollonianism > The “Archeological” Meaning of the Title Page",
+            "similaridade": null,
+            "correto": false,
+            "texto": "Antiquus (1908),189 which was executed after his return. 190 It was first exhibited in the Salon d’Automne in Paris in 1908,191 later in Makovskii’s Salon in St Petersburg in 1909 and in London in Bak"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 156,
+            "secao": "6. Voloshin Carves Power out of Fear",
+            "similaridade": 0.6818,
+            "correto": false,
+            "texto": "The town, Voloshin tells us, was teeming with White refugees and old friends; amazingly Voloshin found here his old flame, Elizaveta Dmitrieva, the one-time Cherubina de Gabriak. Here, too, he must ag"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 75,
+            "secao": "2. The Russian Symbolists and Their Circles",
+            "similaridade": null,
+            "correto": false,
+            "texto": "In Ivanov’s sense of the malleability of nature, in his rather Nietzschean will to control and transform, we see a foreshadowing of the way in which he would feel free to transform the lives of Max an"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 143,
+            "secao": "6. Voloshin Carves Power out of Fear",
+            "similaridade": 0.6605,
+            "correto": false,
+            "texto": "It was not merely passive calm that drew people to Voloshin during this period.\n\nAs the pressures and miseries of war mounted in Odessa, he began to take a more active role in the lives of his friends"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "rozanov-chernyshevsky",
+        "pergunta": "What Rozanov said about Chernyshevsky?",
+        "responde": true,
+        "resposta_esperada": "Rozanov treated Chernyshevsky ironically and with a certain distaste. He discovered in What Is to Be Done? traces of male homosocial desire that resonated more powerfully in the fin de siècle than in the earlier 1860s. Rozanov claimed that, without knowing it, Chernyshevsky deployed triangulated desire as love “between men,” which psychopathologists considered a symptom of degeneration.",
+        "posicao": null,
+        "melhor_similaridade": 0.7404203776998546,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 234.7,
+        "topo": [
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 38,
+            "secao": "Introduction",
+            "similaridade": 0.7052,
+            "correto": false,
+            "texto": "extensively about Chernyshevsky than did any of his symbolist contemporaries.\n\nPredictably, he treated Chernyshevsky ironically and with a certain distaste. Yet he regularly commented with great inter"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 180,
+            "secao": "Transcending Gender",
+            "similaridade": 0.7404,
+            "correto": false,
+            "texto": "Merezhkovsky’s desire to shake off the earlier layer of his cultural identity.\n\nHe claimed that Merezhkovsky actually wanted to be a Chernyshevsky with a religious twist.5 Without naming Chernyshevsky"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 129,
+            "secao": "XIV",
+            "similaridade": null,
+            "correto": false,
+            "texto": "field of a lost battle, from hopeless grief, he'd almost always try to flee.\n\nHaving done everything possible, even more than was possible, he wanted only one thing—to restore his good spirits and get"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 231,
+            "secao": "Religious-Philosophical Meetings",
+            "similaridade": 0.7203,
+            "correto": false,
+            "texto": "A close collaborator of the Merezhkovskys at the beginning of the century, Rozanov differed from the other members of their inner circle, in part because he was not a product of the fin-de-siècle hoth"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 144,
+            "secao": "XV",
+            "similaridade": null,
+            "correto": false,
+            "texto": "AfterMama talked to us, I wondered for the first time about our grandfather. Papa's father. And why we mustn't ask about him. \"That grandfather probably died,\" I said to Kolya after Mama's injunction."
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "rozanov-suslova",
+        "pergunta": "What was the relationship between Rozanov and Apollinaria Suslova?",
+        "responde": true,
+        "resposta_esperada": "Rozanov and Suslova had an affair while he was still in high school and while Dostoevsky was still alive; the couple married in 1880.",
+        "posicao": 3,
+        "melhor_similaridade": 0.6242852741193242,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 467.6,
+        "topo": [
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 254,
+            "secao": "Vasilii Rozanov",
+            "similaridade": 0.6243,
+            "correto": false,
+            "texto": "organ” (ud).6 Rozanov’s obsession with the part-whole correlation resembles in\n\nBook cover of Fallen Leavesby Vasilii Rozanov"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 209,
+            "secao": "Conclusion",
+            "similaridade": null,
+            "correto": false,
+            "texto": "bureaucracy— and only marginally was money involved in this subsidized state\n\nsystem. This was the essence of the deal that was struck, the relationship established, between the literary community and"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 235,
+            "secao": "Religious-Philosophical Meetings",
+            "similaridade": 0.62,
+            "correto": true,
+            "texto": "Russia’s antiquated divorce laws and intolerance of illegitimate children.\n\nUnquestionably, the most interesting aspect of Rozanov’s biography was his relationship with Apollinaria Suslova, Dostoevsky"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 151,
+            "secao": "6. Voloshin Carves Power out of Fear",
+            "similaridade": null,
+            "correto": false,
+            "texto": "The head of the Education and Economy Sections, and by all accounts the de facto head of the Bureau, was an old friend, Nikandr Marks, a former Imperial Army general, paleographer, archaeologist, and "
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 231,
+            "secao": "Religious-Philosophical Meetings",
+            "similaridade": 0.6165,
+            "correto": false,
+            "texto": "A close collaborator of the Merezhkovskys at the beginning of the century, Rozanov differed from the other members of their inner circle, in part because he was not a product of the fin-de-siècle hoth"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "fora-do-corpus-3",
+        "pergunta": "Quais foram as vendas da Petrobras em 2023?",
+        "responde": false,
+        "resposta_esperada": null,
+        "posicao": null,
+        "melhor_similaridade": 0.4665743374061353,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 27.3,
+        "topo": [
+          {
+            "documento": "Hanna Chuchvaha - Art Periodical Culture in Late Imperial Russia (1898-1917)_compressed.pdf",
+            "pagina": 160,
+            "secao": "3: The Golden Fleece or Russia’s “Très Riches Heures” > The Golden Fleece: the Paratextual Dimension > Extravagance in the ‘Time of Troubles’: From ‘Materialism’ to Materiality’",
+            "similaridade": 0.4666,
+            "correto": false,
+            "texto": "during the first year of publication was released in the last issue of 1906.\n\nIt stated that 83,783.85 roubles were spent during the first year; income from sales was only 101 Bogomolov, “Simvolistska"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 123,
+            "secao": "Capítulo 9",
+            "similaridade": null,
+            "correto": false,
+            "texto": "— respondeu Lígia e, vendo a surpresa no rosto de Alice, acrescentou, rindo: — Estou brincando! Na verdade, para o programa que eu montei, preciso de acompanhamento para quatro peças que não são nada "
+          },
+          {
+            "documento": "Hanna Chuchvaha - Art Periodical Culture in Late Imperial Russia (1898-1917)_compressed.pdf",
+            "pagina": 160,
+            "secao": "3: The Golden Fleece or Russia’s “Très Riches Heures” > The Golden Fleece: the Paratextual Dimension > Extravagance in the ‘Time of Troubles’: From ‘Materialism’ to Materiality’",
+            "similaridade": 0.454,
+            "correto": false,
+            "texto": "It cost 14 roubles per year; the price, however, included ten yearly supplements and the illustrated periodical Picturesque Russia (Zhivopisnaia Rossiia). The high life extended to the editorial offic"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 129,
+            "secao": "Capítulo 9",
+            "similaridade": null,
+            "correto": false,
+            "texto": "coisa, mas apenas se jogar nos braços seguros de alguém para se sentir feliz.\n\nSeu antigo namorado, que não lhe dava carinho nem atenção, interpretava isso como um algum tipo de complexo e, no mais, n"
+          },
+          {
+            "documento": "Hanna Chuchvaha - Art Periodical Culture in Late Imperial Russia (1898-1917)_compressed.pdf",
+            "pagina": 52,
+            "secao": "1: When Russia Learned to Reproduce Art > The “Age of Mechanical Reproduction” in Russia: Reproduction Techniques in Historical Perspective",
+            "similaridade": 0.4509,
+            "correto": false,
+            "texto": "published twice a month), and its yearly subscription cost 10 roubles in 1883.\n\nIt did, however, offer 20 high quality reproductions every year, made in etching, copper engraving, lithography or photo"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "fora-do-corpus-4",
+        "pergunta": "What was Rozanov's opinion on Abraham Lincoln?",
+        "responde": false,
+        "resposta_esperada": null,
+        "posicao": null,
+        "melhor_similaridade": 0.6302383800184987,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 855.7,
+        "topo": [
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 253,
+            "secao": "Vasilii Rozanov",
+            "similaridade": 0.6302,
+            "correto": false,
+            "texto": "his discursive power—what Bely described as “the thick physiological jam of V.\n\nV .’ s thinking.” The appropriation of bodily excretion for the purpose of articulating his views on religion and other "
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 340,
+            "secao": "Introduction > Chapter 7. Vasilii Razonov",
+            "similaridade": null,
+            "correto": false,
+            "texto": "Many critics present a one-sided view of Rozanov’s anti- Semitism, either avoiding it altogether or focusing only on it. For instance, Victor Shklovsky’s groundbreaking essay on Rozanov makes no refer"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 278,
+            "secao": "Vasilii Rozanov",
+            "similaridade": 0.6124,
+            "correto": false,
+            "texto": "His later version reveals the motor that drove Rozanov’s polemical style, which he took here to its shocking extreme. Unscrupulous, or immoral like Nietzsche, Rozanov ignored the potential impact of h"
+          },
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 284,
+            "secao": "Part V > Chapter 14 - Nicholas II and Lenin as Art Connoisseurs",
+            "similaridade": null,
+            "correto": false,
+            "texto": "force to the old hands looked like attempts to weave a knout out of sand.\n\nEverything was falling apart.”41 Rozanov was amazed to hear of an old peasant declaring that “the former tsar should be skinn"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 251,
+            "secao": "Vasilii Rozanov",
+            "similaridade": 0.5874,
+            "correto": false,
+            "texto": "with him in Zinaida Gippius’s Petersburg apartment during the 1905 revolution.\n\nLike Bely’s verbal portraits of Solov’ev and Gippius, quoted in earlier chapters, this one is grotesque, not to say vici"
+          }
+        ],
+        "resposta": null
+      }
+    ]
+  },
+  "vetorial": {
+    "resumo": {
+      "rotulo": "vetorial",
+      "modo": "vetorial",
+      "perguntas_com_resposta": 8,
+      "perguntas_sem_resposta": 4,
+      "latencia_busca_media_ms": 20.275000000000002,
+      "recall@1": 0.25,
+      "recall@3": 0.5,
+      "recall@5": 0.75,
+      "recall@10": 0.75,
+      "mrr@10": 0.4375,
+      "recusa_correta_portao": 0.0,
+      "recusa_indevida_portao": 0.0
+    },
+    "limiar": [
+      {
+        "limiar": 0.0,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.05,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.1,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.15,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.2,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.25,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.3,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.35,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.4,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.45,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.5,
+        "recusa_correta": 0.25,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.55,
+        "recusa_correta": 0.25,
+        "recusa_indevida": 0.125
+      },
+      {
+        "limiar": 0.6,
+        "recusa_correta": 0.5,
+        "recusa_indevida": 0.125
+      }
+    ],
+    "casos": [
+      {
+        "id": "irma-de-ligia",
+        "pergunta": "Qual é o nome da irmã de Lígia?",
+        "responde": true,
+        "resposta_esperada": "Luiza",
+        "posicao": 2,
+        "melhor_similaridade": 0.6899549298765798,
+        "ha_lexical": false,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 14.9,
+        "topo": [
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 40,
+            "secao": "Capítulo 3",
+            "similaridade": 0.69,
+            "correto": false,
+            "texto": "irmã, sua confidente fiel. E o que Lígia, dois anos mais nova, poderia dizer?\n\nDo que ela sabia?"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 40,
+            "secao": "Capítulo 3",
+            "similaridade": 0.5567,
+            "correto": true,
+            "texto": "Sentia falta do tempo q ue passava com a irmã, e dizia ocasionalmente: “Lígia, vamos ao Guinle?”, e Lígia às vezes recusava, pois sairia com Iago, por exemplo, mas às vezes aceitava, e elas passeavam "
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 72,
+            "secao": "Capítulo 6",
+            "similaridade": 0.5446,
+            "correto": true,
+            "texto": "“Vou para um lugar bem longe. A ti não voltarei mais, nunca mais.”, respondeu Luiza; e parecia tão vívida que Lígia teve certeza de que aquela era verdadeiramente sua irmã. De repente, foi transportad"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 40,
+            "secao": "Capítulo 3",
+            "similaridade": 0.5241,
+            "correto": true,
+            "texto": "sincera que sempre tivera por ela, sua irmã mais velha e inalcançável; e se\n\na universidade era penosa para Luiza, Lígia ansiava pelo próprio desafio, pois naquele ano faria o"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 176,
+            "secao": "Capítulo 12",
+            "similaridade": 0.5062,
+            "correto": false,
+            "texto": "Aquele pontinho verde ali, mais em cima, é o Parque Guinle, perto da nossa casa.”, dizia Luiza; e embora Lígia também estivesse deslumbrada com a vista, observava muito mais atentamente a irmã. Gostav"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "residencia-de-ligia",
+        "pergunta": "Onde Lígia viveu?",
+        "responde": true,
+        "resposta_esperada": "Altiplano, em João Pessoa e Laranjeiras, no Rio de Janeiro",
+        "posicao": 4,
+        "melhor_similaridade": 0.5371854621633044,
+        "ha_lexical": false,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 15.5,
+        "topo": [
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 152,
+            "secao": "Capítulo 11",
+            "similaridade": 0.5372,
+            "correto": false,
+            "texto": "céu completamente limpo. Seguiam pela Avenida Cabo Branco sem nenhum trânsito.\n\nÀ direita, condomínios, hotéis, prédios novos e construções em andamento; à esquerda, as árvores balançando ao vento, a "
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 176,
+            "secao": "Capítulo 12",
+            "similaridade": 0.5047,
+            "correto": false,
+            "texto": "deixou de ser a cidade maravil hosa há muito tempo... e isso é muito triste.\n\nHoje, o Rio é uma quimera!” Era verdade, Lígia sabia, pois lá morara durante toda a vida e sua pele não conhecia outra rea"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 43,
+            "secao": "Capítulo 3",
+            "similaridade": 0.5018,
+            "correto": false,
+            "texto": "Luiza andou pela última vez no Centro do Rio, passou pelas praias, pelos museus, pelos palácios; entre lágrimas e suspiros, despediu -se de suas amigas; foi com Lí gia passear de bondinho até o Pão de"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 44,
+            "secao": "Capítulo 4",
+            "similaridade": 0.4948,
+            "correto": true,
+            "texto": "o da natureza - essa entidade fria e estranha que tanto inquietou a sua irmã.\n\nDurante muito tempo, por causa da leitura de certos romances e também, pode -se dizer, sintomas de juventude, Lígia alime"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 72,
+            "secao": "Capítulo 6",
+            "similaridade": 0.491,
+            "correto": false,
+            "texto": "“Vou para um lugar bem longe. A ti não voltarei mais, nunca mais.”, respondeu Luiza; e parecia tão vívida que Lígia teve certeza de que aquela era verdadeiramente sua irmã. De repente, foi transportad"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "estudos-de-ligia-e-luiza",
+        "pergunta": "O que Lígia e Luiza estudavam?",
+        "responde": true,
+        "resposta_esperada": "Lígia e Luiza estudavam música. Luiza estudava piano e canto, Lígia estudava piano e violoncelo.",
+        "posicao": 1,
+        "melhor_similaridade": 0.65250621011659,
+        "ha_lexical": false,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 17.2,
+        "topo": [
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 30,
+            "secao": "Capítulo 3",
+            "similaridade": 0.6525,
+            "correto": true,
+            "texto": "Janeiro. Luiza estudava em uma escola de música fora do bairro de Laranjeiras.\n\nA princípio, os intermináveis exercícios que Luiza fazia todos os dias quando chegava em casa não despertaram em Lígia, "
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 52,
+            "secao": "Capítulo 4",
+            "similaridade": 0.6041,
+            "correto": false,
+            "texto": "Então, sempre que Lígia saía com este propósito, era inevitável que pensasse em sua irmã, pois sabia que Luiza ia ao Guinle para meditar sobre uma questão muito importante para si mesma, cuja resposta"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 48,
+            "secao": "Capítulo 4",
+            "similaridade": 0.583,
+            "correto": false,
+            "texto": "sobre os pintores que então eram os seus prediletos. Ali no Jardim Botânico B.\n\nM., enquanto aguardavam o guia, Iago contava uma dessas anedotas sobre Caravaggio, pois Lígia lhe perguntara o que andar"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 39,
+            "secao": "Capítulo 3",
+            "similaridade": 0.5767,
+            "correto": true,
+            "texto": "opinião fosse apenas um germe de ideia na época. O que Iago queria era afirmar-se, ali, diante dela, e dizer a ela e a si mesmo que “se essas pessoas podem ser artistas, eu também posso.” Em 2018, Lui"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 167,
+            "secao": "Capítulo 11",
+            "similaridade": 0.5766,
+            "correto": false,
+            "texto": "Talvez quisesse protegê-la, ou talvez estivesse sendo simplesmente sincera. Ali, sentada, ocorreu à Lígia a ideia de que Luiza se sentisse de algum modo exposta quando o assunto era a música que lhe f"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "fora-do-corpus-1",
+        "pergunta": "Lígia era escritora?",
+        "responde": false,
+        "resposta_esperada": null,
+        "posicao": null,
+        "melhor_similaridade": 0.6297420233742931,
+        "ha_lexical": false,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 13.1,
+        "topo": [
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 91,
+            "secao": "Capítulo 7",
+            "similaridade": 0.6297,
+            "correto": false,
+            "texto": "Pegou, então, o seu livro e tentou lê-lo por um tempo. “Às vezes, mal apagava a vela, meus olhos se fechavam tão depressa...” e os olhos de Lígia definitivamente fechavam, tão poderoso era Pr oust! Ma"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 162,
+            "secao": "Capítulo 11",
+            "similaridade": 0.6234,
+            "correto": false,
+            "texto": "Lígia posara para essa pintura, porém, a mulher no quadro tinha feições ambíguas demais e era difícil dizer quem aquela era de fato. Seria Alice? Não. As prop orções do corpo, o vestido e o piano, nad"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 86,
+            "secao": "Capítulo 7",
+            "similaridade": 0.6181,
+            "correto": false,
+            "texto": "que não escapou aos olhos de Alice, que sentiu uma ponta de ciúme irrelevante.\n\nPara matar o tédio, Lígia trouxera o “ No caminho de Swann”, um sonífero poderoso, sabendo que leria as mesmas primeiras"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 113,
+            "secao": "Capítulo 8",
+            "similaridade": 0.604,
+            "correto": false,
+            "texto": "Mas quando entrou pela primeira vez, se impressionou com a quantidade de livros que Lígia tinha, o quadro de Jacqueline du Pré na parede, os porta -retratos de família numa escrivaninha e que não olho"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "fora-do-corpus-2",
+        "pergunta": "Iago era estrangeiro?",
+        "responde": false,
+        "resposta_esperada": null,
+        "posicao": null,
+        "melhor_similaridade": 0.562696267210923,
+        "ha_lexical": false,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 15.0,
+        "topo": [
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 157,
+            "secao": "Capítulo 11",
+            "similaridade": 0.5627,
+            "correto": false,
+            "texto": "fato no mesmo instante, sussurrou a Iago: “Não é a sua musa ali?”. Iago, atônito e hesitante, se dirigiu a eles. “Não vi o nome dele no cartaz?”, perguntou -se Lígia. “Será que meus pais também não vi"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 77,
+            "secao": "Capítulo 6",
+            "similaridade": 0.5491,
+            "correto": false,
+            "texto": "Continuaram a caminhar em silêncio. Inquieto, ve ndo que fora um pouco insípido demais, Iago decidiu perguntar sobre a ausência recente de Lígia. — Naquele dia, antes que você voltasse para casa, eu p"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 68,
+            "secao": "Capítulo 5",
+            "similaridade": 0.5432,
+            "correto": false,
+            "texto": "Quando ela chegou, ele estava conversando com um velho senhor que o questionava sobre o lugar vazio ao seu lado. Provavelmente, não era a segunda nem a terceira v ez que esta inquisição acontecia naqu"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 146,
+            "secao": "Capítulo 10",
+            "similaridade": 0.528,
+            "correto": false,
+            "texto": "o filho. Como ele não falava inglês, Iago agiu como tradutor da conversa.\n\nIngrid, por sentir uma certa sim patia por seu pai e também para embaraçar Iago, começou a prolongar a conversa desnecessaria"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 143,
+            "secao": "Capítulo 10",
+            "similaridade": 0.5038,
+            "correto": false,
+            "texto": "Alguns meses antes, numa manhã de carnaval, Iago caminhava vagarosamente pela praia de Tambaú em sentido sul. O sol das 10 ardia alto sobre a cidade infestada de turistas e ele sentia, metaforicamente"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "akhmatova-circulo",
+        "pergunta": "Anna Akhmatova fez parte de algum círculo literário?",
+        "responde": true,
+        "resposta_esperada": "Sim: Anna Akhmatova foi membro do grupo dos acmeístas.",
+        "posicao": 1,
+        "melhor_similaridade": 0.6858547586746683,
+        "ha_lexical": false,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 27.6,
+        "topo": [
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 183,
+            "secao": "XVII",
+            "similaridade": 0.6859,
+            "correto": true,
+            "texto": "Biographical Glossary Akhmatova, Anna Andreyevna (1889-1966): Major twentieth-century Russian poet. A member of the Acmeist group, she attained early fame, but was criticized as apohtical after the re"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 58,
+            "secao": "Lev Tolstoy as Early Modernist",
+            "similaridade": 0.6417,
+            "correto": false,
+            "texto": "were a practitioner of reconstitutive metonymic representation like his author.\n\nTogether with Vronsky, we get a particularly luxurious sense of Anna’s physical presence in the first part of this scen"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 132,
+            "secao": "5. Insiders and Outsiders, Gossip and Mythology:From Communitas toward Network Node",
+            "similaridade": 0.636,
+            "correto": false,
+            "texto": "described in terms of her sharovari, her boots, her hair, and her smoking.\n\nAnd, of course, the Obormoty come up again and again, even if their membership has changed: a happily unified community of a"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 183,
+            "secao": "XVII",
+            "similaridade": 0.6302,
+            "correto": false,
+            "texto": "propaganda campaign she was expelled from the Soviet Union of Writers.\n\nShe and her poetry regained official status in the cultural thaw of the late 1950s, but Requiem, her tragic lament written durin"
+          },
+          {
+            "documento": "Korney Chukovsky - The Silver Crest - My Russian Boyhood.pdf",
+            "pagina": 148,
+            "secao": "DEDICATED TO RITA VADZINSKAYA",
+            "similaridade": 0.6267,
+            "correto": false,
+            "texto": "“Annabel Lee,” and discovered that I could understand almost every word of it.\n\nI decided that Annabel Lee was Rita Vadzinskaya, and I used to recite the poem out loud from the rooftops while I was wo"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "akhmatova-gumilyov",
+        "pergunta": "Qual era a relação entre Anna Akhmatova e Nikolai Gumilyov?",
+        "responde": true,
+        "resposta_esperada": "Nikolai Gumilyov foi o primeiro marido de Anna Akhmatova. Divorciaram-se em 1918.",
+        "posicao": null,
+        "melhor_similaridade": 0.6823103780660275,
+        "ha_lexical": false,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 26.4,
+        "topo": [
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 38,
+            "secao": "Introduction",
+            "similaridade": 0.6823,
+            "correto": false,
+            "texto": "Personal contact with Anna Akhmatova, Dmitri Shostakovich, George Balanchine, and Joseph Brodsky helped me, I hope, to research and interpret historical materials on Russian culture in a less prejudic"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 97,
+            "secao": "3. Voloshin and the Modernist Problem of the Ugly Poetess",
+            "similaridade": 0.6769,
+            "correto": false,
+            "texto": "was the case, and on who the heroes of the tale were, and who the villains.\n\nA principal complication was an overlapping of Cherubina’s story with the story of another romance that found its way into "
+          },
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 180,
+            "secao": "Part III > Chapter 8 - Gogol, Ivanov, Tyutchev, and the End of the Nicholas I Era",
+            "similaridade": 0.6615,
+            "correto": false,
+            "texto": "for three-quarters of a century, turning into dogma. The real situation was not quite so black-and-white. Let us recall such cultural titans as Pushkin, Gogol, and the composer Glinka, who all interac"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 45,
+            "secao": "1. Voloshin’s Social and Cultural Origins",
+            "similaridade": 0.6567,
+            "correto": false,
+            "texto": "Russia who sought energetically to shape Russian identity and discourse through art, literature, music, theater, and philosophy. When Elena Ottobal’dovna at last succeeded in completing the move to th"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 183,
+            "secao": "XVII",
+            "similaridade": 0.6543,
+            "correto": false,
+            "texto": "Though they have not been published in the Soviet Union, the informed Soviet reader would understand the reference in Chapter X to the lesson her father taught her about recognizing the importance of "
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "voloshin-amigos-odessa",
+        "pergunta": "Which of Voloshin’s friends stayed in Odessa?",
+        "responde": true,
+        "resposta_esperada": "Among his closest friends in Odessa were the renowned Russian novelist and short story writer, Ivan Bunin, and his wife, Vera Muromtseva Bunina.",
+        "posicao": 4,
+        "melhor_similaridade": 0.6841808285730195,
+        "ha_lexical": false,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 23.7,
+        "topo": [
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 145,
+            "secao": "6. Voloshin Carves Power out of Fear",
+            "similaridade": 0.6842,
+            "correto": false,
+            "texto": "to another. From now on Voloshin would become a champion in this activity.\n\nSoon after the arrival of the Bolsheviks, and as they gained a foothold in the Crimea, Voloshin decided to leave Odessa and "
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 156,
+            "secao": "6. Voloshin Carves Power out of Fear",
+            "similaridade": 0.6818,
+            "correto": false,
+            "texto": "The town, Voloshin tells us, was teeming with White refugees and old friends; amazingly Voloshin found here his old flame, Elizaveta Dmitrieva, the one-time Cherubina de Gabriak. Here, too, he must ag"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 143,
+            "secao": "6. Voloshin Carves Power out of Fear",
+            "similaridade": 0.6605,
+            "correto": false,
+            "texto": "It was not merely passive calm that drew people to Voloshin during this period.\n\nAs the pressures and miseries of war mounted in Odessa, he began to take a more active role in the lives of his friends"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 146,
+            "secao": "6. Voloshin Carves Power out of Fear",
+            "similaridade": 0.6585,
+            "correto": true,
+            "texto": "less permutations of networking and patronage-seeking activity that were required in this volatile period.25 According to Bunin, who provides the first part of this story, Voloshin in his effort to le"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 158,
+            "secao": "6. Voloshin Carves Power out of Fear",
+            "similaridade": 0.6461,
+            "correto": false,
+            "texto": "(Kudasheva, Parnok, and Gertsyk, along with Anastasiia Tsvetaeva, all lived\n\ntogether in the nearby village of Sudak); and, finally, Mandelshtam. It was indeed a gathering of old friends, or at least "
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "rozanov-chernyshevsky",
+        "pergunta": "What Rozanov said about Chernyshevsky?",
+        "responde": true,
+        "resposta_esperada": "Rozanov treated Chernyshevsky ironically and with a certain distaste. He discovered in What Is to Be Done? traces of male homosocial desire that resonated more powerfully in the fin de siècle than in the earlier 1860s. Rozanov claimed that, without knowing it, Chernyshevsky deployed triangulated desire as love “between men,” which psychopathologists considered a symptom of degeneration.",
+        "posicao": null,
+        "melhor_similaridade": 0.7404203776998546,
+        "ha_lexical": false,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 21.3,
+        "topo": [
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 180,
+            "secao": "Transcending Gender",
+            "similaridade": 0.7404,
+            "correto": false,
+            "texto": "Merezhkovsky’s desire to shake off the earlier layer of his cultural identity.\n\nHe claimed that Merezhkovsky actually wanted to be a Chernyshevsky with a religious twist.5 Without naming Chernyshevsky"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 231,
+            "secao": "Religious-Philosophical Meetings",
+            "similaridade": 0.7203,
+            "correto": false,
+            "texto": "A close collaborator of the Merezhkovskys at the beginning of the century, Rozanov differed from the other members of their inner circle, in part because he was not a product of the fin-de-siècle hoth"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 180,
+            "secao": "Transcending Gender",
+            "similaridade": 0.7156,
+            "correto": false,
+            "texto": "V o d o v o z o v i s his great moral justification.”6 Vasilii Vodovozov, a radical journalist of Merezhkovsky’s generation, was the son of Elizaveta Vodovozova, an 1860s activist for whom What Is to "
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 38,
+            "secao": "Introduction",
+            "similaridade": 0.7061,
+            "correto": false,
+            "texto": "In linking the experimental triple union to an overarching goal of transfiguration, I suggest that Gippius appropriated Chernyshevsky, who had proposed a similar extramarital structure, with its power"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 267,
+            "secao": "Vasilii Rozanov",
+            "similaridade": 0.7052,
+            "correto": false,
+            "texto": "a footnote to the case study of the surgeon, Rozanov compared Chernyshevsky’s face to Raphael’s beautiful, androgynous self-portraits."
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "rozanov-suslova",
+        "pergunta": "What was the relationship between Rozanov and Apollinaria Suslova?",
+        "responde": true,
+        "resposta_esperada": "Rozanov and Suslova had an affair while he was still in high school and while Dostoevsky was still alive; the couple married in 1880.",
+        "posicao": 2,
+        "melhor_similaridade": 0.6242852741193242,
+        "ha_lexical": false,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 32.5,
+        "topo": [
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 254,
+            "secao": "Vasilii Rozanov",
+            "similaridade": 0.6243,
+            "correto": false,
+            "texto": "organ” (ud).6 Rozanov’s obsession with the part-whole correlation resembles in\n\nBook cover of Fallen Leavesby Vasilii Rozanov"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 235,
+            "secao": "Religious-Philosophical Meetings",
+            "similaridade": 0.62,
+            "correto": true,
+            "texto": "Russia’s antiquated divorce laws and intolerance of illegitimate children.\n\nUnquestionably, the most interesting aspect of Rozanov’s biography was his relationship with Apollinaria Suslova, Dostoevsky"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 231,
+            "secao": "Religious-Philosophical Meetings",
+            "similaridade": 0.6165,
+            "correto": false,
+            "texto": "A close collaborator of the Merezhkovskys at the beginning of the century, Rozanov differed from the other members of their inner circle, in part because he was not a product of the fin-de-siècle hoth"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 339,
+            "secao": "Introduction > Chapter 7. Vasilii Razonov",
+            "similaridade": 0.616,
+            "correto": false,
+            "texto": "Sokolov’s Obrezanie u evreev: Istoriko-bogoslovskoe issledovanieappeared in Pravoslavnyi Sobesednik, a Kazan’ theological journal, in 1890–91. A separate publication of it also appeared in Kazan’. The"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 235,
+            "secao": "Religious-Philosophical Meetings",
+            "similaridade": 0.6084,
+            "correto": false,
+            "texto": "him a divorce, even though she had apparently left Rozanov of her own accord.\n\nRozanov met Varvara Dmitrievna, the daughter and widow of parish priests, in 1888, and they soon began to live together a"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "fora-do-corpus-3",
+        "pergunta": "Quais foram as vendas da Petrobras em 2023?",
+        "responde": false,
+        "resposta_esperada": null,
+        "posicao": null,
+        "melhor_similaridade": 0.4665743374061353,
+        "ha_lexical": false,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 19.3,
+        "topo": [
+          {
+            "documento": "Hanna Chuchvaha - Art Periodical Culture in Late Imperial Russia (1898-1917)_compressed.pdf",
+            "pagina": 160,
+            "secao": "3: The Golden Fleece or Russia’s “Très Riches Heures” > The Golden Fleece: the Paratextual Dimension > Extravagance in the ‘Time of Troubles’: From ‘Materialism’ to Materiality’",
+            "similaridade": 0.4666,
+            "correto": false,
+            "texto": "during the first year of publication was released in the last issue of 1906.\n\nIt stated that 83,783.85 roubles were spent during the first year; income from sales was only 101 Bogomolov, “Simvolistska"
+          },
+          {
+            "documento": "Hanna Chuchvaha - Art Periodical Culture in Late Imperial Russia (1898-1917)_compressed.pdf",
+            "pagina": 160,
+            "secao": "3: The Golden Fleece or Russia’s “Très Riches Heures” > The Golden Fleece: the Paratextual Dimension > Extravagance in the ‘Time of Troubles’: From ‘Materialism’ to Materiality’",
+            "similaridade": 0.454,
+            "correto": false,
+            "texto": "It cost 14 roubles per year; the price, however, included ten yearly supplements and the illustrated periodical Picturesque Russia (Zhivopisnaia Rossiia). The high life extended to the editorial offic"
+          },
+          {
+            "documento": "Hanna Chuchvaha - Art Periodical Culture in Late Imperial Russia (1898-1917)_compressed.pdf",
+            "pagina": 52,
+            "secao": "1: When Russia Learned to Reproduce Art > The “Age of Mechanical Reproduction” in Russia: Reproduction Techniques in Historical Perspective",
+            "similaridade": 0.4509,
+            "correto": false,
+            "texto": "published twice a month), and its yearly subscription cost 10 roubles in 1883.\n\nIt did, however, offer 20 high quality reproductions every year, made in etching, copper engraving, lithography or photo"
+          },
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 128,
+            "secao": "Part II > Chapter 6 - Nicholas I and Pushkin",
+            "similaridade": 0.441,
+            "correto": false,
+            "texto": "a Russian theme) sold like hot pirozhki: four thousand copies in three weeks.\n\nZagoskin’s Yuri Miloslavsky, or Russians in 1612, also sold"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 176,
+            "secao": "7. Voloshin Carves Power, Cont’d, and theBroader Context and Implications of His Activities",
+            "similaridade": 0.4327,
+            "correto": false,
+            "texto": "44 Though Vsemirnaia literatura published comparatively few books during its existence (only fifty-three books over three years),45 its role in the preservation of the morale and physical welfare of P"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "fora-do-corpus-4",
+        "pergunta": "What was Rozanov's opinion on Abraham Lincoln?",
+        "responde": false,
+        "resposta_esperada": null,
+        "posicao": null,
+        "melhor_similaridade": 0.6302383800184987,
+        "ha_lexical": false,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 16.8,
+        "topo": [
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 253,
+            "secao": "Vasilii Rozanov",
+            "similaridade": 0.6302,
+            "correto": false,
+            "texto": "his discursive power—what Bely described as “the thick physiological jam of V.\n\nV .’ s thinking.” The appropriation of bodily excretion for the purpose of articulating his views on religion and other "
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 278,
+            "secao": "Vasilii Rozanov",
+            "similaridade": 0.6124,
+            "correto": false,
+            "texto": "His later version reveals the motor that drove Rozanov’s polemical style, which he took here to its shocking extreme. Unscrupulous, or immoral like Nietzsche, Rozanov ignored the potential impact of h"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 251,
+            "secao": "Vasilii Rozanov",
+            "similaridade": 0.5874,
+            "correto": false,
+            "texto": "with him in Zinaida Gippius’s Petersburg apartment during the 1905 revolution.\n\nLike Bely’s verbal portraits of Solov’ev and Gippius, quoted in earlier chapters, this one is grotesque, not to say vici"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 235,
+            "secao": "Religious-Philosophical Meetings",
+            "similaridade": 0.5847,
+            "correto": false,
+            "texto": "Thus it was this “illegitimate” aspect of his private life, not a progressive social agenda, that motivated Rozanov’s campaign for the liberalization of divorce laws and for the rights of unwed mother"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 286,
+            "secao": "Vasilii Rozanov",
+            "similaridade": 0.5726,
+            "correto": false,
+            "texto": "As he wrote in Solitaria, “I am not such a scoundrel to think about morality .”72 Because they had other things in common, his symbolist contemporaries and their allies had tolerated his politics of p"
+          }
+        ],
+        "resposta": null
+      }
+    ]
+  },
+  "textual": {
+    "resumo": {
+      "rotulo": "textual",
+      "modo": "textual",
+      "perguntas_com_resposta": 8,
+      "perguntas_sem_resposta": 4,
+      "latencia_busca_media_ms": 285.8833333333333,
+      "recall@1": 0.0,
+      "recall@3": 0.125,
+      "recall@5": 0.125,
+      "recall@10": 0.25,
+      "mrr@10": 0.075,
+      "recusa_correta_portao": 0.0,
+      "recusa_indevida_portao": 0.0
+    },
+    "limiar": [
+      {
+        "limiar": 0.0,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.05,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.1,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.15,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.2,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.25,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.3,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.35,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.4,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.45,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.5,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.55,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      },
+      {
+        "limiar": 0.6,
+        "recusa_correta": 0.0,
+        "recusa_indevida": 0.0
+      }
+    ],
+    "casos": [
+      {
+        "id": "irma-de-ligia",
+        "pergunta": "Qual é o nome da irmã de Lígia?",
+        "responde": true,
+        "resposta_esperada": "Luiza",
+        "posicao": null,
+        "melhor_similaridade": null,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 93.7,
+        "topo": [
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 100,
+            "secao": "Capítulo 7",
+            "similaridade": null,
+            "correto": false,
+            "texto": "fossem completamente ridículas, terminou de falar bruscamente, num tom de conclusão inconcl usiva, e o que seguiu foi um silêncio incômodo. Sentiu que foram palavras jogadas ao vento, que expusera seu"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 158,
+            "secao": "Capítulo 11",
+            "similaridade": null,
+            "correto": false,
+            "texto": "Lígia seguia de quadro em quadro. “Sugar mommy... Quem diria!”, pensava.\n\n“Não que ele precise disso, o pai dele já é rico, mas eu não esperava isso da parte dele. É ridículo, nojento. Quantos anos el"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 4,
+            "secao": "Capítulo 1",
+            "similaridade": null,
+            "correto": false,
+            "texto": "é do nosso tempo... É como as coisas são. — repetiu, como para reafirmar -se.\n\n— Mas não significa que não podemos continuar amigos, afinal, nos conhecemos há tanto tempo... Lígia murmurou qualquer co"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 50,
+            "secao": "Capítulo 4",
+            "similaridade": null,
+            "correto": false,
+            "texto": "de tudo” explicou Lígia quando, certa vez, Iago inquiriu sobre o assunto.\n\n“Antes de tudo, é preciso que você entenda que eu nunca procuro amizade alguma. Acho que você concorda comigo que, hoje em di"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 79,
+            "secao": "Capítulo 6",
+            "similaridade": null,
+            "correto": false,
+            "texto": "com a sua irmã. Não queira nada, Lígia, e você será feliz. É melhor aceitar a vida como ela é do que ficar sofrendo buscando coisas impossíveis. — Me desculpe, Iago. Todos os meus sonhos me vêm pelo p"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "residencia-de-ligia",
+        "pergunta": "Onde Lígia viveu?",
+        "responde": true,
+        "resposta_esperada": "Altiplano, em João Pessoa e Laranjeiras, no Rio de Janeiro",
+        "posicao": null,
+        "melhor_similaridade": null,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 58.8,
+        "topo": [
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 72,
+            "secao": "Capítulo 6",
+            "similaridade": null,
+            "correto": false,
+            "texto": "Como queria, porém, ter certeza da identidade daquele rosto, Lígia deitou-se novamente na ten tativa vã de continuar aquele pesadelo, mas o que aguardava -lhe um sonho bem diferente. Desta vez, Lígia "
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 37,
+            "secao": "Capítulo 3",
+            "similaridade": null,
+            "correto": false,
+            "texto": "Talvez ele não tivesse tido tanta sorte se Lígia fosse mais consciente e orgulhosa da s ua própria beleza, e assim o ignorasse sempre que pudesse - pois Iago, como o botão de um lótus, não fora tocado"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 65,
+            "secao": "Capítulo 5",
+            "similaridade": null,
+            "correto": false,
+            "texto": "direção. Lígia presumiu que, apesar de ser cedo, a igreja já estaria cheia.\n\nLembrou-se da visita que fizera com a avó na Igreja de Nossa Senhora do Carmo, 4 anos antes. Entardecia e a igreja estava q"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 72,
+            "secao": "Capítulo 6",
+            "similaridade": null,
+            "correto": false,
+            "texto": "“Vou para um lugar bem longe. A ti não voltarei mais, nunca mais.”, respondeu Luiza; e parecia tão vívida que Lígia teve certeza de que aquela era verdadeiramente sua irmã. De repente, foi transportad"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 80,
+            "secao": "Capítulo 6",
+            "similaridade": null,
+            "correto": false,
+            "texto": "Vai, disse o pássaro, porque as folhas estão cheias de crianças, Maliciosamente escondidas, a reprimir o riso.”\n— O que você acha? — perguntou Lígia. — Um pouco macabro... e difícil demais pra mim. — "
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "estudos-de-ligia-e-luiza",
+        "pergunta": "O que Lígia e Luiza estudavam?",
+        "responde": true,
+        "resposta_esperada": "Lígia e Luiza estudavam música. Luiza estudava piano e canto, Lígia estudava piano e violoncelo.",
+        "posicao": 2,
+        "melhor_similaridade": null,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 60.8,
+        "topo": [
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 72,
+            "secao": "Capítulo 6",
+            "similaridade": null,
+            "correto": false,
+            "texto": "Como queria, porém, ter certeza da identidade daquele rosto, Lígia deitou-se novamente na ten tativa vã de continuar aquele pesadelo, mas o que aguardava -lhe um sonho bem diferente. Desta vez, Lígia "
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 30,
+            "secao": "Capítulo 3",
+            "similaridade": null,
+            "correto": true,
+            "texto": "Janeiro. Luiza estudava em uma escola de música fora do bairro de Laranjeiras.\n\nA princípio, os intermináveis exercícios que Luiza fazia todos os dias quando chegava em casa não despertaram em Lígia, "
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 72,
+            "secao": "Capítulo 6",
+            "similaridade": null,
+            "correto": false,
+            "texto": "“Vou para um lugar bem longe. A ti não voltarei mais, nunca mais.”, respondeu Luiza; e parecia tão vívida que Lígia teve certeza de que aquela era verdadeiramente sua irmã. De repente, foi transportad"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 34,
+            "secao": "Capítulo 3",
+            "similaridade": null,
+            "correto": false,
+            "texto": "brincadeira de criança. Lígia e Luiza eram ambas muito parecidas na fisionomia.\n\nLuiza fosse dois anos mais velha, mas tinham quase a mesma altura, sendo Lígia um pouco mais alta; esguias, agradavelme"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 36,
+            "secao": "Capítulo 3",
+            "similaridade": null,
+            "correto": false,
+            "texto": "sentada à janela de um ônibus, observando os cisnes, “ Ich leb’ allein...\n\n”; e estas melodias, estas letras, a melancolia das verdades claras e subentendidas destas canções eram somente delas, Lígia "
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "fora-do-corpus-1",
+        "pergunta": "Lígia era escritora?",
+        "responde": false,
+        "resposta_esperada": null,
+        "posicao": null,
+        "melhor_similaridade": null,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 51.6,
+        "topo": [
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 37,
+            "secao": "Capítulo 3",
+            "similaridade": null,
+            "correto": false,
+            "texto": "Talvez ele não tivesse tido tanta sorte se Lígia fosse mais consciente e orgulhosa da s ua própria beleza, e assim o ignorasse sempre que pudesse - pois Iago, como o botão de um lótus, não fora tocado"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 72,
+            "secao": "Capítulo 6",
+            "similaridade": null,
+            "correto": false,
+            "texto": "Como queria, porém, ter certeza da identidade daquele rosto, Lígia deitou-se novamente na ten tativa vã de continuar aquele pesadelo, mas o que aguardava -lhe um sonho bem diferente. Desta vez, Lígia "
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 34,
+            "secao": "Capítulo 3",
+            "similaridade": null,
+            "correto": false,
+            "texto": "brincadeira de criança. Lígia e Luiza eram ambas muito parecidas na fisionomia.\n\nLuiza fosse dois anos mais velha, mas tinham quase a mesma altura, sendo Lígia um pouco mais alta; esguias, agradavelme"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 40,
+            "secao": "Capítulo 3",
+            "similaridade": null,
+            "correto": false,
+            "texto": "Sentia falta do tempo q ue passava com a irmã, e dizia ocasionalmente: “Lígia, vamos ao Guinle?”, e Lígia às vezes recusava, pois sairia com Iago, por exemplo, mas às vezes aceitava, e elas passeavam "
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 50,
+            "secao": "Capítulo 4",
+            "similaridade": null,
+            "correto": false,
+            "texto": "Não que o homem de cabelos brancos fosse um tipo deste gênero, mas só Deus sabe quantas opiniões ele tinha. E Lígia fez como sempre fazia quando se encontrava nessa situação: evitava opinar a todo cus"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "fora-do-corpus-2",
+        "pergunta": "Iago era estrangeiro?",
+        "responde": false,
+        "resposta_esperada": null,
+        "posicao": null,
+        "melhor_similaridade": null,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 27.1,
+        "topo": [
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 157,
+            "secao": "Capítulo 11",
+            "similaridade": null,
+            "correto": false,
+            "texto": "fato no mesmo instante, sussurrou a Iago: “Não é a sua musa ali?”. Iago, atônito e hesitante, se dirigiu a eles. “Não vi o nome dele no cartaz?”, perguntou -se Lígia. “Será que meus pais também não vi"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 37,
+            "secao": "Capítulo 3",
+            "similaridade": null,
+            "correto": false,
+            "texto": "Talvez ele não tivesse tido tanta sorte se Lígia fosse mais consciente e orgulhosa da s ua própria beleza, e assim o ignorasse sempre que pudesse - pois Iago, como o botão de um lótus, não fora tocado"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 59,
+            "secao": "Capítulo 5",
+            "similaridade": null,
+            "correto": false,
+            "texto": "Por ideia de Alice, os dois casais já haviam saído juntos três ou quatro vezes anteriormente, de maneira que era natural que, se Alice e Lígia marcassem de sair, Marcos e Iago deveriam ir também. Mas "
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 67,
+            "secao": "Capítulo 5",
+            "similaridade": null,
+            "correto": false,
+            "texto": "No ano anterior, Iago e Lígia foram para esta mesma igreja na ocasião do concerto da 3ª Sinfonia de Beethoven. Como chegaram tarde, o incômodo de contentar-se uma cadeira no saguão e o calor que passa"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 77,
+            "secao": "Capítulo 6",
+            "similaridade": null,
+            "correto": false,
+            "texto": "Continuaram a caminhar em silêncio. Inquieto, ve ndo que fora um pouco insípido demais, Iago decidiu perguntar sobre a ausência recente de Lígia. — Naquele dia, antes que você voltasse para casa, eu p"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "akhmatova-circulo",
+        "pergunta": "Anna Akhmatova fez parte de algum círculo literário?",
+        "responde": true,
+        "resposta_esperada": "Sim: Anna Akhmatova foi membro do grupo dos acmeístas.",
+        "posicao": null,
+        "melhor_similaridade": null,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 56.1,
+        "topo": [
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 204,
+            "secao": "Part IV > Chapter 10 - Herzen, Tolstoy, and the Women’s Issue",
+            "similaridade": null,
+            "correto": false,
+            "texto": "justly? Or is she innocent, and it is not the business of people to judge her?\n\nIn other words, does Tolstoy have sympathy for Anna, or did the “rubbishy old man” (as protofeminist Anna Akhmatova angr"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 46,
+            "secao": "Lev Tolstoy as Early Modernist",
+            "similaridade": null,
+            "correto": false,
+            "texto": "of the whole. Rather, it is the whole that is capable of killing the part.\n\nThus you must arrange your reason so that it conforms with the whole, with the source of everything, and not with the part, "
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 58,
+            "secao": "Lev Tolstoy as Early Modernist",
+            "similaridade": null,
+            "correto": false,
+            "texto": "were a practitioner of reconstitutive metonymic representation like his author.\n\nTogether with Vronsky, we get a particularly luxurious sense of Anna’s physical presence in the first part of this scen"
+          },
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 137,
+            "secao": "Part II > Chapter 6 - Nicholas I and Pushkin",
+            "similaridade": null,
+            "correto": false,
+            "texto": "(In 1848, more than eleven years after Pushkin’s death, the emperor recalled during a dinner conversation how Pushkin spoke with him three days before the fatal duel: “I confess sincerely, that I susp"
+          },
+          {
+            "documento": "Hanna Chuchvaha - Art Periodical Culture in Late Imperial Russia (1898-1917)_compressed.pdf",
+            "pagina": 179,
+            "secao": "3: The Golden Fleece or Russia’s “Très Riches Heures” > The Golden Fleece: the Paratextual Dimension > The World of Art in The Golden Fleece: Graphic Design and Illustration",
+            "similaridade": null,
+            "correto": false,
+            "texto": "In terms of the discussion appearing in the next chapter, is it worth mentioning that all three parts were devoted to Antiquity: the first part talked about Antiquity challenged by Christianity, the s"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "akhmatova-gumilyov",
+        "pergunta": "Qual era a relação entre Anna Akhmatova e Nikolai Gumilyov?",
+        "responde": true,
+        "resposta_esperada": "Nikolai Gumilyov foi o primeiro marido de Anna Akhmatova. Divorciaram-se em 1918.",
+        "posicao": null,
+        "melhor_similaridade": null,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 16.3,
+        "topo": [
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 204,
+            "secao": "Part IV > Chapter 10 - Herzen, Tolstoy, and the Women’s Issue",
+            "similaridade": null,
+            "correto": false,
+            "texto": "justly? Or is she innocent, and it is not the business of people to judge her?\n\nIn other words, does Tolstoy have sympathy for Anna, or did the “rubbishy old man” (as protofeminist Anna Akhmatova angr"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 173,
+            "secao": "XVII",
+            "similaridade": null,
+            "correto": false,
+            "texto": "Though changes were made in the text without the author's permission, the book was hailed as the first to depict the corrosive effect of the Terror on everyday people, and it was translated into many "
+          },
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 137,
+            "secao": "Part II > Chapter 6 - Nicholas I and Pushkin",
+            "similaridade": null,
+            "correto": false,
+            "texto": "(In 1848, more than eleven years after Pushkin’s death, the emperor recalled during a dinner conversation how Pushkin spoke with him three days before the fatal duel: “I confess sincerely, that I susp"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 166,
+            "secao": "XVII",
+            "similaridade": null,
+            "correto": false,
+            "texto": "eyes I see Repin, Korolenko, Leonid Andreev, Mayakovsky, Chaliapin . . .\n\n(And the Kuokkala dacha, though empty, is extant; it has not yet collapsed, it still stands**; it also remembers their steps a"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 166,
+            "secao": "XVII",
+            "similaridade": null,
+            "correto": false,
+            "texto": "visited there were N. Gumilyov, and Anna Akhmatova, and N. Evreinov, and N.\n\nKulbin, and Boris Grigoriev, and Boris Sadovskoy, and Teffi, and Shklovsky, and Ivan Puni.) After the LiteraryRussia episod"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "voloshin-amigos-odessa",
+        "pergunta": "Which of Voloshin’s friends stayed in Odessa?",
+        "responde": true,
+        "resposta_esperada": "Among his closest friends in Odessa were the renowned Russian novelist and short story writer, Ivan Bunin, and his wife, Vera Muromtseva Bunina.",
+        "posicao": null,
+        "melhor_similaridade": null,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 972.4,
+        "topo": [
+          {
+            "documento": "Hanna Chuchvaha - Art Periodical Culture in Late Imperial Russia (1898-1917)_compressed.pdf",
+            "pagina": 253,
+            "secao": "4: Apollo: Between “Archaism” and Modernism > Apollo and its Textual and Paratextual Standards: Materiality, Archeology of the Visual and Apollonianism > The “Archeological” Meaning of the Title Page",
+            "similaridade": null,
+            "correto": false,
+            "texto": "Antiquus (1908),189 which was executed after his return. 190 It was first exhibited in the Salon d’Automne in Paris in 1908,191 later in Makovskii’s Salon in St Petersburg in 1909 and in London in Bak"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 75,
+            "secao": "2. The Russian Symbolists and Their Circles",
+            "similaridade": null,
+            "correto": false,
+            "texto": "In Ivanov’s sense of the malleability of nature, in his rather Nietzschean will to control and transform, we see a foreshadowing of the way in which he would feel free to transform the lives of Max an"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 200,
+            "secao": "8. Inside Voloshin’s Soviet Circle:Persistence of Structure, Preservation of Anti-structure",
+            "similaridade": null,
+            "correto": false,
+            "texto": "deliberate affectations of speech, with which little-cultured people, common Philistines, vainly attempt to compensate for the emptiness of their speech, the lack of skill and lack of talent of their "
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 137,
+            "secao": "The Case of Alexander Blok",
+            "similaridade": null,
+            "correto": false,
+            "texto": "of celibate marriage, with Nathalie combining the roles of sister and wife.\n\nAs in Blok’s case later, this had broad cultural implications: “Herzen’s love [became] more than a fact in his personal bio"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 174,
+            "secao": "Blok’s Femme Fatale",
+            "similaridade": null,
+            "correto": false,
+            "texto": "the artist, born of the spirit of music—would inscribe on the body of Russia.\n\nThe two kinds of palimpsests represent two sides of the same coin: the Eurasian one, which reinscribes Chaadaev’s image o"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "rozanov-chernyshevsky",
+        "pergunta": "What Rozanov said about Chernyshevsky?",
+        "responde": true,
+        "resposta_esperada": "Rozanov treated Chernyshevsky ironically and with a certain distaste. He discovered in What Is to Be Done? traces of male homosocial desire that resonated more powerfully in the fin de siècle than in the earlier 1860s. Rozanov claimed that, without knowing it, Chernyshevsky deployed triangulated desire as love “between men,” which psychopathologists considered a symptom of degeneration.",
+        "posicao": 10,
+        "melhor_similaridade": null,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 249.7,
+        "topo": [
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 129,
+            "secao": "XIV",
+            "similaridade": null,
+            "correto": false,
+            "texto": "field of a lost battle, from hopeless grief, he'd almost always try to flee.\n\nHaving done everything possible, even more than was possible, he wanted only one thing—to restore his good spirits and get"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 144,
+            "secao": "XV",
+            "similaridade": null,
+            "correto": false,
+            "texto": "AfterMama talked to us, I wondered for the first time about our grandfather. Papa's father. And why we mustn't ask about him. \"That grandfather probably died,\" I said to Kolya after Mama's injunction."
+          },
+          {
+            "documento": "Korney Chukovsky - The Silver Crest - My Russian Boyhood.pdf",
+            "pagina": 108,
+            "secao": "HOUSE OF LIEUTENANT COLONEL’S WIDOW",
+            "similaridade": null,
+            "correto": false,
+            "texto": "He has pounds and Ma pounds of wax And then I told them about Uncle Foma. And then about my mother, about Six-Eyes and about my trouble. They listened. Suddenly Malvina said, “You go straight to your "
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 48,
+            "secao": "VI",
+            "similaridade": null,
+            "correto": false,
+            "texto": "Kornei Chukovsky's reciting of his poetry. About its downtrodden peasant huts.\n\nAbout their defenselessness. About parting. About meeting. About death. Like living steppe, rye fields extending. No mou"
+          },
+          {
+            "documento": "Lydia Chukovskaya - To the Memory of Childhood.pdf",
+            "pagina": 50,
+            "secao": "VI",
+            "similaridade": null,
+            "correto": false,
+            "texto": "\" (The way Polonsky speaks about poetry and the poet in these lines is somewhat similar to what Blok said later in a speech about Pushkin: he spoke of poetry not just as aphenomenon of culture—but of "
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "rozanov-suslova",
+        "pergunta": "What was the relationship between Rozanov and Apollinaria Suslova?",
+        "responde": true,
+        "resposta_esperada": "Rozanov and Suslova had an affair while he was still in high school and while Dostoevsky was still alive; the couple married in 1880.",
+        "posicao": null,
+        "melhor_similaridade": null,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 995.1,
+        "topo": [
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 209,
+            "secao": "Conclusion",
+            "similaridade": null,
+            "correto": false,
+            "texto": "bureaucracy— and only marginally was money involved in this subsidized state\n\nsystem. This was the essence of the deal that was struck, the relationship established, between the literary community and"
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 151,
+            "secao": "6. Voloshin Carves Power out of Fear",
+            "similaridade": null,
+            "correto": false,
+            "texto": "The head of the Education and Economy Sections, and by all accounts the de facto head of the Bureau, was an old friend, Nikandr Marks, a former Imperial Army general, paleographer, archaeologist, and "
+          },
+          {
+            "documento": "Korney Chukovsky - The Silver Crest - My Russian Boyhood.pdf",
+            "pagina": 97,
+            "secao": "HOUSE OF LIEUTENANT COLONEL’S WIDOW",
+            "similaridade": null,
+            "correto": false,
+            "texto": "tried to run around it from the right, the son would slide toward the left.\n\nAnd if the father tried to get at him from the left side, the son would turn up on the right. This was repeated again and a"
+          },
+          {
+            "documento": "Hanna Chuchvaha - Art Periodical Culture in Late Imperial Russia (1898-1917)_compressed.pdf",
+            "pagina": 27,
+            "secao": "Introduction > The Materiality of the Book and Gérard Genette’s “Thresholds”",
+            "similaridade": null,
+            "correto": false,
+            "texto": "in this case, the printed words and layout of the page work as visual texts.\n\nFor example, in the early twentieth century, the visuality of the text would be creatively employed by the Futurists in th"
+          },
+          {
+            "documento": "Hanna Chuchvaha - Art Periodical Culture in Late Imperial Russia (1898-1917)_compressed.pdf",
+            "pagina": 180,
+            "secao": "3: The Golden Fleece or Russia’s “Très Riches Heures” > The Golden Fleece: the Paratextual Dimension > The World of Art in The Golden Fleece: Graphic Design and Illustration",
+            "similaridade": null,
+            "correto": false,
+            "texto": "The image was placed in the centre of the page with empty space around it; the areas of flat, unmodulated surface, created by the façade, connected the image to the surrounding space of the frame. The"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "fora-do-corpus-3",
+        "pergunta": "Quais foram as vendas da Petrobras em 2023?",
+        "responde": false,
+        "resposta_esperada": null,
+        "posicao": null,
+        "melhor_similaridade": null,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 7.9,
+        "topo": [
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 123,
+            "secao": "Capítulo 9",
+            "similaridade": null,
+            "correto": false,
+            "texto": "— respondeu Lígia e, vendo a surpresa no rosto de Alice, acrescentou, rindo: — Estou brincando! Na verdade, para o programa que eu montei, preciso de acompanhamento para quatro peças que não são nada "
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 129,
+            "secao": "Capítulo 9",
+            "similaridade": null,
+            "correto": false,
+            "texto": "coisa, mas apenas se jogar nos braços seguros de alguém para se sentir feliz.\n\nSeu antigo namorado, que não lhe dava carinho nem atenção, interpretava isso como um algum tipo de complexo e, no mais, n"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 8,
+            "secao": "Capítulo 1",
+            "similaridade": null,
+            "correto": false,
+            "texto": "só pra mim. Como estava a orla? Iago está bem? Faz um tempo que ele não visita.\n\nSua mãe era uma mulher extremamente s implória e vaidosa, em nada diferente das personalidades plásticas e superficiais"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 8,
+            "secao": "Capítulo 1",
+            "similaridade": null,
+            "correto": false,
+            "texto": "da internet que, por alguma razão, quase sempre estão vendendo algum produto.\n\nSua imagem antinatural rotineira - e, faça -se justiça, inconsciente - denunciava um empenho obst inado, de caráter práti"
+          },
+          {
+            "documento": "A falésia e o farol.pdf",
+            "pagina": 27,
+            "secao": "Capítulo 2",
+            "similaridade": null,
+            "correto": false,
+            "texto": "hoje, não haveria ‘noite transfigurada’. Ah, eis o maestro, os aplausos...\n\nO que dizer dos nossos patrícios - sobre os quais alguns têm a coragem de dizer ser este um dos melhores povos do mundo -, e"
+          }
+        ],
+        "resposta": null
+      },
+      {
+        "id": "fora-do-corpus-4",
+        "pergunta": "What was Rozanov's opinion on Abraham Lincoln?",
+        "responde": false,
+        "resposta_esperada": null,
+        "posicao": null,
+        "melhor_similaridade": null,
+        "ha_lexical": true,
+        "tem_evidencia": true,
+        "latencia_busca_ms": 841.1,
+        "topo": [
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 340,
+            "secao": "Introduction > Chapter 7. Vasilii Razonov",
+            "similaridade": null,
+            "correto": false,
+            "texto": "Many critics present a one-sided view of Rozanov’s anti- Semitism, either avoiding it altogether or focusing only on it. For instance, Victor Shklovsky’s groundbreaking essay on Rozanov makes no refer"
+          },
+          {
+            "documento": "House of Romanov - Romanov Riches.pdf",
+            "pagina": 284,
+            "secao": "Part V > Chapter 14 - Nicholas II and Lenin as Art Connoisseurs",
+            "similaridade": null,
+            "correto": false,
+            "texto": "force to the old hands looked like attempts to weave a knout out of sand.\n\nEverything was falling apart.”41 Rozanov was amazed to hear of an old peasant declaring that “the former tsar should be skinn"
+          },
+          {
+            "documento": "Hanna Chuchvaha - Art Periodical Culture in Late Imperial Russia (1898-1917)_compressed.pdf",
+            "pagina": 131,
+            "secao": "2: World of Art and the Origins of the Print Revival in Late Imperial Russia > The World of Art and its Paratextual Qualities: Materiality and the Visual in the Context of the Editorial Mission Stat… > Viewing vs. Reading: Word-Image Intermediality",
+            "similaridade": null,
+            "correto": false,
+            "texto": "Peter Christen Asbjørnsen and Jørgen Moe’s collections of Norwegian folk tales.\n\nAfter Diaghilev’s editing, however, Madsen’s words became a reference to a different series of Werenskiold’s works, nam"
+          },
+          {
+            "documento": "Olga Matich - Erotic Utopia - The Decadent Imagination in Russia's Fin De Siecle.pdf",
+            "pagina": 290,
+            "secao": "Conclusion",
+            "similaridade": null,
+            "correto": false,
+            "texto": "the widespread perception of the Romanov genealogy as decadent, Rasputin was seen by many as a man of the people with nothing less than superhuman strength. This was Rozanov’s perspective on Rasputin "
+          },
+          {
+            "documento": "Barbara Walker - Maximilian Voloshin and the Russian literary circle in revolutionary times.pdf",
+            "pagina": 167,
+            "secao": "7. Voloshin Carves Power, Cont’d, and theBroader Context and Implications of His Activities",
+            "similaridade": null,
+            "correto": false,
+            "texto": "First, the blunt proclamation of patronage reveals how explicitly conceived was the relationship between Voloshin, on the one hand, and Lunacharsky as a representative and Narkompros as a branch of th"
+          }
+        ],
+        "resposta": null
+      }
+    ]
+  }
+}

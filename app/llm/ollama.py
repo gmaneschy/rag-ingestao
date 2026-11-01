@@ -37,6 +37,7 @@ class GeradorDeRespostaOllama:
         max_tokens_analise: int = 900,
         timeout_s: int = 300,
         num_ctx_max: int = 8192,
+        pensar: bool | None = None,
         cliente: httpx.Client | None = None,
     ) -> None:
         self.base_url = base_url.rstrip("/")
@@ -45,6 +46,7 @@ class GeradorDeRespostaOllama:
         self.max_tokens = max_tokens
         self.max_tokens_analise = max_tokens_analise
         self.num_ctx_max = num_ctx_max
+        self.pensar = pensar
         self._cliente = cliente or httpx.Client(timeout=httpx.Timeout(timeout_s, connect=5))
         self._timeout_s = timeout_s
 
@@ -74,6 +76,8 @@ class GeradorDeRespostaOllama:
                 "num_predict": max_tokens,
             },
         }
+        if self.pensar is not None:
+            corpo["think"] = self.pensar
         try:
             resposta = self._cliente.post(f"{self.base_url}/api/chat", json=corpo)
         except httpx.ConnectError as erro:
@@ -99,8 +103,14 @@ class GeradorDeRespostaOllama:
             )
 
         dados = resposta.json()
-        texto = limpar_saida(dados.get("message", {}).get("content", ""))
+        mensagem = dados.get("message", {})
+        texto = limpar_saida(mensagem.get("content", ""))
         if not texto:
+            if mensagem.get("thinking"):
+                raise ModeloIndisponivel(
+                    "O modelo gastou o limite de tokens só raciocinando e não respondeu. "
+                    "Defina LLM_THINK=false (ou aumente LLM_MAX_TOKENS_SAIDA)"
+                )
             raise ModeloIndisponivel("O Ollama devolveu uma resposta vazia")
         recusou = e_recusa(texto)
         evidencias, avaliacao = (
