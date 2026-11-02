@@ -1,0 +1,24 @@
+<div {% if pendentes %}hx-get="/app/documentos/tabela?colecao={{ colecao|urlencode }}&estado={{ estado }}"
+     hx-trigger="every 3s" hx-target="#tabela" hx-swap="innerHTML"{% endif %}>
+{% if itens %}
+  <p class="contagem">{{ total|numero }} documento{{ '' if total == 1 else 's' }}{% if total > itens|length %} (mostrando {{ itens|length }}){% endif %}</p>
+  <div class="rolagem">
+  <table>
+    <thead><tr><th>Nome</th><th>Coleção</th><th>Versão</th><th>Estado</th><th class="num">Trechos</th></tr></thead>
+    <tbody>
+    {% for i in itens %}
+      <tr>
+        <td><a href="/app/documentos/{{ i.id }}">{{ i.nome }}</a></td>
+        <td>{{ i.colecao }}</td>
+        <td>{{ i.versao }}</td>
+        <td><span class="selo {{ i.estado }}">{{ i.estado|estado }}</span>{% if i.mensagem_erro %}<br><small class="erro-texto">{{ i.mensagem_erro|resumo(120) }}</small>{% endif %}</td>
+        <td class="num">{{ i.trechos|numero }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+{% else %}
+  <p class="vazio">Nenhum documento{% if colecao or estado %} com esse filtro{% endif %}. Envie arquivos acima.</p>
+{% endif %}
+</div>

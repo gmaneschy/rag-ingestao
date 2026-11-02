@@ -1,0 +1,27 @@
+<form id="config" hx-post="/app/configuracao" hx-target="#config" hx-swap="outerHTML">
+  {% if salvo %}<p class="aviso ok" role="status">Salvo. Vale a partir da próxima pergunta.</p>{% endif %}
+  {% if erros %}<div class="aviso erro" role="alert"><strong>Nada foi salvo:</strong><ul>{% for e in erros %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
+  {% for grupo, campos in grupos.items() %}
+  <fieldset><legend>{{ grupo }}</legend>
+    {% for f in campos %}{% set c = f.campo %}
+    <div class="campo">
+      <label for="c-{{ c.chave }}">{{ c.rotulo }} {% if f.no_banco %}<span class="selo pendente">definido aqui</span>{% endif %}</label>
+      {% if c.tipo == 'bool' %}
+      <select id="c-{{ c.chave }}" name="{{ c.chave }}">
+        <option value="" {{ 'selected' if not f.valor }}>como no .env ({{ 'ligado' if f.padrao == 'sim' else ('desligado' if f.padrao == 'nao' else 'não enviado') }})</option>
+        <option value="sim" {{ 'selected' if f.valor == 'sim' }}>ligado</option>
+        <option value="nao" {{ 'selected' if f.valor == 'nao' }}>desligado</option>
+      </select>
+      {% else %}
+      <input id="c-{{ c.chave }}" name="{{ c.chave }}" value="{{ f.valor }}" placeholder=".env: {{ f.padrao }}"
+             {% if c.tipo == 'texto' %}list="modelos-ollama" autocomplete="off"{% else %}inputmode="decimal"{% endif %}>
+      {% endif %}
+      <small>{{ c.ajuda }}{% if c.minimo is not none %} ({{ '%g'|format(c.minimo) }} a {{ '%g'|format(c.maximo) }}){% endif %}</small>
+    </div>
+    {% endfor %}
+  </fieldset>
+  {% endfor %}
+  <datalist id="modelos-ollama">{% for m in modelos %}<option value="{{ m }}">{% endfor %}</datalist>
+  {% if aviso_modelos %}<p class="aviso">{{ aviso_modelos }}</p>{% endif %}
+  <button class="primario" type="submit">Salvar</button>
+</form>

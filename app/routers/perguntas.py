@@ -8,6 +8,7 @@ from pydantic import BaseModel, ConfigDict, Field, StringConstraints
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
+from app import configuracao
 from app.consulta import servico
 from app.consulta.busca import ReindexacaoNecessaria
 from app.consulta.config import ConsultaSettings, get_consulta_settings
@@ -34,9 +35,29 @@ def obter_reordenador() -> Reordenador | None:
     )
 
 
-@lru_cache
-def obter_gerador() -> GeradorDeResposta:
-    return criar_gerador_de_resposta()
+_GERADORES: dict[tuple[object, ...], GeradorDeResposta] = {}
+
+
+def obter_gerador(
+    llm: Annotated[LLMSettings, Depends(configuracao.llm_efetivo)] = None,  # type: ignore[assignment]
+) -> GeradorDeResposta:
+    """Um gerador por combinação de ajustes: mudar o modelo na tela não exige reiniciar."""
+    if not isinstance(llm, LLMSettings):  # chamada direta, fora do FastAPI
+        llm = get_llm_settings()
+    chave = (
+        llm.llm_provider,
+        llm.llm_model,
+        llm.llm_think,
+        llm.llm_max_tokens_saida,
+        llm.llm_max_tokens_analise,
+        llm.max_tokens_por_pergunta,
+    )
+    if chave not in _GERADORES:
+        _GERADORES[chave] = criar_gerador_de_resposta(llm)
+    return _GERADORES[chave]
+
+
+obter_gerador.cache_clear = _GERADORES.clear  # type: ignore[attr-defined]
 
 
 class PerguntaIn(BaseModel):
@@ -66,8 +87,8 @@ def perguntar(
     session: Annotated[Session, Depends(get_session)],
     embeddings: Annotated[GeradorDeEmbeddings, Depends(obter_embeddings)],
     gerador: Annotated[GeradorDeResposta, Depends(obter_gerador)],
-    llm: Annotated[LLMSettings, Depends(get_llm_settings)],
-    consulta: Annotated[ConsultaSettings, Depends(get_consulta_settings)],
+    llm: Annotated[LLMSettings, Depends(configuracao.llm_efetivo)],
+    consulta: Annotated[ConsultaSettings, Depends(configuracao.consulta_efetiva)],
     reordenador: Annotated[Reordenador | None, Depends(obter_reordenador)],
 ) -> dict[str, object]:
     try:

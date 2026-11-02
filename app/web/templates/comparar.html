@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block titulo %}Comparar modelos{% endblock %}
+{% block conteudo %}
+<h1>Comparar modelos</h1>
+<p class="vazio">A mesma pergunta e a mesma busca, um modelo por coluna. Fica fora do histórico. Modelos locais respondem um de cada vez.</p>
+{% if aviso %}<p class="aviso">{{ aviso }}</p>{% endif %}
+<form class="pergunta" hx-post="/app/comparar" hx-target="#comparacao" hx-swap="innerHTML" hx-disabled-elt="#comparar">
+  <label for="texto" class="vh">Pergunta</label>
+  <textarea id="texto" name="pergunta" rows="3" maxlength="2000" required placeholder="A pergunta a comparar"></textarea>
+  <fieldset><legend>Modelos</legend>
+    {% for m in modelos %}<label class="opcao"><input type="checkbox" name="modelo" value="{{ m }}" {{ 'checked' if m == atual }}> {{ m }}</label>{% else %}<p class="vazio">Nenhum modelo encontrado.</p>{% endfor %}
+  </fieldset>
+  <div class="grade">
+    <div><label for="modo">Busca</label>
+      <select id="modo" name="modo"><option value="hibrida">híbrida</option><option value="vetorial">vetorial</option><option value="textual">textual</option></select></div>
+    <div><label for="tipo">Tipo</label>
+      <select id="tipo" name="tipo"><option value="factual">factual</option><option value="analise">análise</option></select></div>
+    <div><label for="k">Trechos (k)</label><input id="k" name="k" type="number" min="1" max="10" placeholder="padrão"></div>
+    <div><label for="pensar">Raciocínio (qwen3…)</label>
+      <select id="pensar" name="pensar"><option value="">como no .env</option><option value="nao">desligado</option><option value="sim">ligado</option></select></div>
+  </div>
+  <button id="comparar" class="primario" type="submit">Comparar</button>
+</form>
+<div id="comparacao" aria-live="polite"></div>
+{% endblock %}

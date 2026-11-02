@@ -20,7 +20,13 @@ from sqlalchemy.orm import Session, sessionmaker
 from app.ingestao.classificacao import classificar
 from app.ingestao.config import IngestaoSettings
 from app.ingestao.divisao import dividir
-from app.ingestao.extracao import EXTENSOES_ACEITAS, ErroDeExtracao, extrair
+from app.ingestao.extracao import (
+    EXTENSOES_ACEITAS,
+    ErroDeExtracao,
+    conferir_assinatura,
+    extensao_do_nome,
+    extrair,
+)
 from app.llm.protocolos import GeradorDeEmbeddings
 from app.llm.tipos import DIMENSAO_VETOR, ModeloIndisponivel
 
@@ -52,7 +58,7 @@ def limpar_nome(nome: str) -> str:
     nome = _CONTROLE.sub("", nome.replace("\\", "/").split("/")[-1]).strip()
     if not nome or nome in {".", ".."} or len(nome) > 255:
         raise ArquivoInvalido("Nome de arquivo inválido")
-    if Path(nome).suffix.lower() not in EXTENSOES_ACEITAS:
+    if extensao_do_nome(nome) not in EXTENSOES_ACEITAS:
         raise ArquivoInvalido(
             f"Tipo não suportado; aceitos: {', '.join(sorted(EXTENSOES_ACEITAS))}"
         )
@@ -81,8 +87,10 @@ def registrar(
         raise ArquivoInvalido("Arquivo vazio")
     if len(conteudo) > config.tamanho_max_bytes:
         raise ArquivoInvalido(f"Arquivo maior que {config.tamanho_max_mb} MB")
-    if nome.lower().endswith(".pdf") and not conteudo.lstrip().startswith(b"%PDF-"):
-        raise ArquivoInvalido("O arquivo não é um PDF válido")
+    try:
+        conferir_assinatura(nome, conteudo)
+    except ValueError as erro:
+        raise ArquivoInvalido(str(erro)) from erro
 
     hash_conteudo = hashlib.sha256(conteudo).hexdigest()
     try:
@@ -156,7 +164,7 @@ def _registrar(
             {"n": nome, "h": hash_conteudo, "c": colecao},
         ).scalar_one()
 
-    destino = config.arquivos_dir / str(documento_id) / f"v{versao}{Path(nome).suffix.lower()}"
+    destino = config.arquivos_dir / str(documento_id) / f"v{versao}{extensao_do_nome(nome)}"
     destino.parent.mkdir(parents=True, exist_ok=True)
     destino.write_bytes(conteudo)
     session.execute(

@@ -1,0 +1,42 @@
+{% if erro %}
+<p class="aviso erro" role="alert">{{ erro }}</p>
+{% else %}
+<div class="leitura">
+  <article class="resposta {{ 'recusa' if r.resposta.recusou }}">
+    {% if r.resposta.recusou %}<p class="rotulo">Sem evidência suficiente nos documentos</p>{% endif %}
+    {% if r.analise %}
+      <h2>Evidências</h2>{{ (r.analise.evidencias or r.resposta.texto)|citado }}
+      {% if r.analise.avaliacao %}<h2>Avaliação <small>(interpretação do modelo)</small></h2>{{ r.analise.avaliacao|citado }}{% endif %}
+    {% else %}
+      {{ r.resposta.texto|citado }}
+    {% endif %}
+    {% if r.aviso %}<p class="aviso">{{ r.aviso }}</p>{% endif %}
+    {% set cid = r.id %}{% include "parciais/avaliacao.html" with context %}
+    <p class="meta-linha">{{ r.modelo_geracao or '—' }} · {{ r.latencia_ms|numero }} ms · {{ r.resposta.tokens_entrada|numero }} → {{ r.resposta.tokens_saida|numero }} tokens ·
+      <a href="/app/consultas/{{ r.id }}">detalhe da consulta #{{ r.id }}</a></p>
+  </article>
+
+  <aside class="fontes" aria-label="Fontes">
+    <h2>Fontes</h2>
+    {% for f in r.fontes %}
+    <details id="fonte-{{ f.n }}" class="fonte" open>
+      <summary><span class="n">{{ f.n }}</span> <a href="/app/documentos/{{ f.documento_id }}">{{ f.documento }}</a>{% if f.pagina %}, p. {{ f.pagina }}{% endif %}</summary>
+      {% if f.secao %}<div class="rotulo">{{ f.secao }}</div>{% endif %}
+      <blockquote>{{ f.texto }}</blockquote>
+    </details>
+    {% else %}
+    <p class="vazio">Nenhum trecho foi citado.</p>
+    {% endfor %}
+  </aside>
+</div>
+
+<details class="debug">
+  <summary>Trechos recuperados ({{ r.trechos_usados|length }}) — o que o modelo recebeu</summary>
+  <ol>
+    {% for t in r.trechos_usados %}
+    <li id="trecho-{{ t.n }}"><div class="rotulo">[{{ t.n }}] {{ t.documento }}{% if t.pagina %}, p. {{ t.pagina }}{% endif %}{% if t.secao %} · {{ t.secao }}{% endif %}</div>
+      <p>{{ t.texto|resumo(500) }}</p></li>
+    {% endfor %}
+  </ol>
+</details>
+{% endif %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block titulo %}Histórico{% endblock %}
+{% block conteudo %}
+<h1>Histórico</h1>
+<form class="filtros" method="get" action="/app/historico">
+  <label for="q">Busca</label><input id="q" name="q" value="{{ q }}" type="search">
+  <label for="tipo">Tipo</label>
+  <select id="tipo" name="tipo">{% for v, r in [('', 'todos'), ('factual', 'factual'), ('analise', 'análise')] %}<option value="{{ v }}" {{ 'selected' if v == tipo }}>{{ r }}</option>{% endfor %}</select>
+  <label for="avaliacao">Avaliação</label>
+  <select id="avaliacao" name="avaliacao">{% for v, r in [('', 'todas'), ('sim', 'ajudou'), ('nao', 'não ajudou'), ('sem', 'sem avaliação')] %}<option value="{{ v }}" {{ 'selected' if v == avaliacao }}>{{ r }}</option>{% endfor %}</select>
+  <label for="situacao">Situação</label>
+  <select id="situacao" name="situacao">{% for v, r in [('', 'todas'), ('sem_fontes', 'sem fontes'), ('fonte_removida', 'fonte removida')] %}<option value="{{ v }}" {{ 'selected' if v == situacao }}>{{ r }}</option>{% endfor %}</select>
+  <button type="submit">Filtrar</button>
+</form>
+{% if itens %}
+<p class="contagem">{{ total|numero }} consulta{{ '' if total == 1 else 's' }}</p>
+<div class="rolagem"><table>
+  <thead><tr><th>Quando</th><th>Pergunta</th><th>Modelo</th><th>Avaliação</th><th>Fontes</th></tr></thead>
+  <tbody>
+  {% for i in itens %}
+  <tr>
+    <td>{{ i.criada_em|data_br }}</td>
+    <td><a href="/app/consultas/{{ i.id }}">{{ i.pergunta|resumo(140) }}</a>{% if i.tipo == 'analise' %} <span class="selo">análise</span>{% endif %}</td>
+    <td>{{ i.modelo_geracao or '—' }}<br><small>{{ i.latencia_ms|numero }} ms</small></td>
+    <td>{{ '—' if i.ajudou is none else ('ajudou' if i.ajudou else 'não ajudou') }}</td>
+    <td>{{ i.fontes }}{% if i.removidas %} <span class="selo falhou">{{ i.removidas }} removida{{ '' if i.removidas == 1 else 's' }}</span>{% endif %}{% if i.fontes == 0 %} <span class="selo">sem fontes</span>{% endif %}</td>
+  </tr>
+  {% endfor %}
+  </tbody></table></div>
+{% if paginas > 1 %}
+<nav class="paginacao" aria-label="Páginas">
+  {% if pagina > 1 %}<a href="?q={{ q|urlencode }}&tipo={{ tipo }}&avaliacao={{ avaliacao }}&situacao={{ situacao }}&pagina={{ pagina - 1 }}">← Anteriores</a>{% endif %}
+  <span>Página {{ pagina }} de {{ paginas }}</span>
+  {% if pagina < paginas %}<a href="?q={{ q|urlencode }}&tipo={{ tipo }}&avaliacao={{ avaliacao }}&situacao={{ situacao }}&pagina={{ pagina + 1 }}">Próximas →</a>{% endif %}
+</nav>
+{% endif %}
+{% else %}
+<p class="vazio">Nenhuma consulta{% if q or tipo or avaliacao or situacao %} com esse filtro{% endif %}.</p>
+{% endif %}
+{% endblock %}

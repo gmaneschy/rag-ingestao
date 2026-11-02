@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block titulo %}Saúde{% endblock %}
+{% block conteudo %}
+<h1>Saúde</h1>
+<div class="cartoes">
+  <section class="cartao"><h2>Banco</h2>
+    <p><span class="selo processado">ok</span> {{ banco_ms }} ms</p>
+    <dl class="meta"><div><dt>Migração</dt><dd>{{ revisao or '—' }}</dd></div><div><dt>pgvector</dt><dd>{{ pgvector or 'ausente' }}</dd></div></dl>
+  </section>
+  <section class="cartao"><h2>Documentos</h2>
+    <dl class="meta">
+      <div><dt>Prontos</dt><dd>{{ (estados.get('processado', 0))|numero }}</dd></div>
+      <div><dt>Processando</dt><dd>{{ (estados.get('pendente', 0))|numero }}</dd></div>
+      <div><dt>Com falha</dt><dd>{% if estados.get('falhou') %}<a href="/app/documentos?estado=falhou">{{ estados.get('falhou')|numero }}</a>{% else %}0{% endif %}</dd></div>
+      <div><dt>Trechos</dt><dd>{{ trechos|numero }}</dd></div>
+    </dl>
+    {% if modelos_de_vetor|length > 1 or (modelos_de_vetor and modelos_de_vetor[0] != modelo_atual) %}
+    <p class="aviso erro">Há vetores de outro modelo de embeddings ({{ modelos_de_vetor|join(', ') }}). Reprocese os documentos antes de consultar.</p>
+    {% else %}<p class="vazio">Embeddings: {{ modelo_atual }}</p>{% endif %}
+    {% if limpezas %}<p class="aviso">{{ limpezas|numero }} remoção(ões) com limpeza de arquivo pendente (será refeita na subida).</p>{% endif %}
+  </section>
+  <section class="cartao"><h2>Consultas</h2>
+    <dl class="meta">
+      <div><dt>Hoje</dt><dd>{{ consultas_hoje|numero }}</dd></div>
+      <div><dt>Total</dt><dd>{{ consultas|numero }}</dd></div>
+      <div><dt>Gasto hoje</dt><dd>US$ {{ '%.4f'|format(gasto) }}{% if limite %} de {{ '%g'|format(limite) }}{% endif %}</dd></div>
+    </dl>
+  </section>
+  <section class="cartao"><h2>Geração</h2>
+    <p>{{ provedor }} · {{ modelo_llm }}</p>
+    {% if ollama %}
+      {% if ollama.ok %}
+        <p><span class="selo processado">Ollama no ar</span> {{ ollama.modelos|length }} modelo(s)</p>
+        {% if not ollama.instalado %}<p class="aviso erro">O modelo “{{ modelo_llm }}” não está instalado no Ollama.</p>{% endif %}
+      {% else %}<p class="aviso erro">{{ ollama.motivo }}</p>{% endif %}
+    {% endif %}
+    <p class="vazio">Reordenador: {{ reranker or 'desligado' }}{% if reranker %} ({{ 'carregado' if reranker_carregado else 'carrega na 1ª pergunta' }}){% endif %}</p>
+  </section>
+</div>
+<p><a href="/app/logs">Ver os logs →</a> · API: <code>/saude</code></p>
+{% endblock %}

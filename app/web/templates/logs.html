@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block titulo %}Logs{% endblock %}
+{% block conteudo %}
+<h1>Logs</h1>
+<p class="vazio">Últimos eventos deste processo ({{ guardados }} guardados, até 1000). Não há texto de documentos nos logs, só identificadores, tamanhos e tempos.</p>
+<form class="filtros" id="filtros-logs" hx-get="/app/logs/lista" hx-target="#lista-logs" hx-trigger="change, input delay:300ms from:#q, every 5s [document.getElementById('auto').checked]">
+  <label for="nivel">Nível</label>
+  <select id="nivel" name="nivel">{% for n in ['DEBUG','INFO','WARNING','ERROR'] %}<option {{ 'selected' if n == nivel }}>{{ n }}</option>{% endfor %}</select>
+  <label for="q">Contém</label><input id="q" name="q" value="{{ q }}" type="search">
+  <label class="opcao"><input type="checkbox" name="requisicoes" value="true" {{ 'checked' if requisicoes }}> requisições</label>
+  <label class="opcao"><input type="checkbox" id="auto" checked> atualizar sozinho</label>
+</form>
+<div id="lista-logs">{% include "parciais/logs_lista.html" %}</div>
+{% endblock %}

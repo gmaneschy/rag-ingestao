@@ -1,0 +1,7 @@
+<ul class="resultados">
+{% for r in resultados %}
+  <li class="{{ 'ok' if r.ok else 'erro' }}"><strong>{{ r.nome }}</strong>: {{ r.mensagem }}</li>
+{% endfor %}
+</ul>
+<div id="tabela" hx-swap-oob="innerHTML">{% include "parciais/tabela.html" %}</div>
+<datalist id="lista-colecoes" hx-swap-oob="innerHTML">{% for c in colecoes %}<option value="{{ c }}">{% endfor %}</datalist>

@@ -18,6 +18,10 @@ ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \
     DADOS_DIR=/app/dados \
     MODELOS_DIR=/app/modelos
+# djvulibre-bin: leitura da camada de texto de arquivos DjVu.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends djvulibre-bin \
+    && rm -rf /var/lib/apt/lists/*
 RUN useradd --system --create-home --uid 1000 app
 # Pastas dos arquivos originais e do cache de modelos: volumes nomeados herdam este dono.
 RUN mkdir -p /app/dados /app/modelos && chown app:app /app/dados /app/modelos

@@ -1,0 +1,10 @@
+<div id="avaliacao" class="avaliacao">
+  {% if ajudou is none %}
+    <span>A resposta ajudou?</span>
+    {% for v, r in [(1, 'Sim'), (0, 'Não')] %}
+    <button type="button" hx-post="/app/consultas/{{ cid }}/avaliacao" hx-vals='{"ajudou": "{{ 'true' if v else 'false' }}"}'
+            hx-target="#avaliacao" hx-swap="outerHTML">{{ r }}</button>{% endfor %}
+  {% else %}
+    <span role="status">Obrigado. Registrado: {{ 'ajudou' if ajudou else 'não ajudou' }}.</span>
+  {% endif %}
+</div>

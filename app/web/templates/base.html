@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}RAG{% endblock %} · RAG com ingestão</title>
+  <link rel="stylesheet" href="/app/static/app.css">
+  <script src="/app/static/htmx.min.js" defer></script>
+  <script src="/app/static/app.js" defer></script>
+</head>
+<body>
+  <a class="pular" href="#conteudo">Ir para o conteúdo</a>
+  {% if ativa is defined %}
+  <header class="topo">
+    <strong class="marca">RAG</strong>
+    <nav aria-label="Principal">
+      {% for chave, rotulo in [('documentos','Documentos'),('perguntar','Perguntar'),('historico','Histórico'),('comparar','Comparar'),('configuracao','Configuração'),('saude','Saúde'),('logs','Logs')] %}
+      <a href="/app/{{ chave }}" {% if ativa == chave %}aria-current="page"{% endif %}>{{ rotulo }}</a>
+      {% endfor %}
+    </nav>
+    <form method="post" action="/app/sair"><button class="link" type="submit">Sair</button></form>
+  </header>
+  {% endif %}
+  <main id="conteudo">{% block conteudo %}{% endblock %}</main>
+</body>
+</html>

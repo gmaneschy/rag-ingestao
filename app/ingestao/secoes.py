@@ -14,7 +14,9 @@ import unicodedata
 from dataclasses import dataclass
 from typing import Literal
 
-Origem = Literal["indice", "markdown", "palavra", "decimal", "caixa_alta", "romano", "cabecalho"]
+Origem = Literal[
+    "indice", "markdown", "palavra", "decimal", "caixa_alta", "romano", "cabecalho", "estrutura"
+]
 
 TAMANHO_MAX_TITULO = 120
 # Um título idêntico em tantas páginas é cabeçalho ou rodapé corrido. Em CAIXA ALTA bastam duas:

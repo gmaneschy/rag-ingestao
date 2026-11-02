@@ -1,7 +1,7 @@
 [project]
 name = "rag-ingestao"
 version = "0.1.0"
-description = "API FastAPI"
+description = "Documentos ingeridos sozinhos, respostas com citação da fonte e remoção sem deixar rastro"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -16,6 +16,9 @@ dependencies = [
     "python-multipart>=0.0.32",
     "httpx>=0.28.1",
     "fonttools>=4.68.0",
+    "jinja2>=3.1",
+    "defusedxml>=0.7.1",
+    "mobi>=0.4.1",
 ]
 
 [dependency-groups]

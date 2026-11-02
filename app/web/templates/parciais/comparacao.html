@@ -1,0 +1,11 @@
+{% if erro %}<p class="aviso erro" role="alert">{{ erro }}</p>{% else %}
+<h2 class="quebra">{{ pergunta }}</h2>
+<div class="colunas">
+  {% for m in modelos %}
+  <section class="coluna" hx-post="/app/comparar/gerar" hx-trigger="load" hx-swap="innerHTML"
+           hx-vals='{{ {"pergunta": pergunta, "modelo": m, "posicao": loop.index, "modo": modo, "tipo": tipo, "k": k|string, "pensar": pensar}|tojson }}'>
+    <h3>{{ m }}</h3><p class="carregando" style="display:block">{{ 'Gerando…' if loop.first else 'Na fila…' }}</p>
+  </section>
+  {% endfor %}
+</div>
+{% endif %}

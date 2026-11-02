@@ -1,0 +1,19 @@
+<h3>{{ modelo }}</h3>
+{% if erro %}<p class="aviso erro">{{ erro }}</p>{% else %}
+{% set p = 'm' ~ posicao %}
+<p class="meta-linha">{{ r.latencia_ms|numero }} ms · {{ r.resposta.tokens_entrada|numero }} → {{ r.resposta.tokens_saida|numero }} tokens · {{ r.fontes|length }} fonte{{ '' if r.fontes|length == 1 else 's' }}</p>
+<article class="resposta {{ 'recusa' if r.resposta.recusou }}">
+  {% if r.resposta.recusou %}<p class="rotulo">Recusou: sem evidência suficiente</p>{% endif %}
+  {% if r.analise %}
+    <h4>Evidências</h4>{{ (r.analise.evidencias or r.resposta.texto)|citado(p) }}
+    {% if r.analise.avaliacao %}<h4>Avaliação</h4>{{ r.analise.avaliacao|citado(p) }}{% endif %}
+  {% else %}{{ r.resposta.texto|citado(p) }}{% endif %}
+  {% if r.aviso %}<p class="aviso">{{ r.aviso }}</p>{% endif %}
+</article>
+{% for f in r.fontes %}
+<details id="{{ p }}-{{ f.n }}" class="fonte">
+  <summary><span class="n">{{ f.n }}</span> {{ f.documento }}{% if f.pagina %}, p. {{ f.pagina }}{% endif %}</summary>
+  <blockquote>{{ f.texto }}</blockquote>
+</details>
+{% endfor %}
+{% endif %}

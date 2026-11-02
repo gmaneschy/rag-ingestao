@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block titulo %}{{ d.nome }}{% endblock %}
+{% block conteudo %}
+<p><a href="/app/documentos">← Documentos</a></p>
+<h1 class="quebra">{{ d.nome }}</h1>
+
+<div class="cabeca">
+  {% include "parciais/estado.html" %}
+  <dl class="meta">
+    <div><dt>Coleção</dt><dd>{{ d.colecao }}</dd></div>
+    <div><dt>Versão</dt><dd>{{ d.versao }}</dd></div>
+    <div><dt>Trechos</dt><dd>{{ d.trechos|numero }}</dd></div>
+    <div><dt>Seções</dt><dd>{{ d.secoes|numero }}</dd></div>
+    <div><dt>Atualizado</dt><dd>{{ d.atualizado_em|data_br }}</dd></div>
+    <div><dt>Embeddings</dt><dd>{{ d.modelo_embedding or '—' }}</dd></div>
+  </dl>
+</div>
+{% if d.aviso %}<p class="aviso">{{ d.aviso }}</p>{% endif %}
+
+<div class="acoes">
+  <button type="button" hx-post="/app/documentos/{{ d.id }}/reprocessar" hx-target="#estado" hx-swap="outerHTML">Reprocessar</button>
+  <button type="button" class="perigo" data-abrir="dialogo-remover">Remover…</button>
+</div>
+
+<dialog id="dialogo-remover" aria-labelledby="titulo-remover">
+  <form method="dialog">
+    <h2 id="titulo-remover">Remover “{{ d.nome }}”?</h2>
+    <p>Apaga o documento, os trechos e o arquivo. O que fazer com as respostas antigas que o citaram?</p>
+    <label class="opcao"><input type="radio" name="consultas" value="redigir" checked>
+      Apagar só os trechos citados (o histórico fica, marcado como “fonte removida”)</label>
+    <label class="opcao"><input type="radio" name="consultas" value="apagar">
+      Apagar as consultas inteiras</label>
+    <div class="acoes">
+      <button value="cancelar">Cancelar</button>
+      <button type="button" class="perigo" data-confirmar-remocao="/app/documentos/{{ d.id }}">Remover</button>
+    </div>
+  </form>
+</dialog>
+
+{% if d.tipos %}
+<h2>Tipos de trecho</h2>
+<ul class="barras">
+  {% for t, n in d.tipos.items() %}
+  <li><span class="rot">{{ t|tipo }}</span>
+      <span class="barra"><span style="width: {{ (100 * n / maior)|round|int }}%"></span></span>
+      <span class="num">{{ n|numero }}</span></li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% if secoes %}
+<h2>Seções detectadas</h2>
+<div class="rolagem">
+<table>
+  <thead><tr><th>Seção</th><th class="num">Trechos</th><th class="num">Páginas</th></tr></thead>
+  <tbody>
+  {% for s in secoes %}
+    <tr><td>{{ s.secao }}</td><td class="num">{{ s.trechos|numero }}</td>
+        <td class="num">{% if s.pagina_inicial is none %}—{% elif s.pagina_inicial == s.pagina_final %}{{ s.pagina_inicial }}{% else %}{{ s.pagina_inicial }}–{{ s.pagina_final }}{% endif %}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+{% if sem_secao %}<p class="contagem">{{ sem_secao|numero }} trecho{{ '' if sem_secao == 1 else 's' }} sem seção.</p>{% endif %}
+
+{% if d.amostra %}
+<h2>Amostra de trechos</h2>
+<ol class="amostra">
+  {% for t in d.amostra %}
+  <li><div class="rotulo">#{{ t.posicao }}{% if t.pagina %} · p. {{ t.pagina }}{% endif %} · {{ t.tipo|tipo }}{% if t.secao %} · {{ t.secao }}{% endif %}</div>
+      <p>{{ t.texto|resumo(400) }}</p></li>
+  {% endfor %}
+</ol>
+{% endif %}
+{% endblock %}

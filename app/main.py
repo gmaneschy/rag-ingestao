@@ -8,7 +8,8 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request, Response
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.exc import OperationalError
 from starlette.middleware.base import RequestResponseEndpoint
 
@@ -20,6 +21,7 @@ from app.ingestao.config import get_ingestao_settings
 from app.llm.config import get_llm_settings
 from app.logging_config import configure_logging
 from app.routers import documentos, perguntas, saude
+from app.web import comparar, painel, perguntar, sessao, telas
 
 logger = logging.getLogger("app")
 
@@ -79,6 +81,22 @@ def create_app() -> FastAPI:
     app.include_router(saude.router)
     app.include_router(documentos.router)
     app.include_router(perguntas.router)
+    app.include_router(telas.router)
+    app.include_router(telas.protegido)
+    app.include_router(perguntar.protegido)
+    app.include_router(comparar.protegido)
+    app.include_router(painel.protegido)
+    app.mount("/app/static", StaticFiles(directory=telas.RAIZ / "static"), name="estaticos")
+
+    @app.get("/", include_in_schema=False)
+    def raiz() -> RedirectResponse:
+        return RedirectResponse("/app/documentos", status_code=307)
+
+    @app.exception_handler(sessao.PrecisaEntrar)
+    async def sem_sessao(request: Request, _: sessao.PrecisaEntrar) -> Response:
+        if request.headers.get("hx-request") == "true":
+            return Response(status_code=401, headers={"HX-Redirect": sessao.ENTRAR})
+        return RedirectResponse(sessao.ENTRAR, status_code=303)
 
     @app.exception_handler(OperationalError)
     async def banco_indisponivel(_: Request, erro: OperationalError) -> JSONResponse:

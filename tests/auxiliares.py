@@ -107,6 +107,9 @@ def banco(ambiente):
     """Tabelas vazias a cada teste."""
     with get_engine().begin() as c:
         c.execute(
-            text("TRUNCATE documento, trecho, consulta, evento_documento RESTART IDENTITY CASCADE")
+            text(
+                "TRUNCATE documento, trecho, consulta, evento_documento, configuracao "
+                "RESTART IDENTITY CASCADE"
+            )
         )
     yield get_sessionmaker()

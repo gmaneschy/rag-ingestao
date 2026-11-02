@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block titulo %}Documentos{% endblock %}
+{% block conteudo %}
+<h1>Documentos</h1>
+{% if removido == '1' %}<p class="aviso ok" role="status">Documento removido, com trechos, arquivo e citações em respostas antigas.</p>{% endif %}
+{% if removido == '0' %}<p class="aviso erro" role="status">Esse documento não existe mais.</p>{% endif %}
+
+<form id="envio" class="envio" hx-post="/app/documentos/enviar" hx-encoding="multipart/form-data"
+      hx-target="#resultado-envio" hx-swap="innerHTML" hx-indicator="#envio">
+  <div class="zona" id="zona">
+    <label for="arquivos"><strong>Escolha arquivos</strong> ou solte-os aqui</label>
+    <input id="arquivos" name="arquivos" type="file" multiple required accept="{{ extensoes|join(',') }},.zip">
+    <small>Até {{ limite_mb }} MB por arquivo. Aceitos: {{ extensoes|join(' ') }} e .fb2.zip</small>
+  </div>
+  <div class="linha">
+    <label for="colecao">Coleção</label>
+    <input id="colecao" name="colecao" list="lista-colecoes" value="geral" maxlength="64" pattern="[\w.\-]+">
+    <datalist id="lista-colecoes">{% for c in colecoes %}<option value="{{ c }}">{% endfor %}</datalist>
+    <button class="primario" type="submit">Enviar</button>
+    <span class="carregando" aria-hidden="true">Enviando…</span>
+  </div>
+</form>
+<div id="resultado-envio" aria-live="polite"></div>
+
+<form class="filtros" method="get" action="/app/documentos"
+      hx-get="/app/documentos/tabela" hx-target="#tabela" hx-trigger="change, submit"
+      hx-push-url="false" hx-include="this">
+  <label for="f-colecao">Coleção</label>
+  <select id="f-colecao" name="colecao">
+    <option value="">todas</option>
+    {% for c in colecoes %}<option value="{{ c }}" {% if c == colecao %}selected{% endif %}>{{ c }}</option>{% endfor %}
+  </select>
+  <label for="f-estado">Estado</label>
+  <select id="f-estado" name="estado">
+    <option value="">todos</option>
+    {% for v, r in [('pendente','Processando'),('processado','Pronto'),('falhou','Falhou')] %}
+    <option value="{{ v }}" {% if v == estado %}selected{% endif %}>{{ r }}</option>{% endfor %}
+  </select>
+</form>
+
+<div id="tabela">{% include "parciais/tabela.html" %}</div>
+{% endblock %}

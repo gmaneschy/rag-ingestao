@@ -1,6 +1,8 @@
-"""Extração de texto: PDF com texto, TXT e Markdown, com as seções detectadas.
+"""Extração de texto, com as seções detectadas.
 
-OCR para PDF escaneado e EPUB ficam para a etapa 5."""
+PDF e DjVu (com camada de texto) têm página; TXT, Markdown e os formatos de livro eletrônico e de
+texto (EPUB, FB2, DOCX, ODT, HTML, MOBI) têm seção (veja `formatos`). OCR de escaneados fica para
+depois."""
 
 import logging
 import re
@@ -16,7 +18,25 @@ from app.ingestao.secoes import Titulo
 
 logger = logging.getLogger("app.ingestao")
 
-EXTENSOES_ACEITAS = frozenset({".pdf", ".txt", ".md"})
+EXTENSOES_ACEITAS = frozenset(
+    {
+        ".pdf", ".txt", ".md", ".epub", ".fb2", ".fbz", ".docx", ".odt", ".html", ".htm",
+        ".mobi", ".azw3", ".djvu", ".djv",
+    }
+)  # fmt: skip
+
+
+def extensao_do_nome(nome: str) -> str:
+    """Extensão que decide o formato. `livro.fb2.zip` é um FBZ (o seletor de arquivos só enxerga o
+    último pedaço, ".zip"); o resto vem do sufixo normal."""
+    minusculo = nome.lower()
+    if minusculo.endswith(".fb2.zip"):
+        return ".fbz"
+    return Path(minusculo).suffix
+
+
+_ZIP = {".epub", ".fbz", ".docx", ".odt"}
+FORMATOS = EXTENSOES_ACEITAS - {".pdf", ".txt", ".md"}
 
 
 class ErroDeExtracao(Exception):
@@ -180,12 +200,8 @@ def _montar_paginas(
     return paginas
 
 
-def _ler_texto(caminho: Path) -> list[Pagina]:
-    bruto = caminho.read_bytes()
-    try:
-        texto = bruto.decode("utf-8-sig")
-    except UnicodeDecodeError:
-        texto = bruto.decode("latin-1")
+def paginas_de_texto(texto: str) -> list[Pagina]:
+    """Texto corrido -> uma página sem número, com as seções que as heurísticas acharem."""
     texto = limpar(texto)
     if not texto:
         return []
@@ -196,20 +212,67 @@ def _ler_texto(caminho: Path) -> list[Pagina]:
     return [Pagina(numero=None, texto=texto, titulos=titulos)]
 
 
+def _ler_texto(caminho: Path) -> list[Pagina]:
+    bruto = caminho.read_bytes()
+    try:
+        texto = bruto.decode("utf-8-sig")
+    except UnicodeDecodeError:
+        texto = bruto.decode("latin-1")
+    return paginas_de_texto(texto)
+
+
+def _parece_fb2(conteudo: bytes) -> bool:
+    """Procura <FictionBook> no começo, sem depender da codificação: há FB2 em UTF-16 (letras
+    separadas por bytes nulos), com comentários longos antes da raiz e com o nome em minúsculas."""
+    cabeca = conteudo[:65536].replace(b"\x00", b"").lower()
+    return b"<fictionbook" in cabeca
+
+
+def conferir_assinatura(nome: str, conteudo: bytes) -> None:
+    """O conteúdo bate com a extensão? Barra o óbvio antes de gravar (ValueError)."""
+    ext = extensao_do_nome(nome)
+    inicio = conteudo.lstrip()[:16]
+    erro = None
+    if ext == ".pdf" and not inicio.startswith(b"%PDF-"):
+        erro = "O arquivo não é um PDF válido"
+    elif ext in _ZIP and not conteudo.startswith(b"PK"):
+        erro = f"O arquivo não é um {ext[1:].upper()} válido"
+    elif ext in {".mobi", ".azw3"} and conteudo[60:68] not in {b"BOOKMOBI", b"TEXtREAd"}:
+        erro = "O arquivo não é um MOBI/AZW3 válido"
+    elif ext in {".djvu", ".djv"} and not conteudo.startswith(b"AT&TFORM"):
+        erro = "O arquivo não é um DjVu válido"
+    elif ext == ".fb2" and not _parece_fb2(conteudo):
+        erro = "O arquivo não parece um FB2 (não achei a marca <FictionBook> no começo)"
+    if erro:
+        raise ValueError(erro)
+
+
 def extrair(caminho: Path, *, max_paginas: int = 500) -> Extracao:
     """Páginas com texto, mais um aviso se algo ficou de fora. Levanta ErroDeExtracao se não
     houver nada aproveitável."""
-    extensao = caminho.suffix.lower()
+    extensao = extensao_do_nome(caminho.name)
     total: int | None = None
     if extensao == ".pdf":
         paginas, total = _ler_pdf(caminho, max_paginas)
     elif extensao in {".txt", ".md"}:
         paginas = _ler_texto(caminho)
+    elif extensao in FORMATOS:
+        from app.ingestao import formatos  # aqui para não importar em círculo
+
+        if extensao in {".djvu", ".djv"}:
+            paginas, total = formatos.ler_djvu(caminho, max_paginas)
+        else:
+            leitores = {
+                ".epub": formatos.ler_epub, ".fb2": formatos.ler_fb2, ".fbz": formatos.ler_fbz,
+                ".docx": formatos.ler_docx, ".odt": formatos.ler_odt, ".html": formatos.ler_html,
+                ".htm": formatos.ler_html, ".mobi": formatos.ler_mobi, ".azw3": formatos.ler_mobi,
+            }  # fmt: skip
+            paginas = leitores[extensao](caminho)
     else:
         raise ErroDeExtracao(f"Tipo de arquivo não suportado: {extensao or 'sem extensão'}")
     if not paginas:
         raise ErroDeExtracao(
-            "Nenhum texto extraível (PDF escaneado? o OCR ainda não foi implementado)"
+            "Nenhum texto extraível (escaneado, sem camada de texto? o OCR ainda não existe)"
         )
     aviso = None
     if total is not None and len(paginas) < total:

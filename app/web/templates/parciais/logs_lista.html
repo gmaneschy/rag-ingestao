@@ -1,0 +1,15 @@
+{% if eventos %}
+<div class="rolagem"><table class="logs">
+  <thead><tr><th>Quando</th><th>Nível</th><th>Evento</th></tr></thead>
+  <tbody>
+  {% for e in eventos %}
+  <tr class="nivel-{{ e.nivel|lower }}">
+    <td>{{ e.ts[11:19] }}<br><small>{{ e.ts[:10] }}</small></td>
+    <td>{{ e.nivel }}</td>
+    <td><strong>{{ e.msg }}</strong> <small>{{ e.logger }}</small>
+      {% if e.extras %}<br><small class="quebra">{% for k, v in e.extras.items() %}{{ k }}={{ v }} {% endfor %}</small>{% endif %}
+      {% if e.erro %}<pre>{{ e.erro }}</pre>{% endif %}</td>
+  </tr>
+  {% endfor %}
+  </tbody></table></div>
+{% else %}<p class="vazio">Nenhum evento com esse filtro.</p>{% endif %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block titulo %}Perguntar{% endblock %}
+{% block conteudo %}
+<h1>Perguntar</h1>
+<form id="pergunta" class="pergunta" hx-post="/app/perguntar" hx-target="#resposta" hx-swap="innerHTML"
+      hx-disabled-elt="#enviar" hx-indicator="#pergunta">
+  <label for="texto" class="vh">Pergunta</label>
+  <textarea id="texto" name="pergunta" rows="3" maxlength="2000" required autofocus
+            placeholder="O que você quer saber sobre os documentos?"></textarea>
+  <div class="linha">
+    <button id="enviar" class="primario" type="submit">Perguntar</button>
+    <span class="carregando" role="status">Buscando e gerando a resposta…</span>
+  </div>
+
+  <details class="parametros">
+    <summary>Parâmetros</summary>
+    <div class="grade">
+      <fieldset><legend>Busca</legend>
+        <label class="opcao"><input type="radio" name="modo" value="hibrida" checked> híbrida</label>
+        <label class="opcao"><input type="radio" name="modo" value="vetorial"> só vetorial</label>
+        <label class="opcao"><input type="radio" name="modo" value="textual"> só textual</label>
+      </fieldset>
+      <fieldset><legend>Tipo de resposta</legend>
+        <label class="opcao"><input type="radio" name="tipo" value="factual" checked> factual</label>
+        <label class="opcao"><input type="radio" name="tipo" value="analise"> análise (evidências + avaliação)</label>
+      </fieldset>
+      <div><label for="k">Trechos (k)</label>
+        <input id="k" name="k" type="number" min="1" max="10" placeholder="{{ k_padrao }} ({{ k_analise }} na análise)"></div>
+    </div>
+    {% if colecoes %}
+    <fieldset><legend>Coleções (nenhuma marcada = todas)</legend>
+      {% for c in colecoes %}<label class="opcao"><input type="checkbox" name="colecao" value="{{ c }}"> {{ c }}</label>{% endfor %}
+    </fieldset>
+    {% endif %}
+    {% if docs %}
+    <fieldset><legend>Só estes documentos (nenhum marcado = todos)</legend>
+      {% for d in docs %}<label class="opcao"><input type="checkbox" name="documento" value="{{ d.id }}"> <span>{{ d.nome }} <small>({{ d.colecao }})</small></span></label>{% endfor %}
+    </fieldset>
+    {% endif %}
+    <fieldset><legend>Incluir também (a busca usa só o corpo do texto)</legend>
+      {% for v, r in tipos_extras %}<label class="opcao"><input type="checkbox" name="incluir" value="{{ v }}"> {{ r }}</label>{% endfor %}
+    </fieldset>
+  </details>
+</form>
+<div id="resposta" aria-live="polite"></div>
+{% endblock %}

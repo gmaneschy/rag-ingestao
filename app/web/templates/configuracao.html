@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block titulo %}Configuração{% endblock %}
+{% block conteudo %}
+<h1>Configuração</h1>
+<p class="vazio">Ajustes que valem na próxima pergunta, sem reiniciar. Ordem de precedência: parâmetro da própria pergunta, depois o que está aqui, depois o <code>.env</code>. Campo vazio = usar o <code>.env</code>.</p>
+{% include "parciais/configuracao_form.html" %}
+<h2>Fixos no <code>.env</code> (exigem reiniciar)</h2>
+<dl class="meta">{% for r, v in fixos %}<div><dt>{{ r }}</dt><dd class="quebra">{{ v }}</dd></div>{% endfor %}</dl>
+<p class="vazio">O comando de avaliação (<code>python -m app.avaliacao</code>) lê só o <code>.env</code>, para as medições serem reproduzíveis.</p>
+{% endblock %}

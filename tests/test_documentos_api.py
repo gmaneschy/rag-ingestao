@@ -111,3 +111,26 @@ def test_reprocessar_refaz_os_trechos_sem_duplicar(cliente) -> None:
 def test_reprocessar_exige_chave_e_documento_existente(cliente) -> None:
     assert cliente.post("/documentos/1/reprocessar").status_code == 401
     assert cliente.post("/documentos/999/reprocessar", headers=CHAVE).status_code == 404
+
+
+def test_epub_de_ponta_a_ponta(cliente, tmp_path) -> None:
+    from test_formatos import _epub
+
+    conteudo = _epub(tmp_path).read_bytes()
+    resposta = _enviar(cliente, "livro.epub", conteudo)
+    assert resposta.status_code == 202
+    detalhe = cliente.get(f"/documentos/{resposta.json()['id']}", headers=CHAVE).json()
+    assert detalhe["estado"] == "processado" and detalhe["secoes"] >= 2
+    assert _enviar(cliente, "falso.epub", b"nao e zip").status_code == 422
+    assert _enviar(cliente, "a.xyz", b"oi").status_code == 422
+
+
+def test_fb2_zip_enviado_pelo_nome_original(cliente, tmp_path) -> None:
+    from test_formatos import FB2, _zip
+
+    conteudo = _zip(tmp_path / "x.zip", {"c.fb2": FB2}).read_bytes()
+    r = _enviar(cliente, "Livro.fb2.zip", conteudo)
+    assert r.status_code == 202
+    assert (
+        cliente.get(f"/documentos/{r.json()['id']}", headers=CHAVE).json()["estado"] == "processado"
+    )

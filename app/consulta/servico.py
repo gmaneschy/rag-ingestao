@@ -118,6 +118,7 @@ def perguntar(
     documento_ids: list[int] | None = None,
     incluir_tipos: list[str] | None = None,
     reordenador: reranker.Reordenador | None = None,
+    registrar: bool = True,
 ) -> Resultado:
     inicio = time.perf_counter()
     if llm.limite_diario_gasto and gasto_de_hoje(session) >= llm.limite_diario_gasto:
@@ -186,25 +187,27 @@ def perguntar(
         aviso = " ".join(a for a in (aviso_analise, aviso) if a) or None
     latencia = round((time.perf_counter() - inicio) * 1000)
 
-    consulta_id = session.execute(
-        text(
-            "INSERT INTO consulta (pergunta, resposta, fontes, modelo_geracao, tokens_entrada, "
-            "tokens_saida, latencia_ms, custo, tipo) VALUES (:p, :r, CAST(:f AS jsonb), :m, "
-            ":ti, :to, :l, :c, :tipo) RETURNING id"
-        ),
-        {
-            "p": pergunta,
-            "r": resposta.texto,
-            "f": json.dumps(fontes, ensure_ascii=False),
-            "m": getattr(gerador, "nome_modelo", None),
-            "ti": resposta.tokens_entrada,
-            "to": resposta.tokens_saida,
-            "l": latencia,
-            "c": resposta.custo,
-            "tipo": tipo,
-        },
-    ).scalar_one()
-    session.commit()
+    consulta_id = 0
+    if registrar:  # a comparação de modelos não entra no histórico
+        consulta_id = session.execute(
+            text(
+                "INSERT INTO consulta (pergunta, resposta, fontes, modelo_geracao, tokens_entrada, "
+                "tokens_saida, latencia_ms, custo, tipo) VALUES (:p, :r, CAST(:f AS jsonb), :m, "
+                ":ti, :to, :l, :c, :tipo) RETURNING id"
+            ),
+            {
+                "p": pergunta,
+                "r": resposta.texto,
+                "f": json.dumps(fontes, ensure_ascii=False),
+                "m": getattr(gerador, "nome_modelo", None),
+                "ti": resposta.tokens_entrada,
+                "to": resposta.tokens_saida,
+                "l": latencia,
+                "c": resposta.custo,
+                "tipo": tipo,
+            },
+        ).scalar_one()
+        session.commit()
     logger.info(
         "pergunta respondida",
         extra={

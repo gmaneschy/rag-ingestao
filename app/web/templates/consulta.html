@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block titulo %}Consulta #{{ c.id }}{% endblock %}
+{% block conteudo %}
+<p><a href="/app/perguntar">← Perguntar</a></p>
+<h1>Consulta #{{ c.id }}</h1>
+<dl class="meta">
+  <div><dt>Quando</dt><dd>{{ c.criada_em|data_br }}</dd></div>
+  <div><dt>Tipo</dt><dd>{{ c.tipo }}</dd></div>
+  <div><dt>Modelo</dt><dd>{{ c.modelo_geracao or '—' }}</dd></div>
+  <div><dt>Latência</dt><dd>{{ c.latencia_ms|numero }} ms</dd></div>
+  <div><dt>Tokens</dt><dd>{{ c.tokens_entrada|numero }} → {{ c.tokens_saida|numero }}</dd></div>
+  <div><dt>Ajudou?</dt><dd>{{ '—' if c.ajudou is none else ('sim' if c.ajudou else 'não') }}</dd></div>
+</dl>
+<h2>Pergunta</h2>
+<p class="quebra">{{ c.pergunta }}</p>
+<div class="leitura">
+  <article class="resposta"><h2>Resposta</h2>{{ c.resposta|citado }}</article>
+  <aside class="fontes" aria-label="Fontes">
+    <h2>Fontes</h2>
+    {% for f in c.fontes %}
+      {% if f.removido %}
+      <div class="fonte removida" id="fonte-{{ f.n }}"><span class="n">{{ f.n }}</span> <em>fonte removida</em></div>
+      {% else %}
+      <details id="fonte-{{ f.n }}" class="fonte" open>
+        <summary><span class="n">{{ f.n }}</span> <a href="/app/documentos/{{ f.documento_id }}">{{ f.documento }}</a>{% if f.pagina %}, p. {{ f.pagina }}{% endif %}</summary>
+        {% if f.secao %}<div class="rotulo">{{ f.secao }}</div>{% endif %}
+        <blockquote>{{ f.texto }}</blockquote>
+      </details>
+      {% endif %}
+    {% else %}<p class="vazio">Nenhum trecho foi citado.</p>{% endfor %}
+  </aside>
+</div>
+{% endblock %}
