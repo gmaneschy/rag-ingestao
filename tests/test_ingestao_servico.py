@@ -18,7 +18,7 @@ TEXTO_B = "A política de devolução aceita trocas em até sete dias.\n\nO fret
 
 @pytest.fixture
 def emb() -> EmbeddingsSimulado:
-    return EmbeddingsSimulado(384)
+    return EmbeddingsSimulado(768)
 
 
 def _registrar(banco, nome: str, conteudo: bytes, colecao: str = "geral"):  # noqa: F811
@@ -48,7 +48,7 @@ def test_ingere_um_documento_do_inicio_ao_fim(banco, emb) -> None:  # noqa: F811
     assert _um(banco, "SELECT count(*) FROM trecho") >= 1
     with banco() as s:
         modelo, dim = s.execute(text("SELECT modelo_embedding, dimensao FROM trecho")).first()
-    assert (modelo, dim) == ("simulado-hash-v1", 384)
+    assert (modelo, dim) == ("simulado-hash-v1", 768)
     assert _um(banco, "SELECT tipo FROM evento_documento") == "ingerido"
 
 
@@ -133,7 +133,7 @@ def test_falha_do_gerador_de_embeddings_nao_deixa_meio_documento(banco) -> None:
             raise RuntimeError("modelo indisponível")
 
     reg = _registrar(banco, "a.txt", TEXTO_A.encode())
-    _processar(banco, reg, Quebrado(384))
+    _processar(banco, reg, Quebrado(768))
     assert _um(banco, "SELECT estado FROM documento") == "falhou"
     assert _um(banco, "SELECT mensagem_erro FROM documento") == "Erro interno (RuntimeError)"
     assert _um(banco, "SELECT count(*) FROM trecho") == 0
@@ -145,7 +145,7 @@ def test_documento_falho_pode_ser_reenviado_e_recuperado(banco, emb) -> None:  #
             raise RuntimeError("fora")
 
     reg = _registrar(banco, "a.txt", TEXTO_A.encode())
-    _processar(banco, reg, Quebrado(384))
+    _processar(banco, reg, Quebrado(768))
     de_novo = _registrar(banco, "a.txt", TEXTO_A.encode())
     assert de_novo.situacao == "duplicado" and de_novo.precisa_processar
     # O erro antigo some assim que a nova tentativa é aceita, antes mesmo de processar.
@@ -160,7 +160,7 @@ def test_dimensao_incompativel_e_recusada(banco) -> None:  # noqa: F811
     reg = _registrar(banco, "a.txt", TEXTO_A.encode())
     _processar(banco, reg, EmbeddingsSimulado(128))
     assert _um(banco, "SELECT estado FROM documento") == "falhou"
-    assert "384" in _um(banco, "SELECT mensagem_erro FROM documento")
+    assert "768" in _um(banco, "SELECT mensagem_erro FROM documento")
 
 
 def test_versao_mais_nova_no_meio_do_caminho_nao_e_sobrescrita(banco, emb, monkeypatch) -> None:  # noqa: F811
@@ -226,7 +226,7 @@ def test_modelo_indisponivel_vira_falha_com_mensagem_clara(banco) -> None:  # no
             raise ModeloIndisponivel("Não consegui carregar o modelo x: ValueError")
 
     reg = _registrar(banco, "a.txt", TEXTO_A.encode())
-    _processar(banco, reg, SemModelo(384))
+    _processar(banco, reg, SemModelo(768))
     assert _um(banco, "SELECT estado FROM documento") == "falhou"
     erro = _um(banco, "SELECT mensagem_erro FROM documento")
     assert "download" in erro and "reenvie" in erro

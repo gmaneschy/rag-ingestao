@@ -96,14 +96,45 @@ _CAMPOS = "t.id, t.posicao, t.pagina, t.secao, t.texto, d.id AS documento_id, d.
 
 
 def _buscar_vetorial(session: Session, vetor: list[float], n: int, filtros: Filtros):
+    """Os n trechos mais parecidos com a pergunta.
+
+    Sem filtro de documento, coleção, seção ou página, usa o índice HNSW. Com filtro NÃO pode: o
+    índice devolve os ~40 vizinhos mais próximos de TODO o corpus e só depois o Postgres aplica o
+    filtro, então, ao escolher um documento cujo assunto ou idioma está longe da pergunta, todos
+    os 40 são de outros documentos e o resultado sai vazio (a recusa imediata, sem chamar o
+    modelo). Com filtro, a busca é exata sobre os trechos selecionados: CTE MATERIALIZED impede o
+    planejador de usar o índice, e o custo é proporcional ao tamanho da seleção.
+    """
     filtro, parametros = _filtro(filtros)
+    parametros = {"v": vetor_como_texto(vetor), "n": n, **parametros}
+    com_selecao = any(
+        (
+            filtros.colecoes,
+            filtros.documento_ids,
+            filtros.secao,
+            filtros.pagina_de is not None,
+            filtros.pagina_ate is not None,
+        )
+    )
+    if not com_selecao:
+        return session.execute(
+            text(
+                f"SELECT {_CAMPOS}, 1 - (t.vetor <=> CAST(:v AS vector)) AS similaridade "
+                "FROM trecho t JOIN documento d ON d.id = t.documento_id "
+                f"WHERE true{filtro} ORDER BY t.vetor <=> CAST(:v AS vector) LIMIT :n"
+            ),
+            parametros,
+        ).all()
     return session.execute(
         text(
-            f"SELECT {_CAMPOS}, 1 - (t.vetor <=> CAST(:v AS vector)) AS similaridade "
+            f"WITH alvo AS MATERIALIZED (SELECT {_CAMPOS}, t.vetor "
             "FROM trecho t JOIN documento d ON d.id = t.documento_id "
-            f"WHERE true{filtro} ORDER BY t.vetor <=> CAST(:v AS vector) LIMIT :n"
+            f"WHERE true{filtro}) "
+            "SELECT id, posicao, pagina, secao, texto, documento_id, nome, "
+            "1 - (vetor <=> CAST(:v AS vector)) AS similaridade "
+            "FROM alvo ORDER BY vetor <=> CAST(:v AS vector) LIMIT :n"
         ),
-        {"v": vetor_como_texto(vetor), "n": n, **parametros},
+        parametros,
     ).all()
 
 

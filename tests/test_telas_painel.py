@@ -125,7 +125,7 @@ def test_modelo_novo_gera_gerador_novo(logado) -> None:
 
 def test_saude(logado) -> None:
     html = logado.get("/app/saude").text
-    assert "Banco" in html and "0006" in html and "Trechos" in html and "pgvector" in html
+    assert "Banco" in html and "0008" in html and "Trechos" in html and "pgvector" in html
 
 
 def test_logs_filtram_por_nivel_e_texto(logado) -> None:
@@ -138,3 +138,19 @@ def test_logs_filtram_por_nivel_e_texto(logado) -> None:
     assert "documento_id=7" in logado.get("/app/logs/lista?nivel=WARNING").text
     assert logado.get("/app/logs/lista?nivel=XX").status_code == 422
     assert "<script>" not in logado.get("/app/logs/lista?q=<script>").text
+
+
+def test_idioma_da_resposta_na_configuracao(logado) -> None:
+    from app.llm.config import get_llm_settings
+    from app.routers.perguntas import obter_gerador as fabrica
+
+    html = logado.get("/app/configuracao").text
+    assert 'name="llm_idioma"' in html and "sempre português" in html
+    assert "como no .env (o idioma da pergunta)" in html
+    assert "definido aqui" in _salvar(logado, llm_idioma="pt").text
+    assert _linhas() == {"llm_idioma": "pt"}
+    r = _salvar(logado, llm_idioma="klingon")
+    assert "escolha uma das opções" in r.text
+    assert _linhas() == {"llm_idioma": "pt"}  # o inválido não gravou nada
+    base = get_llm_settings()
+    assert fabrica(base) is not fabrica(base.model_copy(update={"llm_idioma": "pt"}))

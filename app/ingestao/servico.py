@@ -196,6 +196,90 @@ def marcar_para_reprocessar(session: Session, documento_id: int) -> bool:
     return achou is not None
 
 
+def marcar_varios_para_reprocessar(session: Session, ids: list[int]) -> list[int]:
+    """Volta os documentos a 'pendente'. Devolve os ids que existem, na ordem pedida."""
+    ordem = list(dict.fromkeys(ids))
+    achados = set(
+        session.execute(
+            text(
+                "UPDATE documento SET estado = 'pendente', mensagem_erro = NULL, "
+                "atualizado_em = now() WHERE id = ANY(:ids) RETURNING id"
+            ),
+            {"ids": ordem},
+        ).scalars()
+    )
+    session.commit()
+    return [i for i in ordem if i in achados]
+
+
+def processar_fila(
+    fabrica: sessionmaker[Session],
+    ids: list[int],
+    embeddings: GeradorDeEmbeddings,
+    config: IngestaoSettings,
+) -> None:
+    """Processa um documento por vez: em lote, não se carrega o modelo N vezes em paralelo."""
+    for documento_id in ids:
+        processar(fabrica, documento_id, embeddings, config)
+
+
+@dataclass(frozen=True)
+class Movimentacao:
+    movidos: list[int]
+    ignorados: list[tuple[int, str, str]]  # (id, nome, motivo)
+
+
+def mover_para_colecao(
+    session: Session, ids: list[int], destino: str, *, ator: str = "api"
+) -> Movimentacao:
+    """Troca a coleção dos documentos, sem reindexar: o trecho não guarda a coleção.
+
+    Recusa, documento a documento, o que colidiria no destino (mesmo nome ou mesmo conteúdo)."""
+    movidos: list[int] = []
+    ignorados: list[tuple[int, str, str]] = []
+    for documento_id in dict.fromkeys(ids):
+        linha = session.execute(
+            text("SELECT nome, colecao, hash_conteudo FROM documento WHERE id = :id FOR UPDATE"),
+            {"id": documento_id},
+        ).first()
+        if linha is None:
+            ignorados.append((documento_id, f"#{documento_id}", "não existe mais"))
+            continue
+        nome, atual, hash_conteudo = linha
+        if atual == destino:
+            ignorados.append((documento_id, nome, "já está nessa coleção"))
+            continue
+        colide = session.execute(
+            text(
+                "SELECT nome = :n AS mesmo_nome FROM documento "
+                "WHERE colecao = :c AND (nome = :n OR hash_conteudo = :h) ORDER BY 1 DESC LIMIT 1"
+            ),
+            {"c": destino, "n": nome, "h": hash_conteudo},
+        ).first()
+        if colide is not None:
+            motivo = (
+                "já existe um documento com esse nome no destino"
+                if colide[0]
+                else "o destino já tem um documento com o mesmo conteúdo"
+            )
+            ignorados.append((documento_id, nome, motivo))
+            continue
+        session.execute(
+            text("UPDATE documento SET colecao = :c, atualizado_em = now() WHERE id = :id"),
+            {"c": destino, "id": documento_id},
+        )
+        session.execute(
+            text(
+                "INSERT INTO evento_documento (documento_id, nome, tipo, ator) "
+                "VALUES (:d, :n, 'movido', :a)"
+            ),
+            {"d": documento_id, "n": nome, "a": ator},
+        )
+        movidos.append(documento_id)
+    session.commit()
+    return Movimentacao(movidos, ignorados)
+
+
 def processar(
     fabrica: sessionmaker[Session],
     documento_id: int,

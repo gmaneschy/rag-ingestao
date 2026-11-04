@@ -9,6 +9,7 @@ import threading
 from collections.abc import Sequence
 from pathlib import Path
 
+from app.llm.perfis import perfil_de
 from app.llm.tipos import ModeloIndisponivel
 
 
@@ -36,8 +37,16 @@ class EmbeddingsLocal:
                     ) from erro
         return self._modelo
 
-    def _gerar(self, textos: Sequence[str]) -> list[list[float]]:
-        vetores = [v.tolist() for v in self._carregar().embed(list(textos), batch_size=32)]
+    def _gerar(self, textos: Sequence[str], *, consulta: bool) -> list[list[float]]:
+        perfil = perfil_de(self.nome_modelo)
+        prefixo = perfil.prefixo_consulta if consulta else perfil.prefixo_trecho
+        entrada = [prefixo + t for t in textos] if prefixo else list(textos)
+        modelo = self._carregar()
+        if perfil.tarefas:  # o modelo escolhe a tarefa (consulta ou trecho) por conta própria
+            metodo = modelo.query_embed if consulta else modelo.passage_embed
+            vetores = [v.tolist() for v in metodo(entrada, batch_size=32)]
+        else:
+            vetores = [v.tolist() for v in modelo.embed(entrada, batch_size=32)]
         for vetor in vetores:
             if len(vetor) != self.dimensao:
                 raise ValueError(
@@ -46,10 +55,10 @@ class EmbeddingsLocal:
                 )
         return vetores
 
-    # Este modelo trata igual o texto guardado e a pergunta. Modelos com prefixos (família E5)
-    # diferenciariam os dois métodos aqui.
+    # Os prefixos de cada modelo vêm de `perfis`: a pergunta e o trecho guardado são tratados
+    # de forma diferente nos modelos feitos para busca (família E5, Gemma, Qwen).
     def gerar_trechos(self, textos: Sequence[str]) -> list[list[float]]:
-        return self._gerar(textos) if textos else []
+        return self._gerar(textos, consulta=False) if textos else []
 
     def gerar_consulta(self, texto: str) -> list[float]:
-        return self._gerar([texto])[0]
+        return self._gerar([texto], consulta=True)[0]

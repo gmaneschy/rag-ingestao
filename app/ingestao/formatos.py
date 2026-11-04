@@ -23,6 +23,7 @@ from defusedxml import ElementTree as ET
 from defusedxml.common import DefusedXmlException
 
 from app.ingestao import cabecalhos
+from app.ingestao.config import get_ingestao_settings
 from app.ingestao.extracao import (
     ErroDeExtracao,
     Pagina,
@@ -392,11 +393,33 @@ def ler_mobi(caminho: Path) -> list[Pagina]:
 # --- DjVu ------------------------------------------------------------------------------------
 
 
+PASTAS_DO_DJVULIBRE_NO_WINDOWS = (
+    r"C:\Program Files (x86)\DjVuLibre",
+    r"C:\Program Files\DjVuLibre",
+)
+
+
+def achar_programa(nome: str) -> str | None:
+    """`djvutxt`/`djvused`: no PATH, na pasta de DJVULIBRE_DIR ou nas pastas padrão do Windows."""
+    achado = shutil.which(nome)
+    if achado:
+        return achado
+    pastas = [get_ingestao_settings().djvulibre_dir, *PASTAS_DO_DJVULIBRE_NO_WINDOWS]
+    for pasta in filter(None, pastas):
+        for candidato in (Path(pasta) / nome, Path(pasta) / f"{nome}.exe"):
+            if candidato.is_file():
+                return str(candidato)
+    return None
+
+
 def ler_djvu(caminho: Path, max_paginas: int) -> tuple[list[Pagina], int]:
     """Texto da camada de texto do DjVu (ferramenta `djvutxt`, do pacote djvulibre-bin)."""
-    exe = shutil.which("djvutxt")
+    exe = achar_programa("djvutxt")
     if not exe:
-        raise ErroDeExtracao("DjVu exige o programa djvutxt (pacote djvulibre-bin) no servidor")
+        raise ErroDeExtracao(
+            "Não achei o djvutxt (DjVuLibre). No Docker, reconstrua a imagem; fora dele, instale o "
+            "DjVuLibre e ponha a pasta no PATH ou em DJVULIBRE_DIR no .env"
+        )
 
     def rodar(*args: str) -> bytes:
         try:
@@ -406,9 +429,9 @@ def ler_djvu(caminho: Path, max_paginas: int) -> tuple[list[Pagina], int]:
         except (subprocess.SubprocessError, OSError) as erro:
             raise ErroDeExtracao("DjVu corrompido ou ilegível") from erro
 
-    sed = shutil.which("djvused")
+    sed = achar_programa("djvused")
     if not sed:
-        raise ErroDeExtracao("DjVu exige o djvulibre-bin (djvused) no servidor")
+        raise ErroDeExtracao("Achei o djvutxt, mas não o djvused (vêm juntos no DjVuLibre)")
     contagem = rodar(sed, str(caminho), "-e", "n").decode().strip()
     total = int(contagem) if contagem.isdigit() else 0
     if total > max_paginas:

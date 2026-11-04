@@ -15,7 +15,7 @@ def test_falha_de_download_vira_modelo_indisponivel(monkeypatch) -> None:
 
     falso = types.SimpleNamespace(TextEmbedding=quebra)
     monkeypatch.setitem(sys.modules, "fastembed", falso)
-    embeddings = EmbeddingsLocal("modelo/qualquer", 384)
+    embeddings = EmbeddingsLocal("modelo/qualquer", 768)
     with pytest.raises(ModeloIndisponivel, match="ValueError"):
         embeddings.gerar_consulta("oi")
 
@@ -32,11 +32,11 @@ def test_depois_da_falha_a_proxima_chamada_tenta_de_novo(monkeypatch) -> None:
         def embed(self, textos, batch_size=32):
             import numpy as np
 
-            return (np.zeros(384) for _ in textos)
+            return (np.zeros(768) for _ in textos)
 
     monkeypatch.setitem(sys.modules, "fastembed", types.SimpleNamespace(TextEmbedding=Modelo))
-    embeddings = EmbeddingsLocal("modelo/qualquer", 384)
+    embeddings = EmbeddingsLocal("modelo/qualquer", 768)
     with pytest.raises(ModeloIndisponivel):
         embeddings.gerar_consulta("oi")
-    assert len(embeddings.gerar_consulta("oi")) == 384
+    assert len(embeddings.gerar_consulta("oi")) == 768
     assert len(chamadas) == 2

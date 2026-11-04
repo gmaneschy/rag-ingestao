@@ -70,3 +70,25 @@ def test_e_recusa_reconhece_a_frase_mesmo_com_espacos_e_caixa() -> None:
 def test_limpar_saida_remove_o_raciocinio_do_modelo() -> None:
     assert limpar_saida("<think>pensando...\nmais</think>\nResposta [1].") == "Resposta [1]."
     assert limpar_saida("sem bloco") == "sem bloco"
+
+
+def test_idioma_da_pergunta_e_o_padrao_e_nao_muda_o_prompt() -> None:
+    from app.llm.prompt import INSTRUCOES_ANALISE, instrucoes
+
+    assert instrucoes() == INSTRUCOES
+    assert instrucoes("analise", "pergunta") == INSTRUCOES_ANALISE
+    assert montar_mensagens("x?", [_t(1, "t")])[0]["content"] == INSTRUCOES
+
+
+def test_idioma_fixo_troca_so_a_regra_do_idioma() -> None:
+    from app.llm.prompt import instrucoes
+
+    pt = instrucoes("factual", "pt")
+    assert "sempre em português" in pt and "no idioma da pergunta" not in pt
+    assert MENSAGEM_SEM_EVIDENCIA in pt and "colchetes" in pt  # recusa e citação intactas
+    en = instrucoes("analise", "en")
+    assert "sempre em inglês" in en and "Evidências:" in en and "Avaliação:" in en
+    assert MENSAGEM_SEM_EVIDENCIA in en
+    assert montar_mensagens("x?", [_t(1, "t")], "factual", "en")[0]["content"] == instrucoes(
+        "factual", "en"
+    )

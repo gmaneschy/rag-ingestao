@@ -6,6 +6,7 @@ from collections.abc import Sequence
 import httpx
 
 from app.llm.prompt import (
+    Idioma,
     e_recusa,
     extrair_citacoes,
     limpar_saida,
@@ -38,6 +39,7 @@ class GeradorDeRespostaOllama:
         timeout_s: int = 300,
         num_ctx_max: int = 8192,
         pensar: bool | None = None,
+        idioma: Idioma = "pergunta",
         cliente: httpx.Client | None = None,
     ) -> None:
         self.base_url = base_url.rstrip("/")
@@ -47,6 +49,7 @@ class GeradorDeRespostaOllama:
         self.max_tokens_analise = max_tokens_analise
         self.num_ctx_max = num_ctx_max
         self.pensar = pensar
+        self.idioma = idioma
         self._cliente = cliente or httpx.Client(timeout=httpx.Timeout(timeout_s, connect=5))
         self._timeout_s = timeout_s
 
@@ -64,7 +67,7 @@ class GeradorDeRespostaOllama:
         *,
         tipo: TipoResposta = "factual",
     ) -> Resposta:
-        mensagens = montar_mensagens(pergunta, trechos, tipo)
+        mensagens = montar_mensagens(pergunta, trechos, tipo, self.idioma)
         max_tokens = self.max_tokens_analise if tipo == "analise" else self.max_tokens
         corpo = {
             "model": self.modelo,

@@ -43,8 +43,8 @@ def test_provedor_desconhecido_e_recusado() -> None:
 
 
 def test_dimensao_incompativel_com_a_coluna_e_recusada() -> None:
-    with pytest.raises(ValidationError, match="384"):
-        _novo(embeddings_dim=768)
+    with pytest.raises(ValidationError, match="768"):
+        _novo(embeddings_dim=384)
 
 
 def test_api_exige_chave() -> None:
@@ -69,8 +69,8 @@ def test_provedor_local_de_embeddings_e_criado_sem_baixar_o_modelo() -> None:
 
     embeddings = criar_embeddings(_novo(embeddings_provider="local"))
     assert isinstance(embeddings, EmbeddingsLocal)
-    assert embeddings.dimensao == 384
-    assert "multilingual" in embeddings.nome_modelo
+    assert embeddings.dimensao == 768
+    assert "embeddinggemma" in embeddings.nome_modelo
 
 
 def test_provedor_api_de_embeddings_ainda_nao_existe() -> None:

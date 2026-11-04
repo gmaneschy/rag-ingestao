@@ -21,6 +21,13 @@
   <button type="button" hx-post="/app/documentos/{{ d.id }}/reprocessar" hx-target="#estado" hx-swap="outerHTML">Reprocessar</button>
   <button type="button" class="perigo" data-abrir="dialogo-remover">Remover…</button>
 </div>
+<form class="acoes" hx-post="/app/documentos/{{ d.id }}/mover" hx-target="#resultado-mover" hx-swap="innerHTML">
+  <label for="destino">Mover para a coleção</label>
+  <input id="destino" name="destino" list="colecoes-existentes" value="{{ d.colecao }}" maxlength="64" pattern="[\w.\-]+" required>
+  <datalist id="colecoes-existentes">{% for c in colecoes %}<option value="{{ c }}">{% endfor %}</datalist>
+  <button type="submit">Mover</button>
+</form>
+<div id="resultado-mover" aria-live="polite"></div>
 
 <dialog id="dialogo-remover" aria-labelledby="titulo-remover">
   <form method="dialog">

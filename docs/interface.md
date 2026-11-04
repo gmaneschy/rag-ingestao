@@ -43,3 +43,33 @@ entra no histórico nem na contagem de gasto diário.
 - **Logs** (`/app/logs`): últimos 1000 eventos do processo, filtro por nível e texto, atualização automática.
 
 Aplique a migração: `uv run alembic upgrade head` (ou reinicie o contêiner, se ele a roda na subida).
+
+## Diagnóstico de recusas
+
+Cada resposta traz `diagnostico` (também na API `/perguntas` e no log "pergunta respondida"): quem recusou
+(`portao`, `modelo` ou `sem_trechos`), a melhor nota do reordenador contra o mínimo, a melhor similaridade
+contra o limiar, quantos achados a busca trouxe e o tempo de busca, reordenador e geração. Na tela, a
+recusa explica o motivo e "Trechos recuperados" mostra a nota e a similaridade de cada trecho.
+
+## Ações em lote e mover de coleção
+
+Na lista de Documentos, marque caixas (ou a caixa do cabeçalho, para todos da lista atual; use o
+filtro de estado "Falhou" para pegar só os que falharam). Aparece uma barra com:
+
+- **Reprocessar**: coloca todos na fila e os processa um por vez, em segundo plano.
+- **Mover para**: troca a coleção sem reindexar (o trecho não guarda a coleção). O que colidiria no
+  destino (mesmo nome ou mesmo conteúdo) é recusado, com o motivo, e o resto é movido.
+
+A seleção sobrevive às atualizações automáticas da lista. Na página de um documento há o mesmo
+"mover". A API tem `POST /documentos/reprocessar` (`{"ids": [...]}` ou `{"todos": true, "colecao":
+..., "estado": ...}`) e `POST /documentos/mover` (`{"ids": [...], "destino": "..."}`). A migração
+`0008` só acrescenta o tipo de evento `movido` ao registro de auditoria.
+
+## Idioma da resposta
+
+Em Configuração, **Idioma da resposta** (`LLM_IDIOMA` no `.env`): `pergunta` (padrão, responde no
+idioma em que foi perguntado), `pt` (sempre português do Brasil) ou `en` (sempre inglês). Troca só a
+regra de idioma do prompt; a frase de recusa e as citações `[n]` não mudam, e na análise os títulos
+"Evidências:" e "Avaliação:" continuam os mesmos, porque o app depende deles. Vale na próxima
+pergunta, sem reiniciar. Útil quando a pergunta é em português e o documento está em inglês ou russo
+e o modelo se confunde de língua.

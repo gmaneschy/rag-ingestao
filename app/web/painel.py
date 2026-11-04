@@ -44,7 +44,9 @@ def _contexto_da_configuracao(
                 "campo": c,
                 "valor": (digitado or guardado).get(c.chave, ""),
                 "no_banco": c.chave in guardado,
-                "padrao": "—" if padrao in (None, "") else configuracao.texto_do_valor(c, padrao),
+                "padrao": "—"
+                if padrao in (None, "")
+                else dict(c.opcoes).get(str(padrao), configuracao.texto_do_valor(c, padrao)),
             }
         )
     return {

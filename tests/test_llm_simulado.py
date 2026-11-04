@@ -10,23 +10,23 @@ def _cos(a: list[float], b: list[float]) -> float:
 
 
 def test_implementacoes_cumprem_os_protocolos() -> None:
-    assert isinstance(EmbeddingsSimulado(384), GeradorDeEmbeddings)
+    assert isinstance(EmbeddingsSimulado(768), GeradorDeEmbeddings)
     assert isinstance(GeradorDeRespostaSimulado(), GeradorDeResposta)
 
 
 def test_embedding_tem_a_dimensao_e_norma_unitaria() -> None:
-    vetor = EmbeddingsSimulado(384).gerar_consulta("prazo de entrega do contrato")
-    assert len(vetor) == 384
+    vetor = EmbeddingsSimulado(768).gerar_consulta("prazo de entrega do contrato")
+    assert len(vetor) == 768
     assert math.isclose(math.sqrt(sum(v * v for v in vetor)), 1.0, rel_tol=1e-9)
 
 
 def test_embedding_e_deterministico_e_ignora_acento_e_caixa() -> None:
-    e = EmbeddingsSimulado(384)
+    e = EmbeddingsSimulado(768)
     assert e.gerar_consulta("Atenção ao Prazo") == e.gerar_consulta("atencao ao prazo")
 
 
 def test_textos_parecidos_ficam_mais_proximos_que_textos_distintos() -> None:
-    e = EmbeddingsSimulado(384)
+    e = EmbeddingsSimulado(768)
     base, parecido, outro = e.gerar_trechos(
         [
             "o prazo de entrega do contrato é de trinta dias",

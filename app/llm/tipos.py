@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 # Dimensão da coluna trecho.vetor (migração 0002). Mudar exige nova migração e reindexação.
-DIMENSAO_VETOR = 384
+DIMENSAO_VETOR = 768
 
 # "factual" responde só com o que os trechos dizem; "analise" também interpreta e opina, mas separa
 # o que está nos trechos (Evidências) do que é do modelo (Avaliação).

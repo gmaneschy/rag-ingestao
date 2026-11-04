@@ -134,3 +134,10 @@ def test_resposta_vazia_depois_de_pensar_orienta_o_llm_think() -> None:
     gerador, _ = _gerador(vazia)
     with pytest.raises(ModeloIndisponivel, match="LLM_THINK=false"):
         gerador.responder("Pergunta?", TRECHOS)
+
+
+def test_idioma_fixo_chega_ao_prompt_do_modelo() -> None:
+    gerador, pedidos = _gerador(_ok("ok [1]"), idioma="pt")
+    gerador.responder("What is the delivery time?", TRECHOS)
+    sistema = json.loads(pedidos[0].content)["messages"][0]["content"]
+    assert "sempre em português" in sistema and MENSAGEM_SEM_EVIDENCIA in sistema

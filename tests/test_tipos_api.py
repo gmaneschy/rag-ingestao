@@ -164,6 +164,6 @@ def test_a_coluna_tipo_so_aceita_os_valores_conhecidos(banco) -> None:
                 text(
                     "INSERT INTO trecho (documento_id, posicao, texto, tipo, modelo_embedding, "
                     "dimensao) "
-                    "SELECT id, 0, 'x', 'lixo', 'm', 384 FROM documento"
+                    "SELECT id, 0, 'x', 'lixo', 'm', 768 FROM documento"
                 )
             )

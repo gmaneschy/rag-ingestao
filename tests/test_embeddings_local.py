@@ -32,13 +32,13 @@ def embeddings(tmp_path_factory):
 
 def test_a_fabrica_cria_o_provedor_local() -> None:
     assert (
-        criar_embeddings(LLMSettings(_env_file=None, embeddings_provider="local")).dimensao == 384
+        criar_embeddings(LLMSettings(_env_file=None, embeddings_provider="local")).dimensao == 768
     )
 
 
 def test_dimensao_real_bate_com_a_coluna(embeddings) -> None:
     vetores = embeddings.gerar_trechos(["O prazo de entrega é de trinta dias."])
-    assert len(vetores) == 1 and len(vetores[0]) == 384
+    assert len(vetores) == 1 and len(vetores[0]) == 768
 
 
 def test_portugues_e_ingles_sobre_o_mesmo_assunto_ficam_proximos(embeddings) -> None:

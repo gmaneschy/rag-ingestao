@@ -109,3 +109,8 @@ legend { font-size: .85rem; color: var(--suave); padding: 0 .3rem; }
 .cartao h2 { margin: .8rem 0 .4rem; }
 .logs td { font-size: .88rem; } .logs pre { white-space: pre-wrap; font-size: .8rem; margin: .3rem 0 0; }
 .logs .nivel-error td:nth-child(2), .logs .nivel-warning td:nth-child(2) { color: var(--erro); font-weight: 600; }
+
+.marca { width: 2rem; padding-right: 0; }
+.lote { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin: .5rem 0; padding: .5rem .75rem; border: 1px solid var(--linha); border-radius: 8px; background: var(--papel); }
+.lote[hidden] { display: none; }
+.lote label { color: var(--suave); margin-left: .5rem; }

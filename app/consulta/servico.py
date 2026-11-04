@@ -34,6 +34,7 @@ class Resultado:
     aviso: str | None
     tipo: TipoResposta = "factual"
     analise: dict[str, object] | None = None
+    diagnostico: dict[str, object] | None = None
 
 
 def _como_dict(numero: int, achado: Achado) -> dict[str, object]:
@@ -45,6 +46,17 @@ def _como_dict(numero: int, achado: Achado) -> dict[str, object]:
         "pagina": achado.trecho.pagina,
         "secao": achado.secao,
         "texto": achado.trecho.texto,
+    }
+
+
+def _com_notas(numero: int, achado: Achado) -> dict[str, object]:
+    """Como `_como_dict`, mais os números que explicam por que o trecho entrou (para depurar)."""
+    return {
+        **_como_dict(numero, achado),
+        "similaridade": achado.similaridade,
+        "nota_reranker": achado.nota_reranker,
+        "rank_vetorial": achado.rank_vetorial,
+        "rank_textual": achado.rank_textual,
     }
 
 
@@ -127,6 +139,7 @@ def perguntar(
     busca.verificar_modelo(session, embeddings.nome_modelo, embeddings.dimensao, colecoes)
     vetor = embeddings.gerar_consulta(pergunta) if modo != "textual" else None
     k_final = k or (consulta.consulta_k_analise if tipo == "analise" else consulta.consulta_k)
+    t_busca = time.perf_counter()
     achados = busca.buscar(
         session,
         pergunta,
@@ -144,13 +157,19 @@ def perguntar(
         documento_ids=documento_ids,
         tipos=(*busca.TIPOS_PADRAO, *(incluir_tipos or [])),
     )
+    ms_busca = round((time.perf_counter() - t_busca) * 1000)
+    candidatos_achados = len(achados)
+    t_rerank = time.perf_counter()
     if reordenador and achados:
         achados = reranker.reordenar(pergunta, achados, reordenador)[:k_final]
+    ms_reranker = round((time.perf_counter() - t_rerank) * 1000) if reordenador else 0
 
-    if reordenador and consulta.reranker_nota_minima is not None:
+    usa_nota = bool(reordenador) and consulta.reranker_nota_minima is not None
+    if usa_nota:
         ha_evidencia = reranker.tem_evidencia(achados, consulta.reranker_nota_minima)
     else:
         ha_evidencia = busca.tem_evidencia(achados, consulta.limiar_similaridade)
+    t_geracao = time.perf_counter()
     if ha_evidencia:
         trechos = [a.trecho for a in achados]
         # O tipo só vai ao gerador quando é a análise: os geradores do tipo factual não mudam.
@@ -162,7 +181,24 @@ def perguntar(
     else:  # sem evidência: nem chama o modelo (mais barato e sem risco de alucinar)
         resposta = Resposta(texto=MENSAGEM_SEM_EVIDENCIA, recusou=True)
 
+    ms_geracao = round((time.perf_counter() - t_geracao) * 1000) if ha_evidencia else 0
     fontes = [_como_dict(n, achados[n - 1]) for n in resposta.fontes if n <= len(achados)]
+    similaridades = [a.similaridade for a in achados if a.similaridade is not None]
+    diagnostico: dict[str, object] = {
+        # Quem recusou: o portão (antes do modelo, sem chamá-lo) ou o próprio modelo.
+        "recusa_por": None
+        if not resposta.recusou
+        else ("modelo" if ha_evidencia else ("portao" if achados else "sem_trechos")),
+        "portao": "nota do reordenador" if usa_nota else "similaridade e palavras",
+        "melhor_nota": achados[0].nota_reranker if achados else None,
+        "nota_minima": consulta.reranker_nota_minima if usa_nota else None,
+        "melhor_similaridade": max(similaridades, default=None),
+        "limiar_similaridade": consulta.limiar_similaridade,
+        "achados_na_busca": candidatos_achados,
+        "ms_busca": ms_busca,
+        "ms_reranker": ms_reranker,
+        "ms_geracao": ms_geracao,
+    }
     aviso = None
     if not resposta.recusou and not fontes:
         aviso = AVISO_RESPOSTA_SEM_CITACAO
@@ -218,16 +254,18 @@ def perguntar(
             "recusou": resposta.recusou,
             "fontes": len(fontes),
             "latencia_ms": latencia,
+            **{k: v for k, v in diagnostico.items() if k != "portao"},
         },
     )
     return Resultado(
         id=consulta_id,
         resposta=resposta,
         fontes=fontes,
-        trechos_usados=[_como_dict(n, a) for n, a in enumerate(achados, start=1)],
+        trechos_usados=[_com_notas(n, a) for n, a in enumerate(achados, start=1)],
         modelo_geracao=getattr(gerador, "nome_modelo", ""),
         latencia_ms=latencia,
         aviso=aviso,
         tipo=tipo,
         analise=analise,
+        diagnostico=diagnostico,
     )

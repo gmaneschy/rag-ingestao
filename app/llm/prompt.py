@@ -8,6 +8,7 @@ o elimina; a avaliação da etapa 5 testa documentos hostis.
 
 import re
 from collections.abc import Sequence
+from typing import Literal
 
 from app.llm.tipos import MENSAGEM_SEM_EVIDENCIA, TipoResposta, TrechoRecuperado
 
@@ -34,6 +35,30 @@ Regras:
 3. Se os trechos não têm relação com a pergunta, responda exatamente: "{MENSAGEM_SEM_EVIDENCIA}" e nada mais.
 4. Responda no idioma da pergunta, de forma concisa."""  # noqa: E501
 
+Idioma = Literal["pergunta", "pt", "en"]
+_FRASE_IDIOMA = "Responda no idioma da pergunta"
+_IDIOMAS: dict[str, str] = {
+    "pt": "Responda sempre em português do Brasil, mesmo que a pergunta ou os trechos estejam em "
+    "outro idioma",
+    "en": "Responda sempre em inglês, mesmo que a pergunta ou os trechos estejam em outro idioma",
+}
+_TITULOS_FIXOS = (
+    ' Mantenha os títulos "Evidências:" e "Avaliação:" exatamente assim, mesmo em inglês.'
+)
+
+
+def instrucoes(tipo: TipoResposta = "factual", idioma: Idioma = "pergunta") -> str:
+    """As instruções do sistema. A frase de recusa não muda com o idioma: o app a reconhece
+    pelo texto e a mostra como recusa em qualquer língua."""
+    base = INSTRUCOES_ANALISE if tipo == "analise" else INSTRUCOES
+    if idioma == "pergunta":
+        return base
+    texto = base.replace(_FRASE_IDIOMA, _IDIOMAS[idioma], 1)
+    if tipo == "analise" and idioma == "en":
+        texto += _TITULOS_FIXOS
+    return texto
+
+
 _MARCA = re.compile(r"<\s*/?\s*trecho", re.IGNORECASE)
 _CITACAO = re.compile(r"\[(\d{1,3}(?:\s*[,;]\s*\d{1,3})*)\]")
 _PENSAMENTO = re.compile(r"<think>.*?</think>", re.DOTALL | re.IGNORECASE)
@@ -45,7 +70,10 @@ def _neutralizar(texto: str) -> str:
 
 
 def montar_mensagens(
-    pergunta: str, trechos: Sequence[TrechoRecuperado], tipo: TipoResposta = "factual"
+    pergunta: str,
+    trechos: Sequence[TrechoRecuperado],
+    tipo: TipoResposta = "factual",
+    idioma: Idioma = "pergunta",
 ) -> list[dict[str, str]]:
     blocos = []
     for numero, trecho in enumerate(trechos, start=1):
@@ -61,7 +89,7 @@ def montar_mensagens(
         )
     usuario = "\n\n".join(blocos) + f"\n\nPergunta: {pergunta.strip()}"
     return [
-        {"role": "system", "content": INSTRUCOES_ANALISE if tipo == "analise" else INSTRUCOES},
+        {"role": "system", "content": instrucoes(tipo, idioma)},
         {"role": "user", "content": usuario},
     ]
 

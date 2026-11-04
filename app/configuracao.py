@@ -23,7 +23,7 @@ from app.llm.config import LLMSettings, get_llm_settings
 
 logger = logging.getLogger(__name__)
 
-Tipo = Literal["int", "float", "bool", "texto"]
+Tipo = Literal["int", "float", "bool", "texto", "escolha"]
 
 
 @dataclass(frozen=True)
@@ -36,6 +36,7 @@ class Campo:
     tipo: Tipo
     minimo: float | None = None
     maximo: float | None = None
+    opcoes: tuple[tuple[str, str], ...] = ()  # (valor, rótulo) do tipo "escolha"
 
 
 CAMPOS: tuple[Campo, ...] = (
@@ -128,6 +129,19 @@ CAMPOS: tuple[Campo, ...] = (
         "bool",
     ),
     Campo(
+        "llm_idioma",
+        "llm",
+        "Geração",
+        "Idioma da resposta",
+        "Em que língua o modelo responde. A frase de recusa não muda.",
+        "escolha",
+        opcoes=(
+            ("pergunta", "o idioma da pergunta"),
+            ("pt", "sempre português"),
+            ("en", "sempre inglês"),
+        ),
+    ),
+    Campo(
         "llm_max_tokens_saida",
         "llm",
         "Geração",
@@ -164,15 +178,19 @@ POR_CHAVE = {c.chave: c for c in CAMPOS}
 def converter(campo: Campo, texto: str) -> object:
     """Texto digitado -> valor do tipo certo. ValueError com mensagem para a pessoa."""
     texto = texto.strip().replace(",", ".") if campo.tipo in ("int", "float") else texto.strip()
+    if campo.tipo == "bool":
+        if texto not in ("sim", "nao"):
+            raise ValueError(f"{campo.rotulo}: escolha ligado ou desligado")
+        return texto == "sim"
+    if campo.tipo == "escolha":
+        if texto not in {valor for valor, _ in campo.opcoes}:
+            raise ValueError(f"{campo.rotulo}: escolha uma das opções")
+        return texto
+    if campo.tipo == "texto":
+        if len(texto) > 120:
+            raise ValueError(f"{campo.rotulo}: texto longo demais")
+        return texto
     try:
-        if campo.tipo == "bool":
-            if texto not in ("sim", "nao"):
-                raise ValueError
-            return texto == "sim"
-        if campo.tipo == "texto":
-            if len(texto) > 120:
-                raise ValueError("texto longo demais")
-            return texto
         valor = int(texto) if campo.tipo == "int" else float(texto)
     except ValueError:
         esperado = "número inteiro" if campo.tipo == "int" else "número (use ponto)"

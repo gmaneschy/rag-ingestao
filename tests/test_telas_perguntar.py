@@ -130,3 +130,28 @@ def test_html_da_resposta_e_escapado(manual) -> None:
 
     assert "<script>" not in texto_citado("<script>x</script> [1]")
     assert 'href="#fonte-2"' in texto_citado("a [1, 2]")
+
+
+def test_diagnostico_aparece_na_resposta_e_na_api(manual) -> None:
+    r = _perguntar(manual)
+    assert "melhor similaridade" in r.text and "geração" in r.text and "similaridade 0." in r.text
+    api = manual.post(
+        "/perguntas",
+        json={"pergunta": "Qual o prazo de entrega?"},
+        headers={"X-API-Key": CHAVE},
+    ).json()
+    assert api["diagnostico"]["recusa_por"] is None and api["diagnostico"]["ms_busca"] >= 0
+
+
+def test_recusa_do_portao_diz_quem_recusou(manual) -> None:
+    r = _perguntar(manual, pergunta="Zzxq wvvk plomt grnx?", modo="vetorial")
+    assert "Recusada pelo" in r.text or "não encontrou nenhum trecho" in r.text
+    assert 'id="fonte-1"' not in r.text
+
+
+def test_avaliar_depois_pela_pagina_da_consulta(manual) -> None:
+    cid = re.search(r"/app/consultas/(\d+)", _perguntar(manual).text).group(1)
+    pagina = manual.get(f"/app/consultas/{cid}").text
+    assert "A resposta ajudou?" in pagina
+    manual.post(f"/app/consultas/{cid}/avaliacao", data={"ajudou": "false"}, headers=HX)
+    assert "não ajudou" in manual.get(f"/app/consultas/{cid}").text

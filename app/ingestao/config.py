@@ -17,6 +17,10 @@ class IngestaoSettings(BaseSettings):
     # Ao subir, retoma os documentos que ficaram 'pendente' (servidor reiniciado no meio).
     retomar_pendentes: bool = True
 
+    # Pasta do DjVuLibre (djvutxt e djvused) quando o app roda fora do Docker e os programas não
+    # estão no PATH. No Windows, os caminhos de instalação padrão também são tentados.
+    djvulibre_dir: str = ""
+
     tamanho_max_mb: int = 20
     max_paginas: int = 500
 

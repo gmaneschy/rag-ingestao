@@ -241,8 +241,12 @@ def conferir_assinatura(nome: str, conteudo: bytes) -> None:
         erro = "O arquivo não é um MOBI/AZW3 válido"
     elif ext in {".djvu", ".djv"} and not conteudo.startswith(b"AT&TFORM"):
         erro = "O arquivo não é um DjVu válido"
-    elif ext == ".fb2" and not _parece_fb2(conteudo):
-        erro = "O arquivo não parece um FB2 (não achei a marca <FictionBook> no começo)"
+    elif ext == ".fb2" and not conteudo.startswith(b"PK") and not _parece_fb2(conteudo):
+        comeco = conteudo[:48].decode("utf-8", errors="replace").replace("\x00", "")
+        erro = (
+            "O arquivo não parece um FB2 (não achei a marca <FictionBook> no começo). "
+            f"Ele começa com: {comeco!r}"
+        )
     if erro:
         raise ValueError(erro)
 
@@ -258,6 +262,9 @@ def extrair(caminho: Path, *, max_paginas: int = 500) -> Extracao:
         paginas = _ler_texto(caminho)
     elif extensao in FORMATOS:
         from app.ingestao import formatos  # aqui para não importar em círculo
+
+        if extensao == ".fb2" and caminho.read_bytes()[:2] == b"PK":
+            extensao = ".fbz"  # um ZIP com o nome .fb2
 
         if extensao in {".djvu", ".djv"}:
             paginas, total = formatos.ler_djvu(caminho, max_paginas)

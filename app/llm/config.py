@@ -21,10 +21,10 @@ class LLMSettings(BaseSettings):
     embeddings_provider: Provedor = "simulado"
     llm_provider: Provedor = "simulado"
 
-    # Modelo local de embeddings: multilíngue (~50 idiomas, inclui português), 384 dimensões,
-    # ~220 MB, disponível no fastembed. Enxerga ~128 tokens por trecho. A escolha definitiva sai
+    # Modelo local de embeddings: multilíngue (~50 idiomas, inclui português), 768 dimensões,
+    # ~1,2 GB, disponível no fastembed. Enxerga até 2048 tokens. A escolha definitiva sai
     # da avaliação da etapa 5; o nome vai gravado em cada vetor.
-    embeddings_model: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    embeddings_model: str = "google/embeddinggemma-300m"
     embeddings_dim: int = DIMENSAO_VETOR
 
     # Geração da resposta. Com LLM_PROVIDER=ollama: LLM_MODEL é o nome do modelo no Ollama
@@ -40,6 +40,8 @@ class LLMSettings(BaseSettings):
     # resposta vazia. LLM_THINK=false desliga o raciocínio; sem a variável, nada é enviado (modelos
     # sem essa capacidade, como o qwen2.5, recusam o parâmetro).
     llm_think: bool | None = None
+    # Idioma da resposta: 'pergunta' (o da pergunta), 'pt' (sempre português) ou 'en' (inglês).
+    llm_idioma: Literal["pergunta", "pt", "en"] = "pergunta"
 
     # Tetos de custo: por pergunta (tokens) e por dia (dólares), aplicados nas etapas 3 e 5.
     max_tokens_por_pergunta: int = 2000

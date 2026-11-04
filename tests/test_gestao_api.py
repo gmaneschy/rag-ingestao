@@ -283,11 +283,11 @@ def test_retomar_pendentes_processa_o_que_ficou_pelo_caminho(banco) -> None:
         )
     assert _um(banco, "SELECT estado FROM documento") == "pendente"  # o servidor "caiu" aqui
 
-    assert manutencao.retomar_pendentes(banco, EmbeddingsSimulado(384), config) == 1
+    assert manutencao.retomar_pendentes(banco, EmbeddingsSimulado(768), config) == 1
     assert _um(banco, "SELECT estado FROM documento WHERE id = :i", i=registro.documento_id) == (
         "processado"
     )
-    assert manutencao.retomar_pendentes(banco, EmbeddingsSimulado(384), config) == 0
+    assert manutencao.retomar_pendentes(banco, EmbeddingsSimulado(768), config) == 0
 
 
 def test_a_subida_retoma_pendentes_e_repete_limpezas(banco, monkeypatch) -> None:

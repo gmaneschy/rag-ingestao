@@ -14,7 +14,9 @@
 <h2>Pergunta</h2>
 <p class="quebra">{{ c.pergunta }}</p>
 <div class="leitura">
-  <article class="resposta"><h2>Resposta</h2>{{ c.resposta|citado }}</article>
+  <article class="resposta"><h2>Resposta</h2>{{ c.resposta|citado }}
+    {% set cid = c.id %}{% set ajudou = c.ajudou %}{% include "parciais/avaliacao.html" with context %}
+  </article>
   <aside class="fontes" aria-label="Fontes">
     <h2>Fontes</h2>
     {% for f in c.fontes %}

@@ -225,6 +225,87 @@ def enviar(
     return resposta
 
 
+def _resultado_do_lote(
+    request: Request, session: Session, avisos: list[tuple[bool, str]], colecao: str, estado: str
+) -> HTMLResponse:
+    filtro = estado if estado in ("pendente", "processado", "falhou") else None
+    return pagina(
+        request,
+        "parciais/lote.html",
+        avisos=avisos,
+        colecoes=_colecoes(session),
+        **_contexto_da_tabela(session, colecao or None, filtro),
+    )
+
+
+@protegido.post("/documentos/reprocessar-lote", response_class=HTMLResponse, dependencies=acao)
+def reprocessar_lote(
+    request: Request,
+    background: BackgroundTasks,
+    session: Sessao,
+    config: Annotated[IngestaoSettings, Depends(get_ingestao_settings)],
+    embeddings: Annotated[GeradorDeEmbeddings, Depends(api_documentos.obter_embeddings)],
+    ids: Annotated[list[int], Form()] = [],  # noqa: B006
+    colecao: Annotated[str, Form(max_length=64)] = "",
+    estado: Annotated[str, Form(max_length=12)] = "",
+) -> HTMLResponse:
+    if not ids:
+        avisos = [(False, "Marque ao menos um documento.")]
+    else:
+        feitos = servico.marcar_varios_para_reprocessar(session, ids[:500])
+        if feitos:
+            background.add_task(
+                servico.processar_fila, get_sessionmaker(), feitos, embeddings, config
+            )
+        plural = "" if len(feitos) == 1 else "s"
+        avisos = [(True, f"{len(feitos)} documento{plural} na fila, um de cada vez.")]
+    return _resultado_do_lote(request, session, avisos, colecao, estado)
+
+
+@protegido.post("/documentos/mover-lote", response_class=HTMLResponse, dependencies=acao)
+def mover_lote(
+    request: Request,
+    session: Sessao,
+    ids: Annotated[list[int], Form()] = [],  # noqa: B006
+    destino: Annotated[str, Form(max_length=64)] = "",
+    colecao: Annotated[str, Form(max_length=64)] = "",
+    estado: Annotated[str, Form(max_length=12)] = "",
+) -> HTMLResponse:
+    destino = destino.strip()
+    if not ids:
+        avisos = [(False, "Marque ao menos um documento.")]
+    elif not COLECAO_VALIDA.fullmatch(destino):
+        avisos = [(False, "Dê a coleção de destino: letras, números, ponto, hífen e sublinhado.")]
+    else:
+        r = servico.mover_para_colecao(session, ids[:500], destino, ator="interface")
+        avisos = []
+        if r.movidos:
+            plural = "" if len(r.movidos) == 1 else "s"
+            avisos.append(
+                (True, f"{len(r.movidos)} documento{plural} movido{plural} para “{destino}”.")
+            )
+        avisos += [(False, f"{nome}: {motivo}") for _, nome, motivo in r.ignorados]
+    return _resultado_do_lote(request, session, avisos, colecao, estado)
+
+
+@protegido.post("/documentos/{documento_id}/mover", response_class=HTMLResponse, dependencies=acao)
+def mover_um(
+    documento_id: int, session: Sessao, destino: Annotated[str, Form(max_length=64)] = ""
+) -> Response:
+    destino = destino.strip()
+    if not COLECAO_VALIDA.fullmatch(destino):
+        return HTMLResponse(
+            '<p class="aviso erro" role="alert">Coleção inválida: use letras, números, ponto, '
+            "hífen e sublinhado.</p>"
+        )
+    r = servico.mover_para_colecao(session, [documento_id], destino, ator="interface")
+    if r.ignorados:
+        return HTMLResponse(
+            f'<p class="aviso erro" role="alert">{r.ignorados[0][2].capitalize()}.</p>'
+        )
+    return Response(status_code=200, headers={"HX-Refresh": "true"})
+
+
 @protegido.get("/documentos/{documento_id}", response_class=HTMLResponse)
 def tela_do_documento(request: Request, documento_id: int, session: Sessao) -> HTMLResponse:
     try:
@@ -239,6 +320,7 @@ def tela_do_documento(request: Request, documento_id: int, session: Sessao) -> H
         "documento.html",
         ativa="documentos",
         d=documento,
+        colecoes=_colecoes(session),
         secoes=secoes["secoes"],
         sem_secao=secoes["trechos_sem_secao"],
         maior=maior,

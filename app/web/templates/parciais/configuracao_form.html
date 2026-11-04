@@ -12,6 +12,11 @@
         <option value="sim" {{ 'selected' if f.valor == 'sim' }}>ligado</option>
         <option value="nao" {{ 'selected' if f.valor == 'nao' }}>desligado</option>
       </select>
+      {% elif c.tipo == 'escolha' %}
+      <select id="c-{{ c.chave }}" name="{{ c.chave }}">
+        <option value="" {{ 'selected' if not f.valor }}>como no .env ({{ f.padrao }})</option>
+        {% for v, r in c.opcoes %}<option value="{{ v }}" {{ 'selected' if f.valor == v }}>{{ r }}</option>{% endfor %}
+      </select>
       {% else %}
       <input id="c-{{ c.chave }}" name="{{ c.chave }}" value="{{ f.valor }}" placeholder=".env: {{ f.padrao }}"
              {% if c.tipo == 'texto' %}list="modelos-ollama" autocomplete="off"{% else %}inputmode="decimal"{% endif %}>

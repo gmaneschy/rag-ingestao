@@ -289,9 +289,10 @@ def test_djvu_escaneado_sem_camada_de_texto(tmp_path) -> None:
 
 def test_djvu_sem_o_programa(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr(shutil, "which", lambda _: None)
+    monkeypatch.setattr(formatos, "PASTAS_DO_DJVULIBRE_NO_WINDOWS", ())
     arquivo = tmp_path / "a.djvu"
     arquivo.write_bytes(b"AT&TFORM....")
-    with pytest.raises(ErroDeExtracao, match="djvulibre"):
+    with pytest.raises(ErroDeExtracao, match="DjVuLibre"):
         extrair(arquivo)
 
 
@@ -352,3 +353,34 @@ def test_fb2_zip_e_tratado_como_fbz(tmp_path) -> None:
     copia = tmp_path / "livro.fb2.zip"
     copia.write_bytes(arquivo.read_bytes())
     assert extrair(copia).paginas
+
+
+def test_fb2_que_na_verdade_e_zip_e_lido_como_fbz(tmp_path) -> None:
+    arquivo = _zip(tmp_path / "livro.fb2", {"c.fb2": FB2})
+    conferir_assinatura("livro.fb2", arquivo.read_bytes())
+    assert "farol" in _secoes(extrair(arquivo).paginas)[1]
+
+
+def test_fb2_recusado_mostra_como_o_arquivo_comeca() -> None:
+    with pytest.raises(ValueError, match="começa com: '<html>"):
+        conferir_assinatura("a.fb2", b"<html><body>oi</body></html>")
+
+
+def test_programa_do_djvu_fora_do_path(tmp_path, monkeypatch) -> None:
+    from app.ingestao.config import get_ingestao_settings
+
+    monkeypatch.setattr(shutil, "which", lambda _: None)
+    monkeypatch.setattr(formatos, "PASTAS_DO_DJVULIBRE_NO_WINDOWS", ())
+    assert formatos.achar_programa("djvutxt") is None
+    (tmp_path / "djvutxt.exe").write_bytes(b"")
+    monkeypatch.setenv("DJVULIBRE_DIR", str(tmp_path))
+    get_ingestao_settings.cache_clear()
+    try:
+        assert formatos.achar_programa("djvutxt") == str(tmp_path / "djvutxt.exe")
+        padrao = tmp_path / "padrao"
+        padrao.mkdir()
+        (padrao / "djvused").write_bytes(b"")
+        monkeypatch.setattr(formatos, "PASTAS_DO_DJVULIBRE_NO_WINDOWS", (str(padrao),))
+        assert formatos.achar_programa("djvused") == str(padrao / "djvused")
+    finally:
+        get_ingestao_settings.cache_clear()

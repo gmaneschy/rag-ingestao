@@ -21,7 +21,7 @@ pytestmark = pytest.mark.skipif(not URL, reason="defina TEST_DATABASE_URL para r
 RAIZ = Path(__file__).resolve().parent.parent
 
 
-def _vetor(i: int, dim: int = 384) -> str:
+def _vetor(i: int, dim: int = 768) -> str:
     v = [0.0] * dim
     v[i] = 1.0
     return "[" + ",".join(str(x) for x in v) + "]"
@@ -63,7 +63,7 @@ def _trecho(c, doc_id, pos=0, texto="o prazo de entrega é de trinta dias") -> i
         text(
             "INSERT INTO trecho (documento_id, posicao, pagina, texto, vetor, "
             "modelo_embedding, dimensao) "
-            "VALUES (:d, :p, 1, :t, CAST(:v AS vector), 'simulado', 384) RETURNING id"
+            "VALUES (:d, :p, 1, :t, CAST(:v AS vector), 'simulado', 768) RETURNING id"
         ),
         {"d": doc_id, "p": pos, "t": texto, "v": _vetor(pos)},
     ).scalar_one()
@@ -201,4 +201,24 @@ def test_downgrade_remove_as_tabelas_e_upgrade_repete(engine) -> None:
             ).scalar_one()
             == 0
         )
+    command.upgrade(cfg, "head")
+
+
+def test_migracao_0007_reindexa_documentos_processados(engine) -> None:
+    eng, cfg = engine
+    command.downgrade(cfg, "0006")
+    with eng.begin() as c:
+        d = _documento(c)
+        c.execute(text("UPDATE documento SET estado = 'processado'"))
+        c.execute(
+            text(
+                "INSERT INTO trecho (documento_id, posicao, texto, vetor, modelo_embedding, "
+                "dimensao) VALUES (:d, 0, 't', CAST(:v AS vector), 'm', 384)"
+            ),
+            {"d": d, "v": _vetor(0, dim=384)},
+        )
+    command.upgrade(cfg, "0007")
+    with eng.connect() as c:
+        assert c.execute(text("SELECT count(*) FROM trecho")).scalar_one() == 0
+        assert c.execute(text("SELECT estado FROM documento")).scalar_one() == "pendente"
     command.upgrade(cfg, "head")

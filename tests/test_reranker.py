@@ -79,7 +79,7 @@ DOCUMENTOS = {
 
 @pytest.fixture
 def corpus(banco):  # noqa: F811
-    emb = EmbeddingsSimulado(384)
+    emb = EmbeddingsSimulado(768)
     for nome, conteudo in DOCUMENTOS.items():
         with banco() as s:
             reg = ingestao.registrar(

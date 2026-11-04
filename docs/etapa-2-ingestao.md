@@ -43,7 +43,7 @@ resto sem avisar. Por isso o padrão é 500; a etapa 5 mede 3 tamanhos para deci
 
 `EMBEDDINGS_PROVIDER=local` usa o fastembed (ONNX, CPU, sem PyTorch) com
 `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`: multilíngue (~50 idiomas, inclui
-português), 384 dimensões (casa com `trecho.vetor`), ~220 MB, baixado na primeira ingestão e
+português), 768 dimensões (casa com `trecho.vetor`), ~220 MB, baixado na primeira ingestão e
 guardado em `MODELOS_DIR` (volume `modelos` no Compose).
 
 O documento do projeto sugeria o `multilingual-e5-small`, mas o fastembed não o oferece; os

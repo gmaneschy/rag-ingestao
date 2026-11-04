@@ -10,6 +10,17 @@
     {% else %}
       {{ r.resposta.texto|citado }}
     {% endif %}
+    {% set dg = r.diagnostico %}
+    {% if r.resposta.recusou and dg %}
+    <p class="aviso">
+      {% if dg.recusa_por == 'portao' %}Recusada pelo <strong>portão</strong>, antes de chamar o modelo:
+        {% if dg.nota_minima is not none %}a melhor nota do reordenador foi {{ '%.2f'|format(dg.melhor_nota) }}, abaixo do mínimo ({{ '%.2f'|format(dg.nota_minima) }}).
+        {% else %}nenhuma palavra da pergunta aparece nos trechos e a melhor similaridade ({{ '%.2f'|format(dg.melhor_similaridade or 0) }}) ficou abaixo do limiar ({{ '%.2f'|format(dg.limiar_similaridade) }}).{% endif %}
+      {% elif dg.recusa_por == 'modelo' %}O <strong>modelo</strong> recebeu {{ r.trechos_usados|length }} trechos e concluiu que não respondem à pergunta.
+      {% else %}A busca não encontrou nenhum trecho nos documentos escolhidos.{% endif %}
+      Detalhes em “Trechos recuperados”.
+    </p>
+    {% endif %}
     {% if r.aviso %}<p class="aviso">{{ r.aviso }}</p>{% endif %}
     {% set cid = r.id %}{% include "parciais/avaliacao.html" with context %}
     <p class="meta-linha">{{ r.modelo_geracao or '—' }} · {{ r.latencia_ms|numero }} ms · {{ r.resposta.tokens_entrada|numero }} → {{ r.resposta.tokens_saida|numero }} tokens ·
@@ -32,9 +43,14 @@
 
 <details class="debug">
   <summary>Trechos recuperados ({{ r.trechos_usados|length }}) — o que o modelo recebeu</summary>
+  {% if dg %}<p class="meta-linha">Portão: {{ dg.portao }} · achados na busca: {{ dg.achados_na_busca }} ·
+    busca {{ dg.ms_busca|numero }} ms · reordenador {{ dg.ms_reranker|numero }} ms · geração {{ dg.ms_geracao|numero }} ms
+    {% if dg.melhor_nota is not none %}· melhor nota {{ '%.2f'|format(dg.melhor_nota) }}{% endif %}
+    {% if dg.melhor_similaridade is not none %}· melhor similaridade {{ '%.2f'|format(dg.melhor_similaridade) }}{% endif %}</p>{% endif %}
   <ol>
     {% for t in r.trechos_usados %}
-    <li id="trecho-{{ t.n }}"><div class="rotulo">[{{ t.n }}] {{ t.documento }}{% if t.pagina %}, p. {{ t.pagina }}{% endif %}{% if t.secao %} · {{ t.secao }}{% endif %}</div>
+    <li id="trecho-{{ t.n }}"><div class="rotulo">[{{ t.n }}] {{ t.documento }}{% if t.pagina %}, p. {{ t.pagina }}{% endif %}{% if t.secao %} · {{ t.secao }}{% endif %}
+        · {% if t.nota_reranker is not none %}nota {{ '%.2f'|format(t.nota_reranker) }} · {% endif %}{% if t.similaridade is not none %}similaridade {{ '%.2f'|format(t.similaridade) }}{% else %}só busca textual{% endif %}</div>
       <p>{{ t.texto|resumo(500) }}</p></li>
     {% endfor %}
   </ol>

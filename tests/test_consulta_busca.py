@@ -74,7 +74,7 @@ DOCUMENTOS = {
 
 @pytest.fixture
 def corpus(banco):  # noqa: F811
-    emb = EmbeddingsSimulado(384)
+    emb = EmbeddingsSimulado(768)
     for (nome, colecao), conteudo in DOCUMENTOS.items():
         with banco() as s:
             reg = servico.registrar(
@@ -159,7 +159,7 @@ def test_verificar_modelo_aceita_o_mesmo_e_recusa_outro(corpus) -> None:
 
 @pytest.fixture
 def corpus_ingles(banco):  # noqa: F811
-    emb = EmbeddingsSimulado(384)
+    emb = EmbeddingsSimulado(768)
     textos = {
         f"comum{i}.txt": f"What was said on Tuesday was long, and the report was dull {i}."
         for i in range(24)
@@ -190,3 +190,52 @@ def test_busca_textual_sem_termo_raro_nao_devolve_nada(corpus_ingles) -> None:
     with sessoes() as s:
         achados = busca.buscar(s, "What was on the report?", None, modo="textual", k=5)
     assert achados == []  # só palavras comuns demais: o que decide é a busca vetorial
+
+
+@pytest.fixture
+def corpus_com_documentos_distantes(banco):  # noqa: F811
+    """Documentos A (muitos, parecidos com a pergunta) e B (muitos, longe dela)."""
+    emb = EmbeddingsSimulado(768)
+    textos = {
+        f"a{i}.txt": f"O prazo de entrega do pedido {i} é de trinta dias úteis para o cliente."
+        for i in range(80)
+    }
+    textos.update(
+        {
+            f"b{i}.txt": "Zorblax quimera sinfonia nebulosa. "
+            + " ".join(f"lume{i}x{j}" for j in range(10))
+            for i in range(80)
+        }
+    )
+    for nome, conteudo in textos.items():
+        with banco() as s:
+            reg = servico.registrar(
+                s, nome=nome, conteudo=conteudo.encode(), colecao="x",
+                config=get_ingestao_settings(),
+            )  # fmt: skip
+        servico.processar(banco, reg.documento_id, emb, get_ingestao_settings())
+    return banco, emb
+
+
+@precisa_de_banco
+def test_busca_vetorial_com_documentos_escolhidos_nao_depende_do_indice(
+    corpus_com_documentos_distantes,
+) -> None:
+    sessoes, emb = corpus_com_documentos_distantes
+    pergunta = "Qual é o prazo de entrega do pedido?"
+    vetor = emb.gerar_consulta(pergunta)
+    with sessoes() as s:
+        ids_b = list(s.execute(text("SELECT id FROM documento WHERE nome LIKE 'b%'")).scalars())
+        antigo = (
+            s.execute(  # o índice entrega os ~40 vizinhos do corpus inteiro; o filtro vem depois
+                text(
+                    "SELECT t.id FROM (SELECT id, documento_id FROM trecho "
+                    "ORDER BY vetor <=> CAST(:v AS vector) LIMIT 40) t "
+                    "WHERE t.documento_id = ANY(:ids) LIMIT 5"
+                ),
+                {"ids": ids_b, "v": busca.vetor_como_texto(vetor)},
+            ).all()
+        )
+        achados = busca.buscar(s, pergunta, vetor, modo="vetorial", k=5, documento_ids=ids_b)
+    assert len(antigo) < 5  # o defeito: o índice entrega vizinhos de outros documentos
+    assert len(achados) == 5 and all(a.trecho.documento.startswith("b") for a in achados)

@@ -48,6 +48,7 @@ def obter_gerador(
         llm.llm_provider,
         llm.llm_model,
         llm.llm_think,
+        llm.llm_idioma,
         llm.llm_max_tokens_saida,
         llm.llm_max_tokens_analise,
         llm.max_tokens_por_pergunta,
@@ -132,6 +133,7 @@ def perguntar(
         "tokens_entrada": resultado.resposta.tokens_entrada,
         "tokens_saida": resultado.resposta.tokens_saida,
         "latencia_ms": resultado.latencia_ms,
+        "diagnostico": resultado.diagnostico,
     }
 
 

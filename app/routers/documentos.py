@@ -15,6 +15,7 @@ from fastapi import (
     status,
 )
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel, Field, model_validator
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
@@ -89,6 +90,66 @@ def reprocessar_documento(
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Documento não encontrado")
     background.add_task(servico.processar, get_sessionmaker(), documento_id, embeddings, config)
     return {"id": documento_id, "estado": "pendente"}
+
+
+class ReprocessarLote(BaseModel):
+    """Ou `ids`, ou `todos` (com os filtros de coleção e estado, como na listagem)."""
+
+    ids: list[int] | None = Field(default=None, min_length=1, max_length=500)
+    todos: bool = False
+    colecao: str | None = Field(default=None, max_length=64)
+    estado: Literal["pendente", "processado", "falhou"] | None = None
+
+    @model_validator(mode="after")
+    def _um_dos_dois(self) -> "ReprocessarLote":
+        if bool(self.ids) == self.todos:
+            raise ValueError("informe `ids` ou `todos: true`, não os dois nem nenhum")
+        return self
+
+
+class MoverLote(BaseModel):
+    ids: list[int] = Field(min_length=1, max_length=500)
+    destino: str = Field(min_length=1, max_length=64, pattern=r"^[\w.-]+$")
+
+
+def ids_do_filtro(session: Session, colecao: str | None, estado: str | None) -> list[int]:
+    return list(
+        session.execute(
+            text(
+                "SELECT id FROM documento WHERE (CAST(:c AS text) IS NULL OR colecao = :c) "
+                "AND (CAST(:e AS text) IS NULL OR estado = :e) ORDER BY id"
+            ),
+            {"c": colecao or None, "e": estado},
+        ).scalars()
+    )
+
+
+@router.post("/reprocessar", status_code=status.HTTP_202_ACCEPTED)
+def reprocessar_em_lote(
+    corpo: ReprocessarLote,
+    background: BackgroundTasks,
+    session: Annotated[Session, Depends(get_session)],
+    config: Annotated[IngestaoSettings, Depends(get_ingestao_settings)],
+    embeddings: Annotated[GeradorDeEmbeddings, Depends(obter_embeddings)],
+) -> dict[str, object]:
+    """Reprocessa vários documentos, um de cada vez, em segundo plano."""
+    pedidos = corpo.ids if corpo.ids else ids_do_filtro(session, corpo.colecao, corpo.estado)
+    ids = servico.marcar_varios_para_reprocessar(session, pedidos)
+    if ids:
+        background.add_task(servico.processar_fila, get_sessionmaker(), ids, embeddings, config)
+    return {"reprocessando": ids, "inexistentes": [i for i in pedidos if i not in ids]}
+
+
+@router.post("/mover")
+def mover_em_lote(
+    corpo: MoverLote, session: Annotated[Session, Depends(get_session)]
+) -> dict[str, object]:
+    """Troca a coleção dos documentos sem reindexar. O que colidiria no destino é recusado."""
+    r = servico.mover_para_colecao(session, corpo.ids, corpo.destino)
+    return {
+        "movidos": r.movidos,
+        "ignorados": [{"id": i, "nome": n, "motivo": m} for i, n, m in r.ignorados],
+    }
 
 
 @router.get("")

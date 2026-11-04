@@ -38,5 +38,14 @@
   </select>
 </form>
 
+<form id="lote" class="lote" hx-swap="none" hx-include=".filtros" hidden>
+  <span id="lote-contagem" aria-live="polite">0 selecionados</span>
+  <button type="button" hx-post="/app/documentos/reprocessar-lote">Reprocessar</button>
+  <label for="lote-destino">Mover para</label>
+  <input id="lote-destino" name="destino" list="lista-colecoes" maxlength="64" pattern="[\w.\-]+" placeholder="coleção">
+  <button type="button" hx-post="/app/documentos/mover-lote">Mover</button>
+</form>
+<div id="resultado-lote" aria-live="polite"></div>
+
 <div id="tabela">{% include "parciais/tabela.html" %}</div>
 {% endblock %}

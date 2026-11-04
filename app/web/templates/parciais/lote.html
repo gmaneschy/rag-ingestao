@@ -1,0 +1,5 @@
+<div id="resultado-lote" hx-swap-oob="innerHTML">
+{% for ok, msg in avisos %}<p class="aviso {{ 'ok' if ok else 'erro' }}" role="status">{{ msg }}</p>{% endfor %}
+</div>
+<div id="tabela" hx-swap-oob="innerHTML">{% include "parciais/tabela.html" %}</div>
+<datalist id="lista-colecoes" hx-swap-oob="innerHTML">{% for c in colecoes %}<option value="{{ c }}">{% endfor %}</datalist>
