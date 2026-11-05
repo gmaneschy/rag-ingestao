@@ -128,7 +128,7 @@ def _registrar(
             session.execute(
                 text(
                     "UPDATE documento SET estado = 'pendente', mensagem_erro = NULL, "
-                    "atualizado_em = now() WHERE id = :id"
+                    f"{_SEM_PROGRESSO}, atualizado_em = now() WHERE id = :id"
                 ),
                 {"id": documento_id},
             )
@@ -149,7 +149,7 @@ def _registrar(
         session.execute(
             text(
                 "UPDATE documento SET hash_conteudo = :h, versao = :v, estado = 'pendente', "
-                "mensagem_erro = NULL, atualizado_em = now() WHERE id = :id"
+                f"mensagem_erro = NULL, {_SEM_PROGRESSO}, atualizado_em = now() WHERE id = :id"
             ),
             {"h": hash_conteudo, "v": versao, "id": documento_id},
         )
@@ -183,12 +183,57 @@ def _registrar(
     return Registro(documento_id, situacao, "pendente")
 
 
+_SEM_PROGRESSO = "progresso = NULL, etapa = NULL, processando_desde = NULL"
+
+# Como o tempo se divide: ler e dividir é pouco; gerar os vetores é o grosso (cerca de 3 a 5
+# trechos por segundo na CPU); gravar é rápido. Os percentuais seguem essa proporção.
+_PCT_DEPOIS_DE_LER = 10
+_PCT_FIM_DOS_VETORES = 95
+_LOTE_DE_VETORES = 16
+
+
+def _progresso(
+    fabrica: sessionmaker[Session], documento_id: int, pct: int, etapa: str, inicio: bool = False
+) -> None:
+    """Grava o andamento numa sessão própria. Não mexe em atualizado_em (a lista é ordenada por
+    ele) e nunca derruba a ingestão: um erro aqui só deixa o número parado."""
+    try:
+        with fabrica() as session:
+            session.execute(
+                text(
+                    "UPDATE documento SET progresso = :p, etapa = :e, "
+                    "processando_desde = CASE WHEN :ini THEN now() ELSE processando_desde END "
+                    "WHERE id = :id"
+                ),
+                {"p": max(0, min(100, pct)), "e": etapa, "ini": inicio, "id": documento_id},
+            )
+            session.commit()
+    except Exception:
+        logger.warning("não consegui gravar o progresso", extra={"documento_id": documento_id})
+
+
+def _vetores_com_progresso(
+    fabrica: sessionmaker[Session],
+    documento_id: int,
+    embeddings: GeradorDeEmbeddings,
+    textos: list[str],
+) -> list[list[float]]:
+    total = len(textos)
+    vetores: list[list[float]] = []
+    for i in range(0, total, _LOTE_DE_VETORES):
+        vetores += embeddings.gerar_trechos(textos[i : i + _LOTE_DE_VETORES])
+        feitos = len(vetores)
+        pct = _PCT_DEPOIS_DE_LER + (_PCT_FIM_DOS_VETORES - _PCT_DEPOIS_DE_LER) * feitos // total
+        _progresso(fabrica, documento_id, pct, f"Gerando vetores ({feitos} de {total} trechos)")
+    return vetores
+
+
 def marcar_para_reprocessar(session: Session, documento_id: int) -> bool:
     """Volta o documento a 'pendente' (os trechos atuais seguem consultáveis até a troca)."""
     achou = session.execute(
         text(
             "UPDATE documento SET estado = 'pendente', mensagem_erro = NULL, "
-            "atualizado_em = now() WHERE id = :id RETURNING id"
+            f"{_SEM_PROGRESSO}, atualizado_em = now() WHERE id = :id RETURNING id"
         ),
         {"id": documento_id},
     ).first()
@@ -203,7 +248,7 @@ def marcar_varios_para_reprocessar(session: Session, ids: list[int]) -> list[int
         session.execute(
             text(
                 "UPDATE documento SET estado = 'pendente', mensagem_erro = NULL, "
-                "atualizado_em = now() WHERE id = ANY(:ids) RETURNING id"
+                f"{_SEM_PROGRESSO}, atualizado_em = now() WHERE id = ANY(:ids) RETURNING id"
             ),
             {"ids": ordem},
         ).scalars()
@@ -302,11 +347,22 @@ def processar(
             raise ErroDeExtracao(
                 f"O modelo gera {embeddings.dimensao} dimensões; a coluna aceita {DIMENSAO_VETOR}"
             )
+        _progresso(fabrica, documento_id, 1, "Lendo o arquivo", inicio=True)
         extracao = extrair(Path(caminho), max_paginas=config.max_paginas)
+        _progresso(fabrica, documento_id, 6, "Dividindo em trechos")
         trechos = classificar(
             dividir(extracao.paginas, config.tamanho_trecho, config.sobreposicao_trecho)
         )
-        vetores = embeddings.gerar_trechos([t.texto for t in trechos])
+        _progresso(
+            fabrica,
+            documento_id,
+            _PCT_DEPOIS_DE_LER,
+            f"Gerando vetores (0 de {len(trechos)} trechos)",
+        )
+        vetores = _vetores_com_progresso(
+            fabrica, documento_id, embeddings, [t.texto for t in trechos]
+        )
+        _progresso(fabrica, documento_id, 97, "Gravando")
         if len(vetores) != len(trechos):
             raise ErroDeExtracao("O gerador de embeddings devolveu uma quantidade inesperada")
 
@@ -345,7 +401,7 @@ def processar(
             session.execute(
                 text(
                     "UPDATE documento SET estado = 'processado', mensagem_erro = NULL, "
-                    "aviso = :aviso, atualizado_em = now() WHERE id = :id"
+                    f"aviso = :aviso, {_SEM_PROGRESSO}, atualizado_em = now() WHERE id = :id"
                 ),
                 {"id": documento_id, "aviso": extracao.aviso},
             )
@@ -395,7 +451,7 @@ def _marcar_falha(fabrica: sessionmaker[Session], documento_id: int, mensagem: s
             session.execute(
                 text(
                     "UPDATE documento SET estado = 'falhou', mensagem_erro = :m, "
-                    "atualizado_em = now() WHERE id = :id"
+                    f"{_SEM_PROGRESSO}, atualizado_em = now() WHERE id = :id"
                 ),
                 {"m": mensagem[:500], "id": documento_id},
             )

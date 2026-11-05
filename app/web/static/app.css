@@ -114,3 +114,11 @@ legend { font-size: .85rem; color: var(--suave); padding: 0 .3rem; }
 .lote { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin: .5rem 0; padding: .5rem .75rem; border: 1px solid var(--linha); border-radius: 8px; background: var(--papel); }
 .lote[hidden] { display: none; }
 .lote label { color: var(--suave); margin-left: .5rem; }
+
+.progresso { display: flex; align-items: center; gap: .5rem; margin-top: .3rem; min-width: 12rem; }
+.progresso progress { flex: 1; height: .6rem; accent-color: var(--acento); }
+.suave { color: var(--suave); }
+.roda { display: none; width: 1.1rem; height: 1.1rem; border: 2px solid var(--linha); border-top-color: var(--acento); border-radius: 50%; animation: gira .8s linear infinite; vertical-align: -.2em; margin-right: .4rem; }
+.htmx-request .roda { display: inline-block; }
+@keyframes gira { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .roda { animation-duration: 2.4s; } }

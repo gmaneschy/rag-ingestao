@@ -24,7 +24,7 @@ def test_preenche_segredos_e_monta_a_url() -> None:
     assert len(env["POSTGRES_PASSWORD"]) >= 32
     assert len(env["API_KEY"]) >= 32
     assert env["DATABASE_URL"] == (
-        f"postgresql+psycopg://app:{env['POSTGRES_PASSWORD']}@localhost:5433/meu_banco"
+        f"postgresql+psycopg://app:{env['POSTGRES_PASSWORD']}@127.0.0.1:5433/meu_banco"
     )
 
 

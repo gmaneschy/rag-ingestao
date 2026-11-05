@@ -1,5 +1,6 @@
 <div id="estado" {% if d.estado == 'pendente' %}hx-get="/app/documentos/{{ d.id }}/estado?era=pendente"
      hx-trigger="every 2s" hx-swap="outerHTML"{% endif %}>
   <span class="selo {{ d.estado }}">{{ d.estado|estado }}</span>
+  {% if d.estado == 'pendente' %}{% with i = d %}{% include "parciais/progresso.html" %}{% endwith %}{% endif %}
   {% if d.mensagem_erro %}<p class="aviso erro">{{ d.mensagem_erro }}</p>{% endif %}
 </div>

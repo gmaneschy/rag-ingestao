@@ -200,3 +200,34 @@ def test_acoes_de_lote_exigem_htmx(logado) -> None:
     assert logado.post("/app/documentos/reprocessar-lote", data={"ids": [1]}).status_code == 403
     assert logado.post("/app/documentos/mover-lote", data={"ids": [1]}).status_code == 403
     assert logado.post("/app/documentos/1/mover", data={"destino": "x"}).status_code == 403
+
+
+# ---------- andamento na tela ----------
+
+
+def test_tela_mostra_barra_e_etapa_dos_pendentes(logado, banco) -> None:
+    a = _enviar(logado, 1)
+    with banco() as s:
+        s.execute(
+            text(
+                "UPDATE documento SET estado = 'pendente', progresso = 42, "
+                "etapa = 'Gerando vetores (10 de 24 trechos)', "
+                "processando_desde = now() - interval '60 seconds' WHERE id = :i"
+            ),
+            {"i": a},
+        )
+        s.commit()
+    tabela = logado.get("/app/documentos/tabela").text
+    assert '<progress max="100" value="42"' in tabela and "42%" in tabela
+    assert "Gerando vetores (10 de 24 trechos)" in tabela and "restantes" in tabela
+    assert "42%" in logado.get(f"/app/documentos/{a}/estado").text
+    with banco() as s:
+        s.execute(text("UPDATE documento SET progresso = NULL, etapa = NULL"))
+        s.commit()
+    assert "Na fila" in logado.get("/app/documentos/tabela").text
+
+
+def test_indicadores_de_carregamento_nas_telas(logado) -> None:
+    assert 'class="roda"' in logado.get("/app/perguntar").text
+    comparar = logado.get("/app/comparar").text
+    assert 'class="roda"' in comparar and 'hx-indicator="this"' in comparar

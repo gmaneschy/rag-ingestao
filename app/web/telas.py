@@ -38,6 +38,7 @@ templates.env.filters.update(
     estado=formato.estado,
     tipo=formato.tipo,
     resumo=formato.resumo,
+    restante=formato.restante,
     citado=formato.texto_citado,
 )
 

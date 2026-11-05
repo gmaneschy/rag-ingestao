@@ -4,7 +4,7 @@
 <h1>Comparar modelos</h1>
 <p class="vazio">A mesma pergunta e a mesma busca, um modelo por coluna. Fica fora do histórico. Modelos locais respondem um de cada vez.</p>
 {% if aviso %}<p class="aviso">{{ aviso }}</p>{% endif %}
-<form class="pergunta" hx-post="/app/comparar" hx-target="#comparacao" hx-swap="innerHTML" hx-disabled-elt="#comparar">
+<form class="pergunta" hx-post="/app/comparar" hx-target="#comparacao" hx-swap="innerHTML" hx-disabled-elt="#comparar" hx-indicator="this">
   <label for="texto" class="vh">Pergunta</label>
   <textarea id="texto" name="pergunta" rows="3" maxlength="2000" required placeholder="A pergunta a comparar"></textarea>
   <fieldset><legend>Modelos</legend>
@@ -19,7 +19,10 @@
     <div><label for="pensar">Raciocínio (qwen3…)</label>
       <select id="pensar" name="pensar"><option value="">como no .env</option><option value="nao">desligado</option><option value="sim">ligado</option></select></div>
   </div>
-  <button id="comparar" class="primario" type="submit">Comparar</button>
+  <div class="linha">
+    <button id="comparar" class="primario" type="submit">Comparar</button>
+    <span class="carregando" role="status"><span class="roda" aria-hidden="true"></span>Comparando os modelos, um de cada vez…</span>
+  </div>
 </form>
 <div id="comparacao" aria-live="polite"></div>
 {% endblock %}

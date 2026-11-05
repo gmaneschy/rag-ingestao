@@ -73,3 +73,14 @@ regra de idioma do prompt; a frase de recusa e as citações `[n]` não mudam, e
 "Evidências:" e "Avaliação:" continuam os mesmos, porque o app depende deles. Vale na próxima
 pergunta, sem reiniciar. Útil quando a pergunta é em português e o documento está em inglês ou russo
 e o modelo se confunde de língua.
+
+## Andamento da ingestão
+
+Enquanto um documento está `pendente`, a lista e a página do documento mostram uma barra com o
+percentual, a etapa e o tempo restante estimado; sem andamento ainda, aparece "Na fila". A
+percentagem segue o custo real: ler o arquivo vai a 10%, gerar os vetores (o grosso, em lotes de
+16 trechos) de 10% a 95%, gravar fecha em 100%. O tempo restante só aparece depois de 15%, por
+extrapolação do ritmo daquele documento (um PDF grande pode levar um tempo na leitura antes de o
+primeiro percentual andar). Os campos `progresso`, `etapa` e `restante_s` também vêm em
+`GET /documentos` e `GET /documentos/{id}` (a migração `0009` cria as colunas). Os botões de
+Perguntar e Comparar mostram um indicador giratório enquanto a resposta é gerada.

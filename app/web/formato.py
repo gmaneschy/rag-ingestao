@@ -35,6 +35,19 @@ def estado(valor: str) -> str:
     return ROTULO_DO_ESTADO.get(valor, valor)
 
 
+def restante(segundos: int | None) -> str:
+    """'cerca de 3 min' a partir de segundos; vazio quando não há estimativa."""
+    if segundos is None:
+        return ""
+    if segundos < 45:
+        return "menos de 1 min"
+    minutos = round(segundos / 60)
+    if minutos < 60:
+        return f"cerca de {minutos} min"
+    horas, resto = divmod(minutos, 60)
+    return f"cerca de {horas} h {resto:02d} min"
+
+
 def tipo(valor: str) -> str:
     return ROTULO_DO_TIPO.get(valor, valor)
 

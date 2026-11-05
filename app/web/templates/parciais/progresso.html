@@ -1,0 +1,10 @@
+{# Andamento de um documento pendente: barra, percentual, etapa e tempo estimado. #}
+{% if i.progresso is not none %}
+<div class="progresso">
+  <progress max="100" value="{{ i.progresso }}" aria-label="Processando {{ i.nome or '' }}"></progress>
+  <strong>{{ i.progresso }}%</strong>
+</div>
+<small class="suave">{{ i.etapa }}{% if i.restante_s is not none %} · {{ i.restante_s|restante }} restantes{% endif %}</small>
+{% else %}
+<small class="suave">Na fila</small>
+{% endif %}

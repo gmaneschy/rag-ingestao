@@ -125,7 +125,7 @@ def test_modelo_novo_gera_gerador_novo(logado) -> None:
 
 def test_saude(logado) -> None:
     html = logado.get("/app/saude").text
-    assert "Banco" in html and "0008" in html and "Trechos" in html and "pgvector" in html
+    assert "Banco" in html and "0009" in html and "Trechos" in html and "pgvector" in html
 
 
 def test_logs_filtram_por_nivel_e_texto(logado) -> None:

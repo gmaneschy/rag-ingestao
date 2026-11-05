@@ -33,8 +33,9 @@ def gerar(exemplo: str) -> str:
     usuario = valor_de(linhas, "POSTGRES_USER") or "app"
     banco = valor_de(linhas, "POSTGRES_DB")
     porta = valor_de(linhas, "DB_PORT") or "5432"
+    # 127.0.0.1 e não localhost: no Windows, localhost tenta IPv6 primeiro e pode travar.
     novo["DATABASE_URL"] = (
-        f"postgresql+psycopg://{usuario}:{novo['POSTGRES_PASSWORD']}@localhost:{porta}/{banco}"
+        f"postgresql+psycopg://{usuario}:{novo['POSTGRES_PASSWORD']}@127.0.0.1:{porta}/{banco}"
     )
 
     saida = []

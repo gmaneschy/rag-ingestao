@@ -172,6 +172,10 @@ def listar_documentos(
             text(
                 "SELECT d.id, d.nome, d.colecao, d.versao, d.estado, d.mensagem_erro, "
                 "d.aviso, d.criado_em, d.atualizado_em, "
+                "d.progresso, d.etapa, "
+                "CASE WHEN d.progresso >= 15 AND d.processando_desde IS NOT NULL THEN "
+                "CAST(round(extract(epoch FROM now() - d.processando_desde) "
+                "* (100 - d.progresso) / d.progresso) AS int) END AS restante_s, "
                 "(SELECT count(*) FROM trecho t WHERE t.documento_id = d.id) AS trechos "
                 f"FROM documento d {onde} "
                 "ORDER BY d.atualizado_em DESC, d.id DESC LIMIT :limite OFFSET :deslocamento"
@@ -195,7 +199,11 @@ def ver_documento(
         session.execute(
             text(
                 "SELECT d.id, d.nome, d.colecao, d.versao, d.estado, d.mensagem_erro, d.aviso, "
-                "d.criado_em, d.atualizado_em, count(t.id) AS trechos, "
+                "d.criado_em, d.atualizado_em, d.progresso, d.etapa, "
+                "CASE WHEN d.progresso >= 15 AND d.processando_desde IS NOT NULL THEN "
+                "CAST(round(extract(epoch FROM now() - d.processando_desde) "
+                "* (100 - d.progresso) / d.progresso) AS int) END AS restante_s, "
+                "count(t.id) AS trechos, "
                 "count(DISTINCT t.secao) AS secoes, "
                 "min(t.modelo_embedding) AS modelo_embedding "
                 "FROM documento d LEFT JOIN trecho t ON t.documento_id = d.id "
