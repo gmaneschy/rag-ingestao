@@ -139,22 +139,18 @@
     {
       "id": "akhmatova-gumilyov",
       "pergunta": "Qual era a relação entre Anna Akhmatova e Nikolai Gumilyov?",
-      "colecoes": [
-        "literatura"
-      ],
+      "colecoes": ["literatura"],
       "responde": true,
-      "resposta_esperada": "Nikolai Gumilyov foi o primeiro marido de Anna Akhmatova. Divorciaram-se em 1918.",
+      "resposta_esperada": "Nikolai Gumilyov (Gumilev) foi o primeiro marido de Anna Akhmatova.",
       "suporte": [
         {
           "documento": "Lydia Chukovskaya - To the Memory of Childhood",
-          "paginas": [
-            184,
-            184
-          ],
-          "contem_algum": [
-            "Gumilyov",
-            "first husband"
-          ]
+          "paginas": [183, 185],
+          "contem_algum": ["Gumilyov", "Gumilev", "Gumilyev", "Gumilëv", "first husband"]
+        },
+        {
+          "documento": "Anna of All the Russias",
+          "contem_algum": ["Marriage to Gumilyov", "were married on 25 April 1910"]
         }
       ]
     },
@@ -363,22 +359,18 @@
     {
       "id": "tolstoi-astapovo",
       "pergunta": "Where did Tolstoy die, and how did he get there?",
-      "colecoes": [
-        "literatura"
-      ],
+      "colecoes": ["literatura"],
       "responde": true,
       "resposta_esperada": "He died on 7 November 1910 at the small railway station of Astapovo. At 82 he had secretly left home on 28 October, accompanied by his doctor, and fell ill with pneumonia during the journey.",
       "suporte": [
         {
           "documento": "Vidas e Anedotas Personalidades Literárias do Cânone Ocidental",
-          "paginas": [
-            26,
-            26
-          ],
-          "contem": [
-            "Astapovo",
-            "pneumonia"
-          ]
+          "paginas": [26, 27],
+          "contem_algum": ["Astápovo", "Astapovo", "pneumonia"]
+        },
+        {
+          "documento": "Tolstói - A Biografia",
+          "contem_algum": ["Makovický", "Riazan", "estação ferroviária"]
         }
       ]
     },
@@ -464,9 +456,14 @@
             20
           ],
           "contem": [
-            "meia-noite",
-            "roupão branco",
-            "café"
+          ],
+          "contem_algum": [
+            "roupão",
+            "túnica",
+            "hábito de monge",
+            "monge",
+            "café",
+            "meia-noite"
           ]
         }
       ]
@@ -647,6 +644,168 @@
       "pergunta": "Qual é a capital da Austrália?",
       "responde": false,
       "observacao": "Pergunta de conhecimento geral sem relação com o corpus: o certo é recusar."
+    },
+    {
+      "id": "fora-agua-formula",
+      "pergunta": "Qual é a fórmula química da água?",
+      "responde": false,
+      "observacao": "Conhecimento geral, sem relação com o corpus: o certo é recusar."
+    },
+    {
+      "id": "fora-copa-2018",
+      "pergunta": "Quem ganhou a Copa do Mundo de 2018?",
+      "responde": false,
+      "observacao": "Fora de domínio (esporte): o certo é recusar."
+    },
+    {
+      "id": "fora-bolo-cenoura",
+      "pergunta": "Como se faz um bolo de cenoura?",
+      "responde": false,
+      "observacao": "Fora de domínio (culinária): o certo é recusar."
+    },
+    {
+      "id": "fora-aconcagua",
+      "pergunta": "What is the highest mountain in South America?",
+      "responde": false,
+      "observacao": "Fora de domínio, em inglês: o certo é recusar."
+    },
+    {
+      "id": "fora-velocidade-luz",
+      "pergunta": "Qual é a velocidade da luz no vácuo?",
+      "responde": false,
+      "observacao": "Fora de domínio (física): o certo é recusar."
+    },
+    {
+      "id": "fora-nginx-https",
+      "pergunta": "Como configurar HTTPS em um servidor nginx?",
+      "responde": false,
+      "observacao": "Fora de domínio (TI): o certo é recusar."
+    },
+    {
+      "id": "fora-guimaraes-rosa",
+      "pergunta": "Qual é o enredo de Grande Sertão: Veredas?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": false,
+      "observacao": "Obra/autor ausente do corpus (validar com verificar_gold.py): o certo é recusar."
+    },
+    {
+      "id": "fora-clarice-hora-da-estrela",
+      "pergunta": "Em que ano Clarice Lispector publicou A Hora da Estrela?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": false,
+      "observacao": "Autora ausente do corpus (validar): o certo é recusar."
+    },
+    {
+      "id": "fora-thomas-mann",
+      "pergunta": "What is The Magic Mountain by Thomas Mann about?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": false,
+      "observacao": "Obra ausente do corpus (validar): o certo é recusar."
+    },
+    {
+      "id": "fora-pessoa-heteronimos",
+      "pergunta": "Quais heterônimos Fernando Pessoa criou?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": false,
+      "observacao": "Autor possivelmente ausente (validar; pode aparecer em Vidas e Anedotas): o certo é recusar."
+    },
+    {
+      "id": "fora-kurosawa-rashomon",
+      "pergunta": "Quem dirigiu o filme Rashomon?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": false,
+      "observacao": "Cinema, fora do tema do corpus (validar): o certo é recusar."
+    },
+    {
+      "id": "fora-neruda-nobel",
+      "pergunta": "Em que ano Pablo Neruda ganhou o Prêmio Nobel de Literatura?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": false,
+      "observacao": "Autor ausente do corpus (validar): o certo é recusar."
+    },
+    {
+      "id": "fora-dostoievski-salario-vremia",
+      "pergunta": "Quanto Dostoiévski ganhava por mês como editor da revista Vrêmia?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": false,
+      "observacao": "Pergunta próxima do corpus: detalhe salarial provavelmente ausente (validar): o certo é recusar."
+    },
+    {
+      "id": "fora-kafka-altura",
+      "pergunta": "Qual era a altura de Kafka em centímetros?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": false,
+      "observacao": "Pergunta próxima do corpus: Kafka aparece, altura não (validar): o certo é recusar."
+    },
+    {
+      "id": "fora-yusupov-fortuna-atual",
+      "pergunta": "Qual é o valor atual em dólares da fortuna dos Yusúpov?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": false,
+      "observacao": "Pergunta próxima do corpus: Yusúpov aparece, valor atual não (validar): o certo é recusar."
+    },
+    {
+      "id": "fora-tsvetaeva-ultimo-poema",
+      "pergunta": "Qual foi o último poema que Tsvetaeva escreveu antes de morrer?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": false,
+      "observacao": "Pergunta próxima do corpus: diários de 1917-22 não cobrem isso (validar): o certo é recusar."
+    },
+    {
+      "id": "fora-kharms-filhos",
+      "pergunta": "How many children did Daniil Kharms have?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": false,
+      "observacao": "Pergunta próxima do corpus: Kharms aparece, filhos provavelmente não (validar): o certo é recusar."
+    },
+    {
+      "id": "fora-orwell-motihari",
+      "pergunta": "Em qual cidade da Índia nasceu George Orwell?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": false,
+      "observacao": "Pergunta próxima do corpus: Orwell aparece, cidade natal provavelmente não (validar): o certo é recusar."
+    },
+    {
+      "id": "fora-talashkino-funcionarios",
+      "pergunta": "Quantos artesãos trabalhavam nas oficinas de Talashkino?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": false,
+      "observacao": "Pergunta próxima do corpus: Tenisheva aparece, número de artesãos provavelmente não (validar): o certo é recusar."
+    },
+    {
+      "id": "fora-voloshin-animais",
+      "pergunta": "Did Voloshin keep any pets at Koktebel?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": false,
+      "observacao": "Pergunta próxima do corpus: Voloshin aparece, animais de estimação provavelmente não (validar): o certo é recusar."
     }
   ]
 }

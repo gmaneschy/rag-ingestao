@@ -34,7 +34,7 @@ dados/entrada ──► n8n (nó de pasta) ──► POST /documentos ──► 
 
 Por parágrafo, com sobreposição, **sem atravessar páginas** (a citação "página N" é sempre
 verdadeira). Parágrafo maior que o tamanho é quebrado por frase e, no limite, por palavra.
-Padrão: 500 caracteres com 80 de sobreposição (`TAMANHO_TRECHO`, `SOBREPOSICAO_TRECHO`).
+Padrão: 500 caracteres com 80 de sobreposição (`TAMANHO_TRECHO`, `SOBREPOSICAO_TRECHO`), ou um perfil de trecho; veja [configuracao-da-ingestao.md](configuracao-da-ingestao.md).
 
 O modelo de embeddings padrão enxerga cerca de **128 tokens** (~500 caracteres) e trunca o
 resto sem avisar. Por isso o padrão é 500; a etapa 5 mede 3 tamanhos para decidir.

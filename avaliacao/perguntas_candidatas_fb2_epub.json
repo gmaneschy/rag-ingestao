@@ -1,0 +1,355 @@
+{
+  "casos": [
+    {
+      "id": "bartlett-nascimento",
+      "pergunta": "Onde Tolstói nasceu?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Em Iásnaia Poliana, a propriedade da família, na província de Tula.",
+      "suporte": [
+        {
+          "documento": "Tolstói - A Biografia - Rosamund Bartlett",
+          "contem_algum": [
+            "Iásnaia Poliana",
+            "Iasnaia Poliana",
+            "Yasnaya Polyana",
+            "Yasnaia Poliana"
+          ]
+        }
+      ],
+      "observacao": "RASCUNHO a partir de conhecimento geral dos livros: validar com verificar_gold.py antes de mesclar."
+    },
+    {
+      "id": "bartlett-casamento-sofia",
+      "pergunta": "Quantos anos Tolstói e Sofia tinham quando se casaram, em 1862?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Tolstói tinha 34 anos e Sofia (Sônia) Behrs, 18.",
+      "suporte": [
+        {
+          "documento": "Tolstói - A Biografia - Rosamund Bartlett",
+          "contem": [
+            "1862"
+          ],
+          "contem_algum": [
+            "Sofia",
+            "Sófia",
+            "Sônia",
+            "Sonya",
+            "Behrs",
+            "Bers"
+          ]
+        }
+      ],
+      "observacao": "RASCUNHO a partir de conhecimento geral dos livros: validar com verificar_gold.py antes de mesclar."
+    },
+    {
+      "id": "bartlett-excomunhao",
+      "pergunta": "Quando e por que Tolstói foi excomungado pela Igreja Ortodoxa?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Em 1901, pelo Santo Sínodo, por suas críticas à Igreja (e pelo romance Ressurreição).",
+      "suporte": [
+        {
+          "documento": "Tolstói - A Biografia - Rosamund Bartlett",
+          "contem": [
+            "1901"
+          ],
+          "contem_algum": [
+            "excomun",
+            "Sínodo",
+            "Sinodo"
+          ]
+        }
+      ],
+      "observacao": "RASCUNHO a partir de conhecimento geral dos livros: validar com verificar_gold.py antes de mesclar."
+    },
+    {
+      "id": "feinstein-casamento-1910",
+      "pergunta": "Com quem Akhmatova se casou em 1910?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Com o poeta Nikolai Gumilev, cofundador do acmeísmo.",
+      "suporte": [
+        {
+          "documento": "Elaine Feinstein - Anna of All the Russias_ A Life of Anna Akhmatova-Vintage (2007)",
+          "contem": [
+            "1910"
+          ],
+          "contem_algum": [
+            "Gumilev",
+            "Gumilyov"
+          ]
+        }
+      ],
+      "observacao": "RASCUNHO a partir de conhecimento geral dos livros: validar com verificar_gold.py antes de mesclar."
+    },
+    {
+      "id": "feinstein-lev-preso",
+      "pergunta": "What happened to Akhmatova's son Lev?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Lev Gumilev was arrested several times and spent years in the Gulag; Requiem grew out of Akhmatova's waiting outside the Leningrad prison.",
+      "suporte": [
+        {
+          "documento": "Elaine Feinstein - Anna of All the Russias_ A Life of Anna Akhmatova-Vintage (2007)",
+          "contem": [
+            "Lev"
+          ],
+          "contem_algum": [
+            "arrested",
+            "Kresty",
+            "Gulag",
+            "camp"
+          ]
+        }
+      ],
+      "observacao": "RASCUNHO a partir de conhecimento geral dos livros: validar com verificar_gold.py antes de mesclar."
+    },
+    {
+      "id": "feinstein-zhdanov-1946",
+      "pergunta": "Qual foi o papel de Zhdanov no ataque a Akhmatova em 1946?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Andrei Zhdanov a denunciou publicamente, junto com Zoshchenko, e ela foi expulsa da União dos Escritores.",
+      "suporte": [
+        {
+          "documento": "Elaine Feinstein - Anna of All the Russias_ A Life of Anna Akhmatova-Vintage (2007)",
+          "contem": [
+            "Zhdanov"
+          ],
+          "contem_algum": [
+            "1946",
+            "Zoshchenko"
+          ]
+        }
+      ],
+      "observacao": "RASCUNHO a partir de conhecimento geral dos livros: validar com verificar_gold.py antes de mesclar."
+    },
+    {
+      "id": "yusupov-veneno-rasputin",
+      "pergunta": "Com o que tentaram envenenar Rasputin no palácio de Yusúpov?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Com bolos e vinho adulterados com cianeto.",
+      "suporte": [
+        {
+          "documento": "Félix F. Yusúpov - Memorias de antes del exilio (1887-1919) (1952)",
+          "contem": [
+            "Rasput"
+          ],
+          "contem_algum": [
+            "cianuro",
+            "cianureto",
+            "cianeto",
+            "cyanide"
+          ]
+        }
+      ],
+      "observacao": "RASCUNHO a partir de conhecimento geral dos livros: validar com verificar_gold.py antes de mesclar."
+    },
+    {
+      "id": "yusupov-palacio-moika",
+      "pergunta": "Em que rio ficava o palácio de Yusúpov em Petrogrado?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "No rio Moika.",
+      "suporte": [
+        {
+          "documento": "Félix F. Yusúpov - Memorias de antes del exilio (1887-1919) (1952)",
+          "contem_algum": [
+            "Moika",
+            "Moyka",
+            "Moica"
+          ]
+        }
+      ],
+      "observacao": "RASCUNHO a partir de conhecimento geral dos livros: validar com verificar_gold.py antes de mesclar."
+    },
+    {
+      "id": "tsvetaeva-irina",
+      "pergunta": "What happened to Tsvetaeva's younger daughter Irina?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Irina died of starvation in 1920 in an orphanage where Tsvetaeva had placed her.",
+      "suporte": [
+        {
+          "documento": "Marina Tsvetaeva - Earthly Signs - Moscow Diaries, 1917-1922",
+          "contem": [
+            "Irina"
+          ],
+          "contem_algum": [
+            "orphanage",
+            "starv",
+            "hunger"
+          ]
+        }
+      ],
+      "observacao": "RASCUNHO a partir de conhecimento geral dos livros: validar com verificar_gold.py antes de mesclar."
+    },
+    {
+      "id": "tsvetaeva-efron-guerra-civil",
+      "pergunta": "Where was Tsvetaeva's husband Sergei Efron during the Civil War?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Fighting with the White Army; she did not know whether he was alive.",
+      "suporte": [
+        {
+          "documento": "Marina Tsvetaeva - Earthly Signs - Moscow Diaries, 1917-1922",
+          "contem": [
+            "Efron"
+          ],
+          "contem_algum": [
+            "White Army",
+            "Volunteer Army",
+            "Whites",
+            "Crimea"
+          ]
+        }
+      ],
+      "observacao": "RASCUNHO a partir de conhecimento geral dos livros: validar com verificar_gold.py antes de mesclar."
+    },
+    {
+      "id": "kharms-morte",
+      "pergunta": "Quando e onde morreu Daniil Kharms?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Em 1942, em Leningrado, na ala psiquiátrica da prisão, depois de preso em 1941.",
+      "suporte": [
+        {
+          "documento": "Daniil Kharms - Notebooks, Diaries and Letters",
+          "contem": [
+            "Kharms"
+          ],
+          "contem_algum": [
+            "1942",
+            "Kresty",
+            "psychiatric"
+          ]
+        }
+      ],
+      "observacao": "RASCUNHO a partir de conhecimento geral dos livros: validar com verificar_gold.py antes de mesclar."
+    },
+    {
+      "id": "white-besprizorniki",
+      "pergunta": "O que eram os besprizorniki na Rússia soviética?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Crianças de rua, órfãs ou abandonadas, sobretudo após a guerra civil e a fome.",
+      "suporte": [
+        {
+          "documento": "Elizabeth White - A Modern History of Russian Childhood",
+          "contem_algum": [
+            "besprizorniki",
+            "besprizornye",
+            "besprizornik",
+            "homeless children"
+          ]
+        }
+      ],
+      "observacao": "RASCUNHO a partir de conhecimento geral dos livros: validar com verificar_gold.py antes de mesclar."
+    },
+    {
+      "id": "solovyov-egoismo",
+      "pergunta": "Segundo Solovyov, o que o amor deve superar?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "O egoísmo.",
+      "suporte": [
+        {
+          "documento": "Vladimir Solovyov - The Meaning of Love",
+          "contem_algum": [
+            "egoism",
+            "egotism",
+            "egoísmo"
+          ]
+        }
+      ],
+      "observacao": "RASCUNHO a partir de conhecimento geral dos livros: validar com verificar_gold.py antes de mesclar."
+    },
+    {
+      "id": "ostroumova-whistler",
+      "pergunta": "Com quem Ostroumova-Lebedeva estudou em Paris?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Com Whistler, em sua academia.",
+      "suporte": [
+        {
+          "documento": "Anna Ostroumova-Lebedeva - Notas Autobiográficas - Vol. 1 & 2",
+          "contem": [
+            "Whistler"
+          ]
+        }
+      ],
+      "observacao": "RASCUNHO a partir de conhecimento geral dos livros: validar com verificar_gold.py antes de mesclar."
+    },
+    {
+      "id": "tenisheva-talashkino",
+      "pergunta": "Em que propriedade Tenisheva criou oficinas de artesanato?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "Em Talashkino, perto de Smolensk.",
+      "suporte": [
+        {
+          "documento": "Maria Tenisheva - Impressões da minha vida",
+          "contem_algum": [
+            "Talashkino",
+            "Talachkino",
+            "Taláchkino"
+          ]
+        }
+      ],
+      "observacao": "RASCUNHO a partir de conhecimento geral dos livros: validar com verificar_gold.py antes de mesclar."
+    },
+    {
+      "id": "makovsky-apollon",
+      "pergunta": "Qual revista Sergei Makovsky fundou e dirigiu a partir de 1909?",
+      "colecoes": [
+        "literatura"
+      ],
+      "responde": true,
+      "resposta_esperada": "A Apollon.",
+      "suporte": [
+        {
+          "documento": "Sergei Makovsky - Retratos de Contemporâneos",
+          "contem_algum": [
+            "Apollon",
+            "Apolo",
+            "Аполлон"
+          ]
+        }
+      ],
+      "observacao": "RASCUNHO a partir de conhecimento geral dos livros: validar com verificar_gold.py antes de mesclar."
+    }
+  ]
+}

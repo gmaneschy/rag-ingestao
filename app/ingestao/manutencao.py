@@ -12,6 +12,8 @@ from collections.abc import Callable
 from sqlalchemy import text
 from sqlalchemy.orm import Session, sessionmaker
 
+from app import configuracao
+from app.conversa import servico as conversas
 from app.ingestao import remocao, servico
 from app.ingestao.config import IngestaoSettings
 from app.llm.protocolos import GeradorDeEmbeddings
@@ -30,6 +32,9 @@ def retomar_pendentes(
                 text("SELECT id FROM documento WHERE estado = 'pendente' ORDER BY id")
             )
         ]
+    # Vale o que a tela de Configuração definiu (tamanho do trecho etc.), não só o .env.
+    with fabrica() as session:
+        config = configuracao.efetivas(session, config)[2]
     for documento_id in ids:
         servico.processar(fabrica, documento_id, embeddings, config)
     return len(ids)
@@ -43,6 +48,11 @@ def executar_na_subida(
     """Roda em uma thread própria, para não atrasar a subida (o modelo pode demorar a carregar).
     Nunca levanta: banco fora do ar na subida não pode derrubar a aplicação."""
     try:
+        interrompidos = conversas.encerrar_interrompidos(fabrica)
+        if interrompidos:
+            logger.info(
+                "perguntas interrompidas pelo reinício", extra={"quantidade": interrompidos}
+            )
         limpezas = remocao.limpar_pendentes(fabrica, config)
         if limpezas:
             logger.info("limpezas pendentes concluídas", extra={"quantidade": limpezas})

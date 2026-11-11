@@ -1,10 +1,12 @@
 """Geração de resposta por um servidor Ollama (modelo local), pela API nativa /api/chat."""
 
+import json
 import math
 from collections.abc import Sequence
 
 import httpx
 
+from app.llm.acompanhamento import Acompanhamento
 from app.llm.prompt import (
     Idioma,
     e_recusa,
@@ -60,19 +62,55 @@ class GeradorDeRespostaOllama:
         necessario = math.ceil(caracteres / CARACTERES_POR_TOKEN) + max_tokens + 256
         return min(max(4096, math.ceil(necessario / 1024) * 1024), self.num_ctx_max)
 
+    def _conferir_status(self, resposta: httpx.Response) -> None:
+        if resposta.status_code == 404:
+            raise ModeloIndisponivel(
+                f"O Ollama não tem o modelo '{self.modelo}'. Baixe com: ollama pull {self.modelo}"
+            )
+        if resposta.status_code >= 400:
+            raise ModeloIndisponivel(
+                f"O Ollama respondeu com erro {resposta.status_code}: {_motivo(resposta)}"
+            )
+
+    def _em_fluxo(
+        self, corpo: dict[str, object], acompanhar: Acompanhamento
+    ) -> tuple[dict[str, object], dict[str, str]]:
+        """Lê a resposta aos pedaços, publicando o texto parcial. Sair do bloco fecha a conexão,
+        e o Ollama para de gerar: é assim que 'parar' libera a CPU de verdade."""
+        conteudo, raciocinio, final = [], [], {}
+        with self._cliente.stream("POST", f"{self.base_url}/api/chat", json=corpo) as resposta:
+            if resposta.status_code >= 400:
+                resposta.read()
+            self._conferir_status(resposta)
+            for linha in resposta.iter_lines():
+                acompanhar.conferir()
+                if not linha.strip():
+                    continue
+                pedaco = json.loads(linha)
+                mensagem = pedaco.get("message", {})
+                conteudo.append(mensagem.get("content", ""))
+                raciocinio.append(mensagem.get("thinking", ""))
+                if conteudo[-1]:
+                    acompanhar.texto(limpar_saida("".join(conteudo)))
+                if pedaco.get("done"):
+                    final = pedaco
+        acompanhar.conferir()
+        return final, {"content": "".join(conteudo), "thinking": "".join(raciocinio)}
+
     def responder(
         self,
         pergunta: str,
         trechos: Sequence[TrechoRecuperado],
         *,
         tipo: TipoResposta = "factual",
+        acompanhar: Acompanhamento | None = None,
     ) -> Resposta:
         mensagens = montar_mensagens(pergunta, trechos, tipo, self.idioma)
         max_tokens = self.max_tokens_analise if tipo == "analise" else self.max_tokens
         corpo = {
             "model": self.modelo,
             "messages": mensagens,
-            "stream": False,
+            "stream": acompanhar is not None,
             "options": {
                 "temperature": 0,
                 "num_ctx": self._num_ctx(mensagens, max_tokens),
@@ -82,7 +120,13 @@ class GeradorDeRespostaOllama:
         if self.pensar is not None:
             corpo["think"] = self.pensar
         try:
-            resposta = self._cliente.post(f"{self.base_url}/api/chat", json=corpo)
+            if acompanhar is None:
+                resposta = self._cliente.post(f"{self.base_url}/api/chat", json=corpo)
+                self._conferir_status(resposta)
+                dados = resposta.json()
+                mensagem = dados.get("message", {})
+            else:
+                dados, mensagem = self._em_fluxo(corpo, acompanhar)
         except httpx.ConnectError as erro:
             raise ModeloIndisponivel(
                 f"Não consegui falar com o Ollama em {self.base_url}. Ele está rodando?"
@@ -96,17 +140,6 @@ class GeradorDeRespostaOllama:
                 f"Falha ao falar com o Ollama: {type(erro).__name__}"
             ) from erro
 
-        if resposta.status_code == 404:
-            raise ModeloIndisponivel(
-                f"O Ollama não tem o modelo '{self.modelo}'. Baixe com: ollama pull {self.modelo}"
-            )
-        if resposta.status_code >= 400:
-            raise ModeloIndisponivel(
-                f"O Ollama respondeu com erro {resposta.status_code}: {_motivo(resposta)}"
-            )
-
-        dados = resposta.json()
-        mensagem = dados.get("message", {})
         texto = limpar_saida(mensagem.get("content", ""))
         if not texto:
             if mensagem.get("thinking"):

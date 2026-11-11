@@ -3,7 +3,13 @@
 import re
 
 import pytest
-from auxiliares import ambiente, banco, pdf_com_texto, precisa_de_banco  # noqa: F401
+from auxiliares import (  # noqa: F401
+    ambiente,
+    banco,
+    pdf_com_texto,
+    perguntar_pela_tela,
+    precisa_de_banco,
+)
 from fastapi.testclient import TestClient
 from sqlalchemy import text
 
@@ -45,7 +51,7 @@ def logado(banco):  # noqa: F811
 
 
 def _perguntar(c, pergunta="Qual o prazo de entrega?", **d):
-    return c.post("/app/perguntar", data={"pergunta": pergunta, **d}, headers=HX)
+    return perguntar_pela_tela(c, pergunta, **d)
 
 
 def _contagem() -> int:
@@ -68,8 +74,10 @@ def test_historico_vazio_e_lista(logado) -> None:
     assert (
         "Qual o prazo de entrega?" in html and "Qual a garantia?" in html and "2 consultas" in html
     )
-    assert "Qual a garantia?" not in logado.get("/app/historico?tipo=factual").text
-    assert "Qual o prazo" in logado.get("/app/historico?q=prazo").text
+    # a barra lateral também lista as conversas: só o miolo da página conta
+    miolo = logado.get("/app/historico?tipo=factual").text.split("<main")[1]
+    assert "Qual a garantia?" not in miolo
+    assert "Qual o prazo" in logado.get("/app/historico?q=prazo").text.split("<main")[1]
     assert "Nenhuma consulta com esse filtro" in logado.get("/app/historico?q=zzzz").text
 
 

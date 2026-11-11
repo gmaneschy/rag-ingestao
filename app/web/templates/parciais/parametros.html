@@ -1,0 +1,36 @@
+{# Dois módulos (diálogos) dentro do formulário do chat: os campos seguem sendo enviados com a
+   pergunta, e o fechamento grava a escolha na conversa. cfg traz o que já foi escolhido. #}
+<dialog id="modal-docs" class="dialogo modal" aria-labelledby="t-docs">
+  <h2 id="t-docs">Documentos desta conversa</h2>
+  <p class="dica">Nada marcado = a busca usa todos os documentos processados.</p>
+  {% if colecoes %}
+  <fieldset><legend>Coleções</legend>
+    {% for c in colecoes %}<label class="opcao"><input type="checkbox" name="colecao" value="{{ c }}" {% if c in (cfg.colecoes or []) %}checked{% endif %}> {{ c }}</label>{% endfor %}
+  </fieldset>
+  {% endif %}
+  {% if docs %}
+  <fieldset><legend>Documentos</legend>
+    {% for d in docs %}<label class="opcao"><input type="checkbox" name="documento" value="{{ d.id }}" {% if d.id in (cfg.documento_ids or []) %}checked{% endif %}> <span>{{ d.nome }} <small>({{ d.colecao }})</small></span></label>{% endfor %}
+  </fieldset>
+  {% else %}<p class="vazio">Nenhum documento processado ainda.</p>{% endif %}
+  <div class="linha"><button type="button" class="primario" data-fechar-modal>Concluir</button>
+    <button type="button" data-limpar="colecao,documento">Limpar seleção</button></div>
+</dialog>
+
+<dialog id="modal-params" class="dialogo modal" aria-labelledby="t-params">
+  <h2 id="t-params">Parâmetros da pergunta</h2>
+  <fieldset><legend>Busca</legend>
+    {% for v, r in [('hibrida','híbrida'),('vetorial','só vetorial'),('textual','só textual')] %}
+    <label class="opcao"><input type="radio" name="modo" value="{{ v }}" {% if (cfg.modo or 'hibrida') == v %}checked{% endif %}> {{ r }}</label>{% endfor %}
+  </fieldset>
+  <fieldset><legend>Tipo de resposta</legend>
+    <label class="opcao"><input type="radio" name="tipo" value="factual" {% if (cfg.tipo or 'factual') == 'factual' %}checked{% endif %}> factual</label>
+    <label class="opcao"><input type="radio" name="tipo" value="analise" {% if cfg.tipo == 'analise' %}checked{% endif %}> análise (evidências + avaliação)</label>
+  </fieldset>
+  <div><label for="k">Trechos (k)</label>
+    <input id="k" name="k" type="number" min="1" max="10" value="{{ cfg.k if cfg.k else '' }}" placeholder="{{ k_padrao }} ({{ k_analise }} na análise)"></div>
+  <fieldset><legend>Incluir também (a busca usa só o corpo do texto)</legend>
+    {% for v, r in tipos_extras %}<label class="opcao"><input type="checkbox" name="incluir" value="{{ v }}" {% if v in (cfg.incluir or []) %}checked{% endif %}> {{ r }}</label>{% endfor %}
+  </fieldset>
+  <div class="linha"><button type="button" class="primario" data-fechar-modal>Concluir</button></div>
+</dialog>

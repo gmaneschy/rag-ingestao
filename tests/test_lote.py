@@ -228,6 +228,6 @@ def test_tela_mostra_barra_e_etapa_dos_pendentes(logado, banco) -> None:
 
 
 def test_indicadores_de_carregamento_nas_telas(logado) -> None:
-    assert 'class="roda"' in logado.get("/app/perguntar").text
+    assert 'class="roda"' not in logado.get("/app/perguntar").text  # o chat usa o do turno
     comparar = logado.get("/app/comparar").text
     assert 'class="roda"' in comparar and 'hx-indicator="this"' in comparar

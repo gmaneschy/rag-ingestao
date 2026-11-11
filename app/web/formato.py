@@ -4,6 +4,7 @@ import re
 from datetime import UTC, datetime
 from zoneinfo import ZoneInfo
 
+from markdown_it import MarkdownIt
 from markupsafe import Markup, escape
 
 FUSO = ZoneInfo("America/Sao_Paulo")
@@ -58,23 +59,32 @@ def resumo(texto: str, limite: int = 260) -> str:
 
 
 _CITACAO = re.compile(r"\[(\d{1,3}(?:\s*[,;]\s*\d{1,3})*)\]")
+# Markdown da resposta do modelo, que é texto não confiável: HTML cru fica desligado (vira texto
+# escapado) e o markdown-it já recusa links javascript:. Quebra de linha simples vira <br>.
+_MARKDOWN = MarkdownIt("commonmark", {"html": False, "breaks": True}).enable(
+    ["table", "strikethrough"]
+)
+# Pedaços onde uma citação [n] não deve virar link: blocos de código, links e as próprias tags.
+_NAO_TEXTO = re.compile(r"(<pre.*?</pre>|<code.*?</code>|<a .*?</a>|<[^>]+>)", re.DOTALL)
 
 
-def texto_citado(texto: str | None, prefixo: str = "fonte") -> Markup:
-    """Texto da resposta em parágrafos, com cada [n] virando link para a fonte n.
-
-    O prefixo separa os alvos quando há várias respostas na mesma página (comparação)."""
-
+def _linkar_citacoes(html: str, prefixo: str) -> str:
     def link(achado: re.Match[str]) -> str:
         numeros = re.findall(r"\d+", achado.group(1))
         links = ", ".join(
-            f'<a href="#{escape(prefixo)}-{n}" class="citacao">{n}</a>' for n in numeros
+            f'<a href="#{escape(prefixo)}-{n}" class="citacao" data-fonte="{n}">{n}</a>'
+            for n in numeros
         )
         return f"[{links}]"
 
-    paragrafos = [p for p in re.split(r"\n\s*\n", (texto or "").strip()) if p.strip()]
-    saida = []
-    for p in paragrafos:
-        seguro = str(escape(p.strip())).replace("\n", "<br>")
-        saida.append(f"<p>{_CITACAO.sub(link, seguro)}</p>")
-    return Markup("".join(saida))
+    partes = _NAO_TEXTO.split(html)
+    for i in range(0, len(partes), 2):  # as posições pares são texto puro
+        partes[i] = _CITACAO.sub(link, partes[i])
+    return "".join(partes)
+
+
+def texto_citado(texto: str | None, prefixo: str = "fonte") -> Markup:
+    """Resposta do modelo em Markdown (negrito, listas, tabelas, código), com cada [n] virando
+    link para a fonte n. O prefixo separa os alvos quando há várias respostas na mesma página."""
+    html = _MARKDOWN.render((texto or "").strip())
+    return Markup(_linkar_citacoes(html, prefixo))

@@ -152,3 +152,17 @@ def test_filtro_vazio_nao_da_422(logado) -> None:
         r = logado.get(url)
         assert r.status_code == 200 and "a.txt" in r.text
     assert logado.get("/app/documentos/tabela?estado=xx").status_code == 422
+
+
+def test_casca_com_barra_lateral_e_nova_conversa(logado) -> None:
+    html = logado.get("/app/documentos").text
+    assert 'id="barra"' in html and "Nova conversa" in html and 'href="/app/perguntar"' in html
+    assert html.count("data-barra-alternar") >= 3  # fechar, abrir e cortina do celular
+    for rotulo in ("Documentos", "Histórico", "Comparar modelos", "Configuração", "Saúde", "Logs"):
+        assert rotulo in html
+    assert 'aria-current="page"' in html
+
+
+def test_entrar_nao_tem_barra_lateral(cliente) -> None:
+    html = cliente.get("/app/entrar").text
+    assert 'id="barra"' not in html and "chave" in html.lower()

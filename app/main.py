@@ -21,7 +21,7 @@ from app.ingestao.config import get_ingestao_settings
 from app.llm.config import get_llm_settings
 from app.logging_config import configure_logging
 from app.routers import documentos, perguntas, saude
-from app.web import comparar, painel, perguntar, sessao, telas
+from app.web import comparar, conversas, painel, perguntar, sessao, telas
 
 logger = logging.getLogger("app")
 
@@ -84,6 +84,7 @@ def create_app() -> FastAPI:
     app.include_router(telas.router)
     app.include_router(telas.protegido)
     app.include_router(perguntar.protegido)
+    app.include_router(conversas.protegido)
     app.include_router(comparar.protegido)
     app.include_router(painel.protegido)
     app.mount("/app/static", StaticFiles(directory=telas.RAIZ / "static"), name="estaticos")

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block titulo %}{{ conversa.titulo if conversa else 'Nova conversa' }}{% endblock %}
+{% block classe_main %}chat-pagina{% endblock %}
+{% block conteudo %}
+<div class="chat-layout">
+<div class="chat">
+  <div id="fio" class="fio" aria-live="polite">
+    {% for t in turnos %}{% include "parciais/turno.html" %}{% endfor %}
+    {% if not turnos %}
+    <div class="vazio-chat"><h1>O que você quer saber sobre os documentos?</h1>
+      <p>Cada pergunta é independente: as respostas citam as fontes, e a conversa só guarda o histórico.</p></div>
+    {% endif %}
+  </div>
+  <form id="composer" class="composer"
+        {% if conversa %}hx-post="/app/conversas/{{ conversa.id }}/turnos" hx-target="#fio" hx-swap="beforeend"
+        {% else %}hx-post="/app/conversas" hx-target="#aviso-envio" hx-swap="innerHTML"{% endif %}>
+    <div id="aviso-envio"></div>
+    <label for="texto" class="vh">Pergunta</label>
+    <textarea id="texto" name="pergunta" rows="2" maxlength="2000" required autofocus
+              placeholder="Pergunte algo sobre os documentos…"></textarea>
+    <div class="linha">
+      <button id="enviar" class="primario" type="submit">Perguntar</button>
+      <button type="button" data-abrir-modal="modal-docs">Documentos <span class="contagem" data-selo="docs"></span></button>
+      <button type="button" data-abrir-modal="modal-params">Parâmetros <span class="contagem" data-selo="params"></span></button>
+      <span class="dica">Enter envia · Shift+Enter quebra a linha</span>
+    </div>
+    {% include "parciais/parametros.html" %}
+  </form>
+</div>
+<aside id="painel-fontes" class="painel-fontes" aria-label="Fontes da resposta" hidden>
+  <div class="topo"><h2>Fontes <small id="painel-fontes-pergunta"></small></h2>
+    <button type="button" class="icone" data-fechar-fontes aria-label="Fechar fontes">✕</button></div>
+  <div id="painel-fontes-corpo"></div>
+</aside>
+</div>
+{% endblock %}

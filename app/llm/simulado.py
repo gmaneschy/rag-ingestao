@@ -6,6 +6,7 @@ import re
 import unicodedata
 from collections.abc import Sequence
 
+from app.llm.acompanhamento import Acompanhamento
 from app.llm.tipos import MENSAGEM_SEM_EVIDENCIA, Resposta, TipoResposta, TrechoRecuperado
 
 _PALAVRA = re.compile(r"\w+")
@@ -70,6 +71,16 @@ class GeradorDeRespostaSimulado:
         trechos: Sequence[TrechoRecuperado],
         *,
         tipo: TipoResposta = "factual",
+        acompanhar: Acompanhamento | None = None,
+    ) -> Resposta:
+        resposta = self._responder(pergunta, trechos, tipo)
+        if acompanhar is not None:
+            acompanhar.conferir()
+            acompanhar.texto(resposta.texto)
+        return resposta
+
+    def _responder(
+        self, pergunta: str, trechos: Sequence[TrechoRecuperado], tipo: TipoResposta
     ) -> Resposta:
         palavras_da_pergunta = set(_palavras(pergunta)) - _VAZIAS
         melhor_posicao, melhor_pontos = 0, 0

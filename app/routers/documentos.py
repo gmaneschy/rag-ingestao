@@ -19,9 +19,10 @@ from pydantic import BaseModel, Field, model_validator
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
+from app import configuracao
 from app.db import get_session, get_sessionmaker
 from app.ingestao import remocao, servico
-from app.ingestao.config import IngestaoSettings, get_ingestao_settings
+from app.ingestao.config import IngestaoSettings
 from app.llm.fabrica import criar_embeddings
 from app.llm.protocolos import GeradorDeEmbeddings
 from app.security import exigir_chave
@@ -48,7 +49,7 @@ def enviar_documento(
     background: BackgroundTasks,
     arquivo: Annotated[UploadFile, File()],
     session: Annotated[Session, Depends(get_session)],
-    config: Annotated[IngestaoSettings, Depends(get_ingestao_settings)],
+    config: Annotated[IngestaoSettings, Depends(configuracao.ingestao_efetiva)],
     embeddings: Annotated[GeradorDeEmbeddings, Depends(obter_embeddings)],
     colecao: Annotated[str, Form(min_length=1, max_length=64, pattern=r"^[\w.-]+$")] = "geral",
 ) -> JSONResponse:
@@ -82,7 +83,7 @@ def reprocessar_documento(
     documento_id: int,
     background: BackgroundTasks,
     session: Annotated[Session, Depends(get_session)],
-    config: Annotated[IngestaoSettings, Depends(get_ingestao_settings)],
+    config: Annotated[IngestaoSettings, Depends(configuracao.ingestao_efetiva)],
     embeddings: Annotated[GeradorDeEmbeddings, Depends(obter_embeddings)],
 ) -> dict[str, object]:
     """Refaz extração, divisão e vetores a partir do arquivo guardado (útil ao mudar o modelo)."""
@@ -129,7 +130,7 @@ def reprocessar_em_lote(
     corpo: ReprocessarLote,
     background: BackgroundTasks,
     session: Annotated[Session, Depends(get_session)],
-    config: Annotated[IngestaoSettings, Depends(get_ingestao_settings)],
+    config: Annotated[IngestaoSettings, Depends(configuracao.ingestao_efetiva)],
     embeddings: Annotated[GeradorDeEmbeddings, Depends(obter_embeddings)],
 ) -> dict[str, object]:
     """Reprocessa vários documentos, um de cada vez, em segundo plano."""
@@ -279,7 +280,7 @@ def ver_secoes(
 def remover_documento(
     documento_id: int,
     session: Annotated[Session, Depends(get_session)],
-    config: Annotated[IngestaoSettings, Depends(get_ingestao_settings)],
+    config: Annotated[IngestaoSettings, Depends(configuracao.ingestao_efetiva)],
     consultas: Annotated[
         remocao.ModoConsultas,
         Query(

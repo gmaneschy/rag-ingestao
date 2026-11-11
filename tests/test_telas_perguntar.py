@@ -3,7 +3,13 @@
 import re
 
 import pytest
-from auxiliares import ambiente, banco, pdf_com_texto, precisa_de_banco  # noqa: F401
+from auxiliares import (  # noqa: F401
+    ambiente,
+    banco,
+    pdf_com_texto,
+    perguntar_pela_tela,
+    precisa_de_banco,
+)
 from fastapi.testclient import TestClient
 from sqlalchemy import text
 
@@ -55,13 +61,13 @@ def manual(logado):
 
 
 def _perguntar(c, pergunta="Qual o prazo de entrega?", **dados):
-    return c.post("/app/perguntar", data={"pergunta": pergunta, **dados}, headers=HX)
+    return perguntar_pela_tela(c, pergunta, **dados)
 
 
 def test_exige_sessao(banco) -> None:  # noqa: F811
     with TestClient(create_app(), follow_redirects=False) as c:
         assert c.get("/app/perguntar").status_code == 303
-        assert c.post("/app/perguntar", data={"pergunta": "oi, tudo bem?"}).status_code == 303
+        assert c.post("/app/conversas", data={"pergunta": "oi, tudo bem?"}).status_code == 303
 
 
 def test_pagina_lista_colecoes_e_documentos(manual) -> None:
@@ -72,20 +78,20 @@ def test_pagina_lista_colecoes_e_documentos(manual) -> None:
 def test_resposta_com_fontes_clicaveis_e_debug(manual) -> None:
     r = _perguntar(manual)
     assert r.status_code == 200
-    assert 'id="fonte-1"' in r.text and 'href="#fonte-1"' in r.text
-    assert "manual.pdf" in r.text and "Trechos recuperados" in r.text
-    assert "detalhe da consulta" in r.text
+    assert re.search(r'id="t\d+-1"', r.text) and re.search(r'href="#t\d+-1"', r.text)
+    assert "manual.pdf" in r.text and "Detalhes técnicos" in r.text
+    assert "consulta #" in r.text
 
 
 def test_pergunta_curta_e_exigencia_de_htmx(manual) -> None:
     assert "Escreva uma pergunta" in _perguntar(manual, pergunta="  ").text
-    sem = manual.post("/app/perguntar", data={"pergunta": "Qual o prazo?"})
+    sem = manual.post("/app/conversas", data={"pergunta": "Qual o prazo?"})
     assert sem.status_code == 403
 
 
 def test_filtros_do_painel(manual) -> None:
     r = _perguntar(manual, colecao="outra", modo="textual", k="2")
-    assert r.status_code == 200 and 'id="fonte-1"' not in r.text
+    assert r.status_code == 200 and not re.search(r'id="t\d+-1"', r.text)
     assert _perguntar(manual, k="99").status_code == 422
 
 
@@ -130,11 +136,12 @@ def test_html_da_resposta_e_escapado(manual) -> None:
 
     assert "<script>" not in texto_citado("<script>x</script> [1]")
     assert 'href="#fonte-2"' in texto_citado("a [1, 2]")
+    assert 'href="#t7-2"' in texto_citado("a [1, 2]", prefixo="t7")
 
 
 def test_diagnostico_aparece_na_resposta_e_na_api(manual) -> None:
     r = _perguntar(manual)
-    assert "melhor similaridade" in r.text and "geração" in r.text and "similaridade 0." in r.text
+    assert "melhor similaridade" in r.text and "geração" in r.text and "trechos enviados" in r.text
     api = manual.post(
         "/perguntas",
         json={"pergunta": "Qual o prazo de entrega?"},
@@ -146,7 +153,7 @@ def test_diagnostico_aparece_na_resposta_e_na_api(manual) -> None:
 def test_recusa_do_portao_diz_quem_recusou(manual) -> None:
     r = _perguntar(manual, pergunta="Zzxq wvvk plomt grnx?", modo="vetorial")
     assert "Recusada pelo" in r.text or "não encontrou nenhum trecho" in r.text
-    assert 'id="fonte-1"' not in r.text
+    assert not re.search(r'id="t\d+-1"', r.text)
 
 
 def test_avaliar_depois_pela_pagina_da_consulta(manual) -> None:

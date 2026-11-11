@@ -20,6 +20,7 @@ dependencies = [
     "defusedxml>=0.7.1",
     "mobi>=0.4.1",
     "numpy>=2.5.4",
+    "markdown-it-py>=4.2.0",
 ]
 
 [dependency-groups]

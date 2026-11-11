@@ -21,10 +21,12 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
+from app import configuracao
 from app.config import Settings, get_settings
+from app.conversa import servico as conversas
 from app.db import get_session, get_sessionmaker
 from app.ingestao import remocao, servico
-from app.ingestao.config import IngestaoSettings, get_ingestao_settings
+from app.ingestao.config import IngestaoSettings
 from app.ingestao.extracao import EXTENSOES_ACEITAS
 from app.llm.protocolos import GeradorDeEmbeddings
 from app.routers import documentos as api_documentos
@@ -65,7 +67,18 @@ def estado_do_filtro(estado: Annotated[str, Query(max_length=12)] = "") -> Estad
 FiltroDeEstado = Annotated[Estado | None, Depends(estado_do_filtro)]
 
 
+def _conversas_da_barra() -> list[dict[str, object]]:
+    """As conversas recentes da barra lateral. Sem banco, a página abre mesmo assim."""
+    try:
+        with get_sessionmaker()() as session:
+            return conversas.listar(session)
+    except Exception:
+        return []
+
+
 def pagina(request: Request, nome: str, **contexto: object) -> HTMLResponse:
+    if "ativa" in contexto:
+        contexto.setdefault("conversas", _conversas_da_barra())
     return templates.TemplateResponse(request, nome, contexto)
 
 
@@ -143,7 +156,7 @@ def _contexto_da_tabela(
 def tela_de_documentos(
     request: Request,
     session: Sessao,
-    config: Annotated[IngestaoSettings, Depends(get_ingestao_settings)],
+    config: Annotated[IngestaoSettings, Depends(configuracao.ingestao_efetiva)],
     colecao: Annotated[str | None, Query(max_length=64)] = None,
     estado: FiltroDeEstado = None,
     removido: Literal["0", "1"] | None = None,
@@ -182,7 +195,7 @@ def enviar(
     request: Request,
     background: BackgroundTasks,
     session: Sessao,
-    config: Annotated[IngestaoSettings, Depends(get_ingestao_settings)],
+    config: Annotated[IngestaoSettings, Depends(configuracao.ingestao_efetiva)],
     embeddings: Annotated[GeradorDeEmbeddings, Depends(api_documentos.obter_embeddings)],
     arquivos: Annotated[list[UploadFile], File()],
     colecao: Annotated[str, Form(max_length=64)] = "geral",
@@ -244,7 +257,7 @@ def reprocessar_lote(
     request: Request,
     background: BackgroundTasks,
     session: Sessao,
-    config: Annotated[IngestaoSettings, Depends(get_ingestao_settings)],
+    config: Annotated[IngestaoSettings, Depends(configuracao.ingestao_efetiva)],
     embeddings: Annotated[GeradorDeEmbeddings, Depends(api_documentos.obter_embeddings)],
     ids: Annotated[list[int], Form()] = [],  # noqa: B006
     colecao: Annotated[str, Form(max_length=64)] = "",
@@ -350,7 +363,7 @@ def reprocessar(
     documento_id: int,
     background: BackgroundTasks,
     session: Sessao,
-    config: Annotated[IngestaoSettings, Depends(get_ingestao_settings)],
+    config: Annotated[IngestaoSettings, Depends(configuracao.ingestao_efetiva)],
     embeddings: Annotated[GeradorDeEmbeddings, Depends(api_documentos.obter_embeddings)],
 ) -> HTMLResponse:
     if not servico.marcar_para_reprocessar(session, documento_id):
@@ -364,7 +377,7 @@ def reprocessar(
 def remover(
     documento_id: int,
     session: Sessao,
-    config: Annotated[IngestaoSettings, Depends(get_ingestao_settings)],
+    config: Annotated[IngestaoSettings, Depends(configuracao.ingestao_efetiva)],
     consultas: Literal["redigir", "apagar"] = "redigir",
 ) -> Response:
     resultado = remocao.remover(session, documento_id, consultas=consultas, config=config)

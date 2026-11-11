@@ -2,9 +2,12 @@
 
 from functools import lru_cache
 from pathlib import Path
+from typing import Any
 
 from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+from app.ingestao import perfis
 
 
 class IngestaoSettings(BaseSettings):
@@ -24,13 +27,32 @@ class IngestaoSettings(BaseSettings):
     tamanho_max_mb: int = 20
     max_paginas: int = 500
 
-    # O modelo de embeddings padrão enxerga só ~128 tokens (cerca de 500 caracteres): trechos
-    # maiores são truncados no vetor. O tamanho ideal sai dos experimentos da etapa 5.
+    # Tamanho do trecho em caracteres (~4 por token) e quanto um trecho repete do anterior.
+    # Um perfil (curto, medio, longo) escolhe os dois de uma vez; "personalizado" usa os valores
+    # abaixo. Ver app/ingestao/perfis.py e docs/configuracao-da-ingestao.md.
+    perfil_trechos: str = perfis.PERSONALIZADO
     tamanho_trecho: int = 500
     sobreposicao_trecho: int = 80
 
+    @model_validator(mode="before")
+    @classmethod
+    def aplicar_perfil(cls, dados: Any) -> Any:
+        perfil = perfis.POR_CHAVE.get(str(dados.get("perfil_trechos", perfis.PERSONALIZADO)))
+        if perfil is not None and perfil.tamanho and perfil.sobreposicao is not None:
+            dados = {
+                **dados,
+                "tamanho_trecho": perfil.tamanho,
+                "sobreposicao_trecho": perfil.sobreposicao,
+            }
+        return dados
+
     @model_validator(mode="after")
     def validar(self) -> "IngestaoSettings":
+        if (
+            self.perfil_trechos != perfis.PERSONALIZADO
+            and self.perfil_trechos not in perfis.POR_CHAVE
+        ):
+            raise ValueError("PERFIL_TRECHOS deve ser curto, medio, longo ou personalizado")
         if self.tamanho_max_mb < 1 or self.max_paginas < 1:
             raise ValueError("TAMANHO_MAX_MB e MAX_PAGINAS precisam ser positivos")
         if self.tamanho_trecho < 100:

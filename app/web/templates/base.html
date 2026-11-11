@@ -6,22 +6,69 @@
   <title>{% block titulo %}RAG{% endblock %} · RAG com ingestão</title>
   <link rel="icon" type="image/svg+xml" href="/app/static/favicon.svg">
   <link rel="stylesheet" href="/app/static/app.css">
+  <script>
+    // Antes da primeira pintura, para a barra não piscar aberta quando o usuário a deixou fechada.
+    try {
+      const fechada = localStorage.getItem("rag.barra") === "fechada" || (!localStorage.getItem("rag.barra") && innerWidth < 800);
+      document.documentElement.dataset.barra = fechada ? "fechada" : "aberta";
+    } catch (e) { document.documentElement.dataset.barra = innerWidth < 800 ? "fechada" : "aberta"; }
+  </script>
   <script src="/app/static/htmx.min.js" defer></script>
   <script src="/app/static/app.js" defer></script>
 </head>
 <body>
   <a class="pular" href="#conteudo">Ir para o conteúdo</a>
   {% if ativa is defined %}
-  <header class="topo">
-    <strong class="marca">RAG</strong>
-    <nav aria-label="Principal">
-      {% for chave, rotulo in [('documentos','Documentos'),('perguntar','Perguntar'),('historico','Histórico'),('comparar','Comparar'),('configuracao','Configuração'),('saude','Saúde'),('logs','Logs')] %}
-      <a href="/app/{{ chave }}" {% if ativa == chave %}aria-current="page"{% endif %}>{{ rotulo }}</a>
-      {% endfor %}
-    </nav>
-    <form method="post" action="/app/sair"><button class="link" type="submit">Sair</button></form>
-  </header>
+  <div class="app">
+    <aside id="barra" class="barra" aria-label="Barra lateral">
+      <div class="barra-topo">
+        <strong class="logo">RAG</strong>
+        <button type="button" class="icone" data-barra-alternar aria-controls="barra" aria-label="Ocultar a barra lateral" title="Ocultar a barra lateral">
+          <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><rect x="2.5" y="3.5" width="15" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 4v12" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
+      </div>
+      <a class="nova-conversa" href="/app/perguntar" {% if ativa == 'perguntar' and not conversa_ativa %}aria-current="page"{% endif %}>
+        <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        Nova conversa
+      </a>
+      {% if conversas is defined %}
+      <div class="conversas" aria-label="Conversas">
+        {% for c in conversas %}
+        <div class="conversa-item {{ 'ativa' if c.id == conversa_ativa }}">
+          <a href="/app/conversas/{{ c.id }}" {% if c.id == conversa_ativa %}aria-current="page"{% endif %} title="{{ c.titulo }}">
+            {% if c.gerando %}<span class="roda pequena" role="status" aria-label="gerando"></span>{% endif %}<span class="titulo">{{ c.titulo }}</span></a>
+          <button type="button" class="icone menu-conversa" data-menu-conversa="{{ c.id }}" data-titulo="{{ c.titulo }}" aria-label="Opções da conversa" title="Opções">⋯</button>
+        </div>
+        {% else %}<p class="vazio">Nenhuma conversa ainda.</p>{% endfor %}
+      </div>
+      {% endif %}
+      <nav aria-label="Principal" class="barra-nav">
+        {% for chave, rotulo in [('documentos','Documentos'),('historico','Histórico'),('comparar','Comparar modelos'),('configuracao','Configuração'),('saude','Saúde'),('logs','Logs')] %}
+        <a href="/app/{{ chave }}" {% if ativa == chave %}aria-current="page"{% endif %}>{{ rotulo }}</a>
+        {% endfor %}
+      </nav>
+      <form method="post" action="/app/sair" class="barra-rodape"><button class="link" type="submit">Sair</button></form>
+    </aside>
+    <div class="cortina" data-barra-alternar hidden></div>
+    <div class="area">
+      <button type="button" class="icone abrir-barra" data-barra-alternar aria-controls="barra" aria-label="Mostrar a barra lateral" title="Mostrar a barra lateral">
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><rect x="2.5" y="3.5" width="15" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 4v12" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
   {% endif %}
-  <main id="conteudo">{% block conteudo %}{% endblock %}</main>
+  <main id="conteudo" class="{% block classe_main %}{% endblock %}">{% block conteudo %}{% endblock %}</main>
+  {% if ativa is defined %}</div></div>
+  <dialog id="dialogo-conversa" class="dialogo">
+    <form method="dialog">
+      <h2 id="conversa-titulo-dialogo">Conversa</h2>
+      <label for="conversa-novo-titulo">Título</label>
+      <input id="conversa-novo-titulo" type="text" maxlength="120">
+      <div class="linha">
+        <button type="button" class="primario" data-conversa-renomear>Renomear</button>
+        <button type="button" class="perigo" data-conversa-apagar>Apagar</button>
+        <button value="cancel">Fechar</button>
+      </div>
+    </form>
+  </dialog>
+  {% endif %}
 </body>
 </html>

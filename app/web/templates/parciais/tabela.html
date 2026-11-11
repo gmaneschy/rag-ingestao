@@ -4,11 +4,11 @@
   <p class="contagem">{{ total|numero }} documento{{ '' if total == 1 else 's' }}{% if total > itens|length %} (mostrando {{ itens|length }}){% endif %}</p>
   <div class="rolagem">
   <table>
-    <thead><tr><th class="marca"><input type="checkbox" id="marcar-todos" aria-label="Marcar todos os documentos da lista"></th><th>Nome</th><th>Coleção</th><th>Versão</th><th>Estado</th><th class="num">Trechos</th></tr></thead>
+    <thead><tr><th class="col-marca"><input type="checkbox" id="marcar-todos" aria-label="Marcar todos os documentos da lista"></th><th>Nome</th><th>Coleção</th><th>Versão</th><th>Estado</th><th class="num">Trechos</th></tr></thead>
     <tbody>
     {% for i in itens %}
       <tr>
-        <td class="marca"><input type="checkbox" form="lote" name="ids" value="{{ i.id }}" aria-label="Marcar {{ i.nome }}"></td>
+        <td class="col-marca"><input type="checkbox" form="lote" name="ids" value="{{ i.id }}" aria-label="Marcar {{ i.nome }}"></td>
         <td><a href="/app/documentos/{{ i.id }}">{{ i.nome }}</a></td>
         <td>{{ i.colecao }}</td>
         <td>{{ i.versao }}</td>

@@ -84,3 +84,43 @@ extrapolação do ritmo daquele documento (um PDF grande pode levar um tempo na 
 primeiro percentual andar). Os campos `progresso`, `etapa` e `restante_s` também vêm em
 `GET /documentos` e `GET /documentos/{id}` (a migração `0009` cria as colunas). Os botões de
 Perguntar e Comparar mostram um indicador giratório enquanto a resposta é gerada.
+
+## Casca: barra lateral e Markdown
+
+A navegação mora numa **barra lateral ocultável** (botão no topo dela; quando fechada, um botão no canto
+mostra de novo). A escolha fica lembrada no navegador. No celular a barra vira uma gaveta que fecha
+ao escolher um destino ou com Esc. "Nova conversa" leva a Perguntar.
+
+As respostas do modelo são renderizadas como **Markdown**: negrito, listas, tabelas, código e citações
+`[n]` clicáveis (que não viram link dentro de código). HTML cru na resposta é mostrado como texto, e
+links `javascript:` não são linkados, porque a saída do modelo não é confiável.
+
+## Conversas (chat)
+
+- A barra lateral lista as conversas (mais recentes primeiro); "⋯" abre o diálogo para **renomear** ou
+  **apagar**. Apagar remove também as consultas (respostas) da conversa.
+- `/app/perguntar` é uma conversa nova; a primeira pergunta cria a conversa (título = início da pergunta).
+  Cada pergunta é independente: não há contexto de pergunta anterior.
+- A pergunta roda numa thread do servidor, **não presa à página**: trocar de tela não a interrompe, e a
+  conversa mostra um indicador na barra enquanto gera. A tela consulta o turno a cada 1 s e mostra a
+  etapa (buscando, reordenando, gerando) e o texto parcial (streaming do Ollama).
+- **Parar** cancela a geração (o turno vira "interrompida", sem consulta registrada); **Tentar de novo** a
+  refaz. **Editar** reescreve a pergunta e gera de novo, apagando a consulta antiga.
+- Parâmetros (busca, tipo, k, coleções, documentos, tipos extras) ficam gravados na conversa.
+- Limites: o estado em andamento mora na memória de um processo só; se o servidor reinicia, turnos que
+  estavam gerando viram "erro" na subida. Turnos cancelados ou com erro guardam o texto da pergunta no
+  turno (sem consulta): a remoção de documentos não os apaga.
+- Enter envia; Shift+Enter quebra a linha.
+
+### Módulos da conversa
+
+Os botões **Documentos** e **Parâmetros**, ao lado de "Perguntar", abrem diálogos. Documentos: coleções
+e documentos que a busca deve usar (nada marcado = todos). Parâmetros: modo de busca, tipo, k e tipos
+extras. Fechar o diálogo grava a escolha na conversa (`POST /app/conversas/{id}/config`); ela volta ao
+reabrir a conversa. Um número ou ponto ao lado do botão indica que há algo diferente do padrão.
+
+### Painel de fontes
+
+Cada resposta tem o botão **Fontes (n)**; clicar nele, ou numa citação `[n]` do texto, abre o painel
+recolhível à direita com os trechos daquela resposta (a citação destaca o trecho). ✕ fecha o painel.
+Em telas estreitas o painel sobrepõe a conversa.

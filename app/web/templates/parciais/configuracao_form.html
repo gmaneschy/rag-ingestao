@@ -3,6 +3,11 @@
   {% if erros %}<div class="aviso erro" role="alert"><strong>Nada foi salvo:</strong><ul>{% for e in erros %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
   {% for grupo, campos in grupos.items() %}
   <fieldset><legend>{{ grupo }}</legend>
+    {% if grupo == 'Ingestão' %}
+    <p class="vazio">Trecho atual: <strong>{{ trecho_atual[0] }}</strong> caracteres, sobreposição de <strong>{{ trecho_atual[1] }}</strong>.
+      {% for p in perfis %}<br><strong>{{ p.rotulo }}</strong>: {{ p.para_que }} ({{ p.tamanho }} / {{ p.sobreposicao }}){% if p.nota_minima is not none %}, nota mínima {{ p.nota_minima }}{% endif %}{% if not p.calibrado %} — <em>nota mínima ainda não calibrada: meça com o comando de avaliação antes de confiar nas recusas</em>{% endif %}.{% endfor %}</p>
+    {% if desatualizados %}<p class="aviso" role="status">{{ desatualizados }} documento(s) foram processados com outro tamanho de trecho. As mudanças acima só valem para documentos novos; para os demais, selecione-os em <a href="/app/documentos">Documentos</a> e use “Reprocessar”.</p>{% endif %}
+    {% endif %}
     {% for f in campos %}{% set c = f.campo %}
     <div class="campo">
       <label for="c-{{ c.chave }}">{{ c.rotulo }} {% if f.no_banco %}<span class="selo pendente">definido aqui</span>{% endif %}</label>

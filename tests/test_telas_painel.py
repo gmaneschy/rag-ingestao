@@ -1,9 +1,16 @@
 """Integração: configuração (precedência), saúde e logs."""
 
 import logging
+import re
 
 import pytest
-from auxiliares import ambiente, banco, pdf_com_texto, precisa_de_banco  # noqa: F401
+from auxiliares import (  # noqa: F401
+    ambiente,
+    banco,
+    pdf_com_texto,
+    perguntar_pela_tela,
+    precisa_de_banco,
+)
 from fastapi.testclient import TestClient
 from sqlalchemy import text
 
@@ -93,8 +100,8 @@ def test_banco_vence_o_env_e_a_pergunta_vence_o_banco(logado) -> None:
     )
 
     def recuperados(**extra):
-        r = logado.post("/app/perguntar", data={"pergunta": "Qual o prazo?", **extra}, headers=HX)
-        return r.text.count('id="trecho-')
+        r = perguntar_pela_tela(logado, "Qual o prazo?", **extra)
+        return int(re.search(r"trechos enviados: (\d+)", r.text).group(1))
 
     assert recuperados() == 5  # .env (padrão)
     _salvar(logado, consulta_k="2")
@@ -107,10 +114,7 @@ def test_banco_vence_o_env_e_a_pergunta_vence_o_banco(logado) -> None:
 def test_banco_invalido_cai_no_env(logado) -> None:
     with get_engine().begin() as c:
         c.execute(text("INSERT INTO configuracao (chave, valor) VALUES ('consulta_k', 'lixo')"))
-    assert (
-        logado.post("/app/perguntar", data={"pergunta": "Qual o prazo?"}, headers=HX).status_code
-        == 200
-    )
+    assert perguntar_pela_tela(logado, "Qual o prazo?").status_code == 200
 
 
 def test_modelo_novo_gera_gerador_novo(logado) -> None:
@@ -125,7 +129,7 @@ def test_modelo_novo_gera_gerador_novo(logado) -> None:
 
 def test_saude(logado) -> None:
     html = logado.get("/app/saude").text
-    assert "Banco" in html and "0009" in html and "Trechos" in html and "pgvector" in html
+    assert "Banco" in html and "0011" in html and "Trechos" in html and "pgvector" in html
 
 
 def test_logs_filtram_por_nivel_e_texto(logado) -> None:

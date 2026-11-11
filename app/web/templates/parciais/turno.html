@@ -1,0 +1,79 @@
+{% set pref = 't' ~ t.id %}
+<section class="turno" id="turno-{{ t.id }}" data-estado="{{ t.estado }}"
+  {% if t.estado == 'gerando' %}hx-get="/app/conversas/{{ t.conversa_id }}/turnos/{{ t.id }}" hx-trigger="every 1s" hx-swap="outerHTML"{% endif %}>
+  <div class="balao-usuario">
+    <p class="texto-pergunta">{{ t.pergunta }}</p>
+    {% if t.estado != 'gerando' %}
+    <button type="button" class="link" data-editar="turno-{{ t.id }}">Editar</button>
+    <form class="editar" hidden hx-post="/app/conversas/{{ t.conversa_id }}/turnos/{{ t.id }}/refazer"
+          hx-target="#turno-{{ t.id }}" hx-swap="outerHTML">
+      <label class="vh" for="ed-{{ t.id }}">Editar a pergunta</label>
+      <textarea id="ed-{{ t.id }}" name="pergunta" rows="2" maxlength="2000" required>{{ t.pergunta }}</textarea>
+      <button class="primario" type="submit">Enviar de novo</button>
+      <button type="button" data-cancelar-edicao>Cancelar</button>
+    </form>
+    {% endif %}
+  </div>
+
+  <div class="resposta-turno">
+  {% if t.estado == 'gerando' %}
+    <p class="carregando-turno" role="status"><span class="roda" aria-hidden="true"></span>{{ t.etapa or 'Começando' }}…</p>
+    {% if t.parcial %}<article class="resposta parcial">{{ t.parcial|citado(pref) }}</article>{% endif %}
+    <button type="button" hx-post="/app/conversas/{{ t.conversa_id }}/turnos/{{ t.id }}/cancelar"
+            hx-target="#turno-{{ t.id }}" hx-swap="outerHTML">Parar</button>
+  {% elif t.estado == 'cancelada' %}
+    <p class="aviso">Resposta interrompida.</p>
+    <button type="button" hx-post="/app/conversas/{{ t.conversa_id }}/turnos/{{ t.id }}/refazer"
+            hx-target="#turno-{{ t.id }}" hx-swap="outerHTML">Tentar de novo</button>
+  {% elif t.estado == 'erro' %}
+    <p class="aviso erro" role="alert">{{ t.erro or 'Não foi possível responder.' }}</p>
+    <button type="button" hx-post="/app/conversas/{{ t.conversa_id }}/turnos/{{ t.id }}/refazer"
+            hx-target="#turno-{{ t.id }}" hx-swap="outerHTML">Tentar de novo</button>
+  {% else %}
+    {% set dg = t.diagnostico or {} %}
+    {% set recusou = dg.recusa_por is not none and dg.recusa_por %}
+    <div class="leitura">
+      <article class="resposta {{ 'recusa' if recusou }}">
+        {% if recusou %}<p class="rotulo">Sem evidência suficiente nos documentos</p>{% endif %}
+        {% if t.partes %}
+          {% for titulo, corpo in t.partes %}<h2>{{ titulo }}{% if titulo == 'Avaliação' %} <small>(interpretação do modelo)</small>{% endif %}</h2>{{ corpo|citado(pref) }}{% endfor %}
+        {% else %}{{ t.resposta|citado(pref) }}{% endif %}
+        {% if recusou %}
+        <p class="aviso">
+          {% if dg.recusa_por == 'portao' %}Recusada pelo <strong>portão</strong>, antes de chamar o modelo:
+            {% if dg.nota_minima is not none %}a melhor nota do reordenador foi {{ '%.2f'|format(dg.melhor_nota) }}, abaixo do mínimo ({{ '%.2f'|format(dg.nota_minima) }}).
+            {% else %}nenhuma palavra da pergunta aparece nos trechos e a melhor similaridade ({{ '%.2f'|format(dg.melhor_similaridade or 0) }}) ficou abaixo do limiar ({{ '%.2f'|format(dg.limiar_similaridade or 0) }}).{% endif %}
+          {% elif dg.recusa_por == 'modelo' %}O <strong>modelo</strong> concluiu que os trechos não respondem à pergunta.
+          {% else %}A busca não encontrou nenhum trecho nos documentos escolhidos.{% endif %}
+        </p>
+        {% endif %}
+        {% if t.aviso %}<p class="aviso">{{ t.aviso }}</p>{% endif %}
+        {% set cid = t.consulta_id %}{% set ajudou = t.ajudou %}{% include "parciais/avaliacao.html" with context %}
+        <p class="meta-linha">{{ t.modelo_geracao or '—' }} · {{ t.latencia_ms|numero }} ms · {{ t.tokens_entrada|numero }} → {{ t.tokens_saida|numero }} tokens ·
+          <a href="/app/consultas/{{ t.consulta_id }}">consulta #{{ t.consulta_id }}</a></p>
+      </article>
+      <button type="button" class="ver-fontes" data-fontes="{{ t.id }}" {% if not t.fontes %}disabled{% endif %}>
+        Fontes{% if t.fontes %} ({{ t.fontes|length }}){% endif %}</button>
+      <template id="fontes-dados-{{ t.id }}">
+        {% for f in t.fontes %}
+        <details id="{{ pref }}-{{ f.n }}" class="fonte" open>
+          <summary><span class="n">{{ f.n }}</span> <a href="/app/documentos/{{ f.documento_id }}">{{ f.documento }}</a>{% if f.pagina %}, p. {{ f.pagina }}{% endif %}</summary>
+          {% if f.secao %}<div class="rotulo">{{ f.secao }}</div>{% endif %}
+          <blockquote>{{ f.texto }}</blockquote>
+        </details>
+        {% endfor %}
+      </template>
+    </div>
+    {% if dg %}
+    <details class="debug">
+      <summary>Detalhes técnicos</summary>
+      <p class="meta-linha">Portão: {{ dg.portao }} · achados na busca: {{ dg.achados_na_busca }} ·
+        trechos enviados: {{ dg.trechos_enviados }} ·
+        busca {{ dg.ms_busca|numero }} ms · reordenador {{ dg.ms_reranker|numero }} ms · geração {{ dg.ms_geracao|numero }} ms
+        {% if dg.melhor_nota is not none %}· melhor nota {{ '%.2f'|format(dg.melhor_nota) }}{% endif %}
+        {% if dg.melhor_similaridade is not none %}· melhor similaridade {{ '%.2f'|format(dg.melhor_similaridade) }}{% endif %}</p>
+    </details>
+    {% endif %}
+  {% endif %}
+  </div>
+</section>

@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session
 from app.consulta import busca, reranker
 from app.consulta.busca import Achado, Modo
 from app.consulta.config import ConsultaSettings
+from app.llm.acompanhamento import Acompanhamento
 from app.llm.config import LLMSettings
 from app.llm.protocolos import GeradorDeEmbeddings, GeradorDeResposta
 from app.llm.tipos import MENSAGEM_SEM_EVIDENCIA, Resposta, TipoResposta
@@ -131,11 +132,18 @@ def perguntar(
     incluir_tipos: list[str] | None = None,
     reordenador: reranker.Reordenador | None = None,
     registrar: bool = True,
+    acompanhar: Acompanhamento | None = None,
 ) -> Resultado:
     inicio = time.perf_counter()
     if llm.limite_diario_gasto and gasto_de_hoje(session) >= llm.limite_diario_gasto:
         raise LimiteDiarioExcedido(f"Limite diário de gasto atingido ({llm.limite_diario_gasto})")
 
+    def etapa(nome: str) -> None:
+        if acompanhar is not None:
+            acompanhar.conferir()
+            acompanhar.etapa(nome)
+
+    etapa("Buscando nos documentos")
     busca.verificar_modelo(session, embeddings.nome_modelo, embeddings.dimensao, colecoes)
     vetor = embeddings.gerar_consulta(pergunta) if modo != "textual" else None
     k_final = k or (consulta.consulta_k_analise if tipo == "analise" else consulta.consulta_k)
@@ -159,6 +167,8 @@ def perguntar(
     )
     ms_busca = round((time.perf_counter() - t_busca) * 1000)
     candidatos_achados = len(achados)
+    if reordenador and achados:
+        etapa("Reordenando os trechos")
     t_rerank = time.perf_counter()
     if reordenador and achados:
         achados = reranker.reordenar(pergunta, achados, reordenador)[:k_final]
@@ -171,13 +181,16 @@ def perguntar(
         ha_evidencia = busca.tem_evidencia(achados, consulta.limiar_similaridade)
     t_geracao = time.perf_counter()
     if ha_evidencia:
+        etapa("Gerando a resposta")
         trechos = [a.trecho for a in achados]
-        # O tipo só vai ao gerador quando é a análise: os geradores do tipo factual não mudam.
-        resposta = (
-            gerador.responder(pergunta, trechos, tipo=tipo)
-            if tipo == "analise"
-            else gerador.responder(pergunta, trechos)
-        )
+        # O tipo e o acompanhamento só vão ao gerador quando existem: os geradores simples
+        # (e os dos testes) continuam recebendo só a pergunta e os trechos.
+        extras: dict[str, object] = {}
+        if tipo == "analise":
+            extras["tipo"] = tipo
+        if acompanhar is not None:
+            extras["acompanhar"] = acompanhar
+        resposta = gerador.responder(pergunta, trechos, **extras)
     else:  # sem evidência: nem chama o modelo (mais barato e sem risco de alucinar)
         resposta = Resposta(texto=MENSAGEM_SEM_EVIDENCIA, recusou=True)
 
@@ -195,6 +208,7 @@ def perguntar(
         "melhor_similaridade": max(similaridades, default=None),
         "limiar_similaridade": consulta.limiar_similaridade,
         "achados_na_busca": candidatos_achados,
+        "trechos_enviados": len(achados),
         "ms_busca": ms_busca,
         "ms_reranker": ms_reranker,
         "ms_geracao": ms_geracao,
@@ -222,6 +236,8 @@ def perguntar(
             aviso = None  # a análise já traz o aviso próprio, mais específico
         aviso = " ".join(a for a in (aviso_analise, aviso) if a) or None
     latencia = round((time.perf_counter() - inicio) * 1000)
+    if acompanhar is not None:
+        acompanhar.conferir()
 
     consulta_id = 0
     if registrar:  # a comparação de modelos não entra no histórico

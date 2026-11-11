@@ -401,9 +401,15 @@ def processar(
             session.execute(
                 text(
                     "UPDATE documento SET estado = 'processado', mensagem_erro = NULL, "
-                    f"aviso = :aviso, {_SEM_PROGRESSO}, atualizado_em = now() WHERE id = :id"
+                    "aviso = :aviso, tamanho_trecho = :tam, sobreposicao_trecho = :sob, "
+                    f"{_SEM_PROGRESSO}, atualizado_em = now() WHERE id = :id"
                 ),
-                {"id": documento_id, "aviso": extracao.aviso},
+                {
+                    "id": documento_id,
+                    "aviso": extracao.aviso,
+                    "tam": config.tamanho_trecho,
+                    "sob": config.sobreposicao_trecho,
+                },
             )
             ja_ingerido = session.execute(
                 text(

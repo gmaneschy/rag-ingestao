@@ -19,6 +19,8 @@ from sqlalchemy.orm import Session
 
 from app.consulta.config import ConsultaSettings, get_consulta_settings
 from app.db import get_session
+from app.ingestao import perfis
+from app.ingestao.config import IngestaoSettings, get_ingestao_settings
 from app.llm.config import LLMSettings, get_llm_settings
 
 logger = logging.getLogger(__name__)
@@ -29,7 +31,7 @@ Tipo = Literal["int", "float", "bool", "texto", "escolha"]
 @dataclass(frozen=True)
 class Campo:
     chave: str
-    alvo: Literal["consulta", "llm"]
+    alvo: Literal["consulta", "llm", "ingestao"]
     grupo: str
     rotulo: str
     ajuda: str
@@ -171,6 +173,69 @@ CAMPOS: tuple[Campo, ...] = (
         0,
         1000,
     ),
+    Campo(
+        "perfil_trechos",
+        "ingestao",
+        "Ingestão",
+        "Perfil de trecho",
+        "Escolhe de uma vez o tamanho do trecho, a sobreposição e (no perfil curto) a nota mínima. "
+        "Curto: fatos e frases soltas. Médio: artigos, cláusulas e seções (leis, contratos, "
+        "manuais). Longo: prosa corrida. Personalizado: vale o que estiver nos campos abaixo. "
+        "Só vale para documentos novos ou reprocessados.",
+        "escolha",
+        opcoes=(
+            *((p.chave, f"{p.rotulo}: {p.para_que}") for p in perfis.PERFIS),
+            (perfis.PERSONALIZADO, "personalizado: eu defino os valores"),
+        ),
+    ),
+    Campo(
+        "tamanho_trecho",
+        "ingestao",
+        "Ingestão",
+        "Tamanho do trecho (caracteres)",
+        "Quanto texto cada trecho guarda (4 caracteres ≈ 1 token). Trechos menores dão buscas "
+        "mais precisas, mas podem cortar uma ideia ao meio; maiores guardam mais contexto, mas "
+        "diluem a busca e gastam a janela do modelo. Só vale com o perfil personalizado, e só "
+        "para documentos novos ou reprocessados. Ao mudar, a nota mínima precisa ser medida "
+        "de novo.",
+        "int",
+        100,
+        4000,
+    ),
+    Campo(
+        "sobreposicao_trecho",
+        "ingestao",
+        "Ingestão",
+        "Sobreposição (caracteres)",
+        "Quanto do fim de um trecho se repete no começo do seguinte, para uma frase na divisa "
+        "não se perder. Muito baixa corta ideias; muito alta repete texto e infla a base. "
+        "Deve ficar abaixo de metade do tamanho do trecho. Só vale com o perfil personalizado.",
+        "int",
+        0,
+        2000,
+    ),
+    Campo(
+        "tamanho_max_mb",
+        "ingestao",
+        "Ingestão",
+        "Tamanho máximo do arquivo (MB)",
+        "Arquivos maiores são recusados no envio. Arquivos grandes demoram a processar e "
+        "ocupam memória.",
+        "int",
+        1,
+        500,
+    ),
+    Campo(
+        "max_paginas",
+        "ingestao",
+        "Ingestão",
+        "Máximo de páginas",
+        "Documentos com mais páginas são recusados. O tempo de processamento cresce com o "
+        "número de páginas.",
+        "int",
+        1,
+        5000,
+    ),
 )
 POR_CHAVE = {c.chave: c for c in CAMPOS}
 
@@ -215,25 +280,35 @@ def ler(session: Session) -> dict[str, str]:
 
 
 def _aplicar(
-    consulta: ConsultaSettings, llm: LLMSettings, guardado: dict[str, str]
-) -> tuple[ConsultaSettings, LLMSettings]:
-    ajustes: dict[str, dict[str, object]] = {"consulta": {}, "llm": {}}
+    consulta: ConsultaSettings,
+    llm: LLMSettings,
+    ingestao: IngestaoSettings,
+    guardado: dict[str, str],
+) -> tuple[ConsultaSettings, LLMSettings, IngestaoSettings]:
+    ajustes: dict[str, dict[str, object]] = {"consulta": {}, "llm": {}, "ingestao": {}}
     for chave, valor in guardado.items():
         campo = POR_CHAVE[chave]
         ajustes[campo.alvo][chave] = converter(campo, valor)
     # Reconstrói com validação: um valor que viola uma regra entre campos não passa.
+    nova_ingestao = type(ingestao)(**{**ingestao.model_dump(), **ajustes["ingestao"]})
+    perfil = perfis.POR_CHAVE.get(nova_ingestao.perfil_trechos)
+    if perfil is not None and perfil.nota_minima is not None:
+        # O perfil calibrado traz a nota mínima que combina com o tamanho do trecho.
+        ajustes["consulta"]["reranker_nota_minima"] = perfil.nota_minima
     nova_consulta = type(consulta)(**{**consulta.model_dump(), **ajustes["consulta"]})
     nova_llm = type(llm)(**{**llm.model_dump(), **ajustes["llm"]})
-    return nova_consulta, nova_llm
+    return nova_consulta, nova_llm, nova_ingestao
 
 
-def efetivas(session: Session) -> tuple[ConsultaSettings, LLMSettings]:
+def efetivas(
+    session: Session, ingestao_base: IngestaoSettings | None = None
+) -> tuple[ConsultaSettings, LLMSettings, IngestaoSettings]:
     """O .env com os ajustes do banco por cima. Se o banco tiver algo inválido (por exemplo,
     depois de o .env mudar), o app segue com o .env e avisa no log em vez de falhar."""
-    base = get_consulta_settings(), get_llm_settings()
+    base = get_consulta_settings(), get_llm_settings(), ingestao_base or get_ingestao_settings()
     guardado = ler(session)
     if not guardado:
-        return base
+        return _aplicar(*base, {})
     try:
         return _aplicar(*base, guardado)
     except (ValidationError, ValueError):
@@ -247,6 +322,10 @@ def consulta_efetiva(session: Annotated[Session, Depends(get_session)]) -> Consu
 
 def llm_efetivo(session: Annotated[Session, Depends(get_session)]) -> LLMSettings:
     return efetivas(session)[1]
+
+
+def ingestao_efetiva(session: Annotated[Session, Depends(get_session)]) -> IngestaoSettings:
+    return efetivas(session)[2]
 
 
 def salvar(session: Session, digitado: dict[str, str]) -> list[str]:
@@ -263,7 +342,9 @@ def salvar(session: Session, digitado: dict[str, str]) -> list[str]:
             erros.append(str(erro))
     if not erros:
         try:
-            _aplicar(get_consulta_settings(), get_llm_settings(), para_gravar)
+            _aplicar(
+                get_consulta_settings(), get_llm_settings(), get_ingestao_settings(), para_gravar
+            )
         except ValidationError as erro:
             erros.extend(str(e["msg"]).removeprefix("Value error, ") for e in erro.errors())
         except ValueError as erro:

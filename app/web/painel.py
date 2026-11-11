@@ -13,6 +13,8 @@ from app import configuracao
 from app.consulta import servico
 from app.consulta.config import get_consulta_settings
 from app.db import get_session
+from app.ingestao import perfis
+from app.ingestao.config import get_ingestao_settings
 from app.llm.config import get_llm_settings
 from app.logging_config import MEMORIA
 from app.routers import perguntas as api
@@ -33,7 +35,11 @@ def _contexto_da_configuracao(
     session: Session, digitado: dict[str, str] | None = None, erros: list[str] | None = None
 ) -> dict[str, object]:
     guardado = configuracao.ler(session)
-    base = {"consulta": get_consulta_settings(), "llm": get_llm_settings()}
+    base = {
+        "consulta": get_consulta_settings(),
+        "llm": get_llm_settings(),
+        "ingestao": get_ingestao_settings(),
+    }
     llm = get_llm_settings()
     modelos, aviso_modelos = modelos_disponiveis(llm)
     grupos: dict[str, list[dict[str, object]]] = {}
@@ -49,7 +55,18 @@ def _contexto_da_configuracao(
                 else dict(c.opcoes).get(str(padrao), configuracao.texto_do_valor(c, padrao)),
             }
         )
+    atual = configuracao.efetivas(session)[2]
+    desatualizados = session.execute(
+        text(
+            "SELECT count(*) FROM documento WHERE estado = 'processado' AND "
+            "(tamanho_trecho, sobreposicao_trecho) IS DISTINCT FROM (:t, :s)"
+        ),
+        {"t": atual.tamanho_trecho, "s": atual.sobreposicao_trecho},
+    ).scalar_one()
     return {
+        "perfis": perfis.PERFIS,
+        "trecho_atual": (atual.tamanho_trecho, atual.sobreposicao_trecho),
+        "desatualizados": desatualizados,
         "grupos": grupos,
         "erros": erros or [],
         "modelos": modelos,

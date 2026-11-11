@@ -3,6 +3,7 @@
 from collections.abc import Sequence
 from typing import Protocol, runtime_checkable
 
+from app.llm.acompanhamento import Acompanhamento
 from app.llm.tipos import Resposta, TipoResposta, TrechoRecuperado
 
 
@@ -27,6 +28,7 @@ class GeradorDeResposta(Protocol):
     """Escreve a resposta a partir da pergunta e dos trechos recuperados.
 
     Deve citar só o que está nos trechos e recusar (Resposta.recusou) quando não houver evidência.
+    Com `acompanhar`, publica o texto que vai saindo e levanta Cancelado se pedirem para parar.
     """
 
     nome_modelo: str
@@ -37,4 +39,5 @@ class GeradorDeResposta(Protocol):
         trechos: Sequence[TrechoRecuperado],
         *,
         tipo: TipoResposta = "factual",
+        acompanhar: Acompanhamento | None = None,
     ) -> Resposta: ...

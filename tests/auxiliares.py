@@ -108,8 +108,18 @@ def banco(ambiente):
     with get_engine().begin() as c:
         c.execute(
             text(
-                "TRUNCATE documento, trecho, consulta, evento_documento, configuracao "
-                "RESTART IDENTITY CASCADE"
+                "TRUNCATE documento, trecho, consulta, evento_documento, configuracao, "
+                "conversa, turno RESTART IDENTITY CASCADE"
             )
         )
     yield get_sessionmaker()
+
+
+def perguntar_pela_tela(cliente, pergunta="Qual o prazo de entrega?", **dados):
+    """Faz uma pergunta como a tela faz (nova conversa) e devolve a página da conversa, já com a
+    resposta: no TestClient a tarefa em segundo plano termina antes de a resposta voltar."""
+    r = cliente.post(
+        "/app/conversas", data={"pergunta": pergunta, **dados}, headers={"HX-Request": "true"}
+    )
+    destino = r.headers.get("HX-Redirect")
+    return cliente.get(destino) if destino else r
