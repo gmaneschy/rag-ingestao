@@ -111,3 +111,17 @@ bge-m3: 89% e 9%); a similaridade do embedding não separa (33% e 22–35% no me
 
 Para ligar o portão: `RERANKER_MODEL` + `RERANKER_NOTA_MINIMA` no `.env`. Para medir um valor:
 `rodar --reranker MODELO --nota-minima X --gerar`.
+
+## Comparar extratores de PDF
+
+```bash
+uv run python -m app.avaliacao extratores --pasta dados/arquivos            # pypdf, pdfplumber, pymupdf
+uv run python -m app.avaliacao extratores --amostra 20 --max-documentos 5   # teste rápido
+```
+
+Lê os PDFs da pasta (sem tocar no banco), extrai até `--amostra` páginas de cada um com cada
+extrator e grava `avaliacao/resultados/<data>-extratores.md`: velocidade, páginas vazias, palavras
+coladas, letras espaçadas, hífen solto, lixo de codificação, concordância de conteúdo e de ordem
+entre os extratores e, no fim, trechos lado a lado dos documentos em que eles mais discordam.
+A leitura em colunas e tabelas só se decide olhando esses trechos. O PyMuPDF é AGPL e fica só no
+grupo de desenvolvimento; se for o melhor, trocar o extrator do pipeline é uma decisão de licença.

@@ -6,6 +6,7 @@ uv run python -m app.avaliacao rodar --modos hibrida,vetorial,textual
 uv run python -m app.avaliacao falhas avaliacao/resultados/ARQUIVO.json
 uv run python -m app.avaliacao embeddings --modelos MODELO1,MODELO2
 uv run python -m app.avaliacao rodar --gerar --rotulo qwen2.5-7b
+uv run python -m app.avaliacao extratores --pasta dados/arquivos   # pypdf x pdfplumber x PyMuPDF
 """
 
 import argparse
@@ -282,6 +283,23 @@ def _embeddings(args: argparse.Namespace) -> int:
     return 0
 
 
+def _extratores(args: argparse.Namespace) -> int:
+    from app.avaliacao import extratores
+
+    nomes = [n.strip() for n in args.extratores.split(",") if n.strip()]
+    desconhecidos = [n for n in nomes if n not in extratores.EXTRATORES]
+    if desconhecidos:
+        print(f"Extrator desconhecido: {', '.join(desconhecidos)}", file=sys.stderr)
+        return 2
+    relatorio_md = extratores.executar(args.pasta, nomes, args.amostra, args.max_documentos)
+    args.saida.mkdir(parents=True, exist_ok=True)
+    arquivo = args.saida / f"{datetime.now():%Y%m%d-%H%M%S}-extratores.md"
+    arquivo.write_text(relatorio_md, encoding="utf-8")
+    print(relatorio_md)
+    print(f"\nSalvo em {arquivo}", file=sys.stderr)
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="python -m app.avaliacao", description=__doc__)
     sub = parser.add_subparsers(dest="comando", required=True)
@@ -321,6 +339,16 @@ def main(argv: list[str] | None = None) -> int:
     emb.add_argument("--cache", type=Path, default=Path("avaliacao/embeddings_cache"))
     emb.add_argument("--saida", type=Path, default=Path("avaliacao/resultados"))
     emb.set_defaults(funcao=_embeddings)
+
+    ext = sub.add_parser(
+        "extratores", help="compara pypdf, pdfplumber e PyMuPDF nos PDFs do corpus"
+    )
+    ext.add_argument("--pasta", type=Path, default=Path("dados/arquivos"))
+    ext.add_argument("--extratores", default="pypdf,pdfplumber,pymupdf")
+    ext.add_argument("--amostra", type=int, default=40, help="páginas por documento")
+    ext.add_argument("--max-documentos", type=int, help="só os N primeiros (teste rápido)")
+    ext.add_argument("--saida", type=Path, default=Path("avaliacao/resultados"))
+    ext.set_defaults(funcao=_extratores)
 
     rod = sub.add_parser("rodar", help="roda o conjunto de referência")
     rod.add_argument("--conjunto", type=Path, default=Path("avaliacao/perguntas.json"))

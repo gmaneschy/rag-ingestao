@@ -115,8 +115,9 @@ Experimento de embeddings: [docs/embeddings.md](docs/embeddings.md).
 
 ## Resultados medidos
 
-> Conjunto de referência: 32 perguntas (português, inglês, russo traduzido; ~25% sem resposta no
-> corpus), 22 documentos, 5274 trechos. Hardware: Ryzen 5 2600X, 32 GB, só CPU.
+> Conjunto de referência: 52 perguntas (português e inglês; 24 com resposta e 28 sem resposta no
+> corpus, várias "próximas do corpus" para testar a recusa), 22 documentos. Hardware: Ryzen 5 2600X,
+> 32 GB, só CPU. As tabelas de embeddings abaixo vêm do conjunto anterior, de 32 perguntas.
 
 ### Embeddings (busca híbrida, recall de recuperação)
 
@@ -130,16 +131,63 @@ Experimento de embeddings: [docs/embeddings.md](docs/embeddings.md).
 
 ### Reordenador e portão de evidência
 
-*A preencher com `rodar --reranker ... --nota-minima ...`: recusa correta × recusa indevida por
-nota mínima.*
+Busca híbrida com o reordenador `jina-reranker-v2-base-multilingual` sobre 20 candidatos:
+
+| | sem reordenador | com reordenador |
+|---|---|---|
+| R@1 | 61% | **74%** |
+| R@5 | 83% | **87%** |
+| MRR@20 | 0,70 | **0,79** |
+| busca (ms) | ~900 | ~5400 |
+
+O reordenador melhora a posição do trecho certo, a um custo de latência de cerca de 4,5 s por
+pergunta. O portão de evidência recusa quando a nota do 1º trecho fica abaixo de um mínimo:
+
+| Nota mínima | Recusa correta | Recusa indevida |
+|---|---|---|
+| -0,080 | 69% | 17% |
+| **0,05 (adotada)** | 79% | 22% |
+| 0,083 | 83% | 22% |
+| 0,451 | 86% | 30% |
+| 0,516 | 93% | 39% |
+
+Escolhi 0,05: subir mais troca cada recusa correta a mais por várias respostas boas recusadas, e
+para um sistema que promete responder com fonte recusar demais custa mais que deixar passar uma
+pergunta limítrofe. O portão por similaridade, sem reordenador, não recusava nada no conjunto novo.
+Ressalva: o gabarito de duas perguntas ainda aceita só um dos documentos que respondem, o que
+subestima a recuperação (a nota mínima não depende do gabarito).
 
 ### Geração (qualidade e latência por modelo)
 
-*A preencher com `rodar --gerar`: qwen2.5:7b × phi4:14b × qwen3 (`think=false`).*
+| Modelo | Recusa correta | Recusa indevida | Fundamentação* | Latência média | p95 |
+|---|---|---|---|---|---|
+| qwen2.5:7b (adotado) | 93% | 17% | 68% | 45,6 s | 62,7 s |
+
+*Das respostas dadas, as que citam o trecho correto; subestimada onde o gabarito é estreito.
+O qwen3.5:4b (`think=false`) ficou em 63–88 s por pergunta contra ~35 s do qwen2.5:7b numa rodada
+anterior, e por isso não foi adotado. Pendente: phi4:14b.
+
+### Extração de PDF (pypdf × pdfplumber × PyMuPDF)
+
+`python -m app.avaliacao extratores`, sobre os 9 PDFs do corpus (até 30 páginas cada):
+
+| Extrator | ms/página | palavras coladas (por mil) | concordância com o pypdf |
+|---|---|---|---|
+| **pypdf (adotado)** | 68 | 0,5 | — |
+| PyMuPDF | 2,7 | 0,2 | 98% das palavras, 99% da ordem |
+| pdfplumber (amostra de 5 PDFs) | 149 | 0,7 | 97% das palavras, 96% da ordem |
+
+O PyMuPDF é mais rápido e um pouco mais limpo, mas é AGPL; a extração é pequena diante do custo dos
+vetores, e o pypdf (BSD) mantém a licença simples. O pdfplumber foi o mais lento e o pior em
+palavras coladas. Defeitos conhecidos do pypdf: dígitos separados ("3 5 8") e alguma palavra
+partida em alfabeto cirílico, e o marcador `<UN>` de fonte sem mapeamento.
 
 ### Tamanho do trecho
 
-*A preencher: 300 × 500 × 800 caracteres, com coleções temporárias.*
+Não medimos 300 × 500 × 800: o tamanho depende do tipo de documento (um artigo de lei pede trechos
+diferentes de um romance), então ele é um ajuste do usuário, por perfil (curto, médio, longo ou
+personalizado), com explicações na tela. Só o perfil curto tem nota mínima calibrada. Detalhes em
+[docs/configuracao-da-ingestao.md](docs/configuracao-da-ingestao.md).
 
 ### Remoção sem rastro
 
