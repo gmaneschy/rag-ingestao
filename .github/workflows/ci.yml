@@ -56,6 +56,11 @@ jobs:
     env:
       # Só o banco e a API: o n8n e o Caddy não são o que este job verifica.
       COMPOSE_PROFILES: app
+      # O .env de teste vem do .env.example (LLM_PROVIDER=ollama, sem LLM_MODEL), e a API recusa
+      # subir assim. O CI não tem Ollama nem baixa modelos: usa os provedores simulados. As
+      # variáveis do shell valem mais que o .env na interpolação do Compose.
+      LLM_PROVIDER: simulado
+      EMBEDDINGS_PROVIDER: simulado
     steps:
       - uses: actions/checkout@v5
       - name: Gerar um .env de teste
