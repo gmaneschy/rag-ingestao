@@ -35,7 +35,7 @@ jobs:
       DATABASE_URL: postgresql+psycopg://app:app@localhost:5432/teste
       TEST_DATABASE_URL: postgresql+psycopg://app:app@localhost:5432/teste
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
@@ -62,7 +62,7 @@ jobs:
       LLM_PROVIDER: simulado
       EMBEDDINGS_PROVIDER: simulado
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Gerar um .env de teste
         run: python3 scripts/gen_env.py
       - name: Validar o compose.yaml com todos os profiles
@@ -83,7 +83,7 @@ jobs:
     # A instância gratuita da Oracle é arm64; este job garante que a imagem constrói nela.
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: docker/setup-qemu-action@v3
       - uses: docker/setup-buildx-action@v3
       - uses: docker/build-push-action@v6
